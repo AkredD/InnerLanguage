@@ -7,7 +7,7 @@ package cs.service.innerlanguage.parser.exceptions;
 
 /**
  *
- * @author alex
+ * @author anisimov_a_v
  */
 public class ParsingException extends InnerException {
 	public ParsingException() {

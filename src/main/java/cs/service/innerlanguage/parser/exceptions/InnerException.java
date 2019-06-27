@@ -6,7 +6,7 @@ package cs.service.innerlanguage.parser.exceptions;
 
 /**
  *
- * @author admin
+ * @author anisimov_a_v
  */
 public class InnerException extends RuntimeException {
 	public InnerException() {

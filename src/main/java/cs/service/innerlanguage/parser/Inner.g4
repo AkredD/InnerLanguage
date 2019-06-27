@@ -124,9 +124,9 @@ whileStatement      : WHILE OPENBRACKET condition CLOSEBRACKET
 
 eqStatement         : DATANAME EQ varValue ENDCOMMAND;
 
-plusEqStatemet      : DATANAME PLUSEQ  varValue ENDCOMMAND;
+plusEqStatement      : DATANAME PLUSEQ  varValue ENDCOMMAND;
 
-minusEqStatemet     : DATANAME MINUSEQ varValue ENDCOMMAND;
+minusEqStatement     : DATANAME MINUSEQ varValue ENDCOMMAND;
 
 returnStatement     : RETURN varValue ENDCOMMAND;
 
@@ -150,8 +150,8 @@ statement   :   (ifStatement
                 | constantDef
                 | systemDef
                 | eqStatement
-                | plusEqStatemet
-                | minusEqStatemet
+                | plusEqStatement
+                | minusEqStatement
                 | callStatement ENDCOMMAND
                 | writeStatement);
 

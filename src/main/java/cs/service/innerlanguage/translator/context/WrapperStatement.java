@@ -5,12 +5,14 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import cs.service.innerlanguage.translator.context.AbstractNodeContext;
+
 /**
  *
- * @author root
+ * @author anisimov_a_v
  */
 public abstract class WrapperStatement extends AbstractNodeContext {
-    protected WrapperStatement(AbstractNodeContext parent) {
-        super(parent);
-    }
+	protected WrapperStatement(AbstractNodeContext parent) {
+		super(parent);
+	}
 }

@@ -7,26 +7,29 @@ package cs.service.innerlanguage.translator.context;
 
 /**
  *
- * @author root
+ * @author anisimov_a_v
  */
-public class ExpressionContext extends AbstractNodeContext{
-    protected Boolean inScope;
-    private NodeContext inner;
-    
-    public ExpressionContext(AbstractNodeContext parent) {
-        super(parent);
-        this.inScope = false;
-    }
-    
-    public ExpressionContext(AbstractNodeContext parent, Boolean inScope, NodeContext inner) {
-        super(parent);
-        this.inScope = inScope;
-        this.inner = inner;
-    }
+public class ExpressionContext extends AbstractNodeContext {
+	protected Boolean inScope;
+	private NodeContext inner;
 
-    public void setInner(NodeContext inner) {
-        this.inner = inner;
-    }
-    
-    
+	public ExpressionContext(AbstractNodeContext parent) {
+		super(parent);
+		this.inScope = false;
+	}
+
+	public ExpressionContext(AbstractNodeContext parent, Boolean inScope, NodeContext inner) {
+		super(parent);
+		this.inScope = inScope;
+		this.inner = inner;
+	}
+
+	public void setInner(NodeContext inner) {
+		this.inner = inner;
+	}
+
+	@Override
+	public String toString() {
+		return ((inScope) ? "(" : "") + inner.toString() + ((inScope) ? ")" : "");
+	}
 }

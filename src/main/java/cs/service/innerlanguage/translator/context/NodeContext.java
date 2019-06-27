@@ -7,11 +7,9 @@ package cs.service.innerlanguage.translator.context;
 
 /**
  *
- * @author root
+ * @author anisimov_a_v
  */
 public interface NodeContext {
-    @Override
-    public String toString();
-    
-    
+	@Override
+	public String toString();
 }

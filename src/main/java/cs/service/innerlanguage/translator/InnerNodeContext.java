@@ -9,10 +9,8 @@ import java.util.List;
 
 /**
  *
- * @author root
+ * @author anisimov_a_v
  */
 public class InnerNodeContext {
-    private List<InnerNodeContext> contexts;
-    
-    
+	private List<InnerNodeContext> contexts;
 }
