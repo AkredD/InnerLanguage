@@ -7,12 +7,17 @@ package cs.service.innerlanguage.translator.context;
 
 /**
  *
- * @author akredd
+ * @author anisimov_a_v
  */
-public class BaseValueImpl implements NodeContext{
-    private Object value;
-    
-    public BaseValueImpl(Object value) {
-        this.value = value;
-    }
+public class BaseValueImpl implements NodeContext {
+	private Object value;
+
+	public BaseValueImpl(Object value) {
+		this.value = value;
+	}
+
+	@Override
+	public String toString() {
+		return value.toString();
+	}
 }

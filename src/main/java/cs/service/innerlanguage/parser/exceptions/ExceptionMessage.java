@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
 
 /**
  *
- * @author admin
+ * @author anisimov_a_v
  */
 public enum ExceptionMessage {
 	AMBIGUOUS_ATTRIBUTE,
@@ -19,7 +19,6 @@ public enum ExceptionMessage {
 	UNKNOWN_COLUMN;
 	private static final String MESSAGES = "messages";
 	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.getDefault());
-        
 
 	public String getLocalizedMessage() {
 		return MSG_BUNDLE.getString(this.toString());

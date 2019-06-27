@@ -7,23 +7,25 @@ package cs.service.innerlanguage.translator.context;
 
 /**
  *
- * @author root
+ * @author anisimov_a_v
  */
-public class UnaryConditionImpl extends ExpressionContext{
-    private NodeContext operand;
-    //TODO revert operator
-    private String operator;
-    
-    public UnaryConditionImpl(AbstractNodeContext parent, NodeContext operand, String operator) {
-        super(parent);
-        this.operand = operand;
-        this.operator = operator;
-    }
+public class UnaryConditionImpl extends ExpressionContext {
+	private NodeContext operand;
+	//TODO revert operator
+	private String operator;
 
-    public void setOperand(NodeContext operand) {
-        this.operand = operand;
-    }
-    
-    
-    
+	public UnaryConditionImpl(AbstractNodeContext parent, NodeContext operand, String operator) {
+		super(parent);
+		this.operand = operand;
+		this.operator = operator;
+	}
+
+	public void setOperand(NodeContext operand) {
+		this.operand = operand;
+	}
+
+	@Override
+	public String toString() {
+		return "!" + operand.toString();
+	}
 }
