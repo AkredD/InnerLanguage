@@ -13,6 +13,7 @@ import cs.service.innerlanguage.translator.InnerBaseVisitor;
 import cs.service.innerlanguage.translator.InnerVisitor;
 import cs.service.innerlanguage.translator.InnerVisitorImpl;
 import cs.service.innerlanguage.translator.context.NodeContext;
+import cs.service.innerlanguage.translator.types.basic.BasicProvider;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -25,8 +26,7 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
  * @author anisimov_a_v
  */
 public class InnerAdapter {
-	public static void main(String[] args) {
-		String query = "TYPE Main.\n"
+	private static String query = "TYPE Main.\n"
 							+ "STATIC (\n"
 							+ "DATA: Integer a VALUES(123)\n"
 							+ ".\n"
@@ -69,7 +69,10 @@ public class InnerAdapter {
 							+ "return i.\n"
 							+ "END. \n"
 							+ "END.";
-		InnerParser.InnerContext context = prepareContext(query);
+
+	public static void main(String[] args) {
+		BasicProvider.instance();
+		//InnerParser.InnerContext context = prepareContext(query);
 	}
 
 	private static InnerParser.InnerContext prepareContext(String csdmlQuery) {
