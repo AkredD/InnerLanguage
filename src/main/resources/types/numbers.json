@@ -1,0 +1,209 @@
+{
+	"typeNode" : {
+		"classPath" : "java.lang",
+		"className" : "Number",
+		"parent" : "java.lang.Object",
+		"methods" : [
+			{
+				"outputClassName" : "java.lang.Double",
+				"methodName" : "doubleValue",
+				"constructor" : null
+			},
+			{
+				"outputClassName" : "java.lang.Float",
+				"methodName" : "floatValue",
+				"constructor" : null
+			},
+			{
+				"outputClassName" : "java.lang.Byte",
+				"methodName" : "byteValue",
+				"constructor" : null
+			},
+			{
+				"outputClassName" : "java.lang.Integer",
+				"methodName" : "intValue",
+				"constructor" : null
+			},
+			{
+				"outputClassName" : "java.lang.Long",
+				"methodName" : "doubleValue",
+				"constructor" : null
+			},
+			{
+				"outputClassName" : "java.lang.Short",
+				"methodName" : "shortValue",
+				"constructor" : null
+			}
+		]
+	},
+	"innerTypes" : [
+		{
+			"typeNode" : {
+				"classPath" : "java.lang",
+				"className" : "Double",
+				"parent" : "java.lang.Number",
+				"methods" : [
+					{
+						"outputClassName" : "java.lang.Double",
+						"methodName" : "valueOf",
+						"constructor" : {
+							"parameters" : {
+								"d" : "java.lang.String"
+							}
+						}
+					},
+					{
+						"outputClassName" : "java.lang.Integer",
+						"methodName" : "compare",
+						"constructor" : {
+							"parameters" : {
+								"d1" : "java.lang.Double",
+								"d2" : "java.lang.Double"
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"typeNode" : {
+				"classPath" : "java.lang",
+				"className" : "Float",
+				"parent" : "java.lang.Number",
+				"methods" : [
+					{
+						"outputClassName" : "java.lang.Float",
+						"methodName" : "valueOf",
+						"constructor" : {
+							"parameters" : {
+								"d" : "java.lang.String"
+							}
+						}
+					},
+					{
+						"outputClassName" : "java.lang.Integer",
+						"methodName" : "compare",
+						"constructor" : {
+							"parameters" : {
+								"d1" : "java.lang.Float",
+								"d2" : "java.lang.Float"
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"typeNode" : {
+				"classPath" : "java.lang",
+				"className" : "Byte",
+				"parent" : "java.lang.Number",
+				"methods" : [
+					{
+						"outputClassName" : "java.lang.String",
+						"methodName" : "valueOf",
+						"constructor" : {
+							"parameters" : {
+								"d" : "java.lang.String"
+							}
+						}
+					},
+					{
+						"outputClassName" : "java.lang.Integer",
+						"methodName" : "compare",
+						"constructor" : {
+							"parameters" : {
+								"d1" : "java.lang.Byte",
+								"d2" : "java.lang.Byte"
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"typeNode" : {
+				"classPath" : "java.lang",
+				"className" : "Integer",
+				"parent" : "java.lang.Number",
+				"methods" : [
+					{
+						"outputClassName" : "java.lang.String",
+						"methodName" : "valueOf",
+						"constructor" : {
+							"parameters" : {
+								"d" : "java.lang.String"
+							}
+						}
+					},
+					{
+						"outputClassName" : "java.lang.Integer",
+						"methodName" : "compare",
+						"constructor" : {
+							"parameters" : {
+								"d1" : "java.lang.Integer",
+								"d2" : "java.lang.Integer"
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"typeNode" : {
+				"classPath" : "java.lang",
+				"className" : "Long",
+				"parent" : "java.lang.Number",
+				"methods" : [
+					{
+						"outputClassName" : "java.lang.Long",
+						"methodName" : "valueOf",
+						"constructor" : {
+							"parameters" : {
+								"d" : "java.lang.String"
+							}
+						}
+					},
+					{
+						"outputClassName" : "java.lang.Integer",
+						"methodName" : "compare",
+						"constructor" : {
+							"parameters" : {
+								"d1" : "java.lang.Long",
+								"d2" : "java.lang.Long"
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"typeNode" : {
+				"classPath" : "java.lang",
+				"className" : "Short",
+				"parent" : "java.lang.Number",
+				"methods" : [
+					{
+						"outputClassName" : "java.lang.Short",
+						"methodName" : "valueOf",
+						"constructor" : {
+							"parameters" : {
+								"d" : "java.lang.String"
+							}
+						}
+					},
+					{
+						"outputClassName" : "java.lang.Integer",
+						"methodName" : "compare",
+						"constructor" : {
+							"parameters" : {
+								"d1" : "java.lang.Short",
+								"d2" : "java.lang.Short"
+							}
+						}
+					}
+				]
+			}
+		}
+	]
+}

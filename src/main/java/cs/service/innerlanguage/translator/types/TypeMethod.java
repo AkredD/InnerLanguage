@@ -11,17 +11,17 @@ import java.util.Set;
  *
  * @author anisimov_a_v
  */
-public class TypeMethods {
+public class TypeMethod {
 	private final TypeWrapper output;
-	private final Set<TypeConstructor> contructors;
+	private final Set<TypeConstructor> constructors;
 
-	public TypeMethods(TypeWrapper output, Set<TypeConstructor> contructors) {
+	public TypeMethod(TypeWrapper output, Set<TypeConstructor> constructors) {
 		this.output = output;
-		this.contructors = contructors;
+		this.constructors = constructors;
 	}
 
-	public Set<TypeConstructor> getContructors() {
-		return contructors;
+	public Set<TypeConstructor> getConstructors() {
+		return constructors;
 	}
 
 	public TypeWrapper getOutput() {
