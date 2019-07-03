@@ -8,6 +8,7 @@ package cs.service.innerlanguage.translator.statements;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.statements.SimpleStatement;
+import cs.service.innerlanguage.translator.types.TypeWrapper;
 import java.util.List;
 import org.antlr.v4.runtime.Token;
 
@@ -17,14 +18,14 @@ import org.antlr.v4.runtime.Token;
  */
 public abstract class DataStatement extends SimpleStatement {
 	//TODO reverse with new Object View
-	protected String type;
+	protected TypeWrapper type;
 	protected String dataName;
 	protected List<NodeContext> values;
 	protected CallFunctionImpl callFunction;
 
-	protected DataStatement(AbstractNodeContext parent, String typeName, String dataName, List<NodeContext> values, Token start, Token stop) {
+	protected DataStatement(AbstractNodeContext parent, TypeWrapper type, String dataName, List<NodeContext> values, Token start, Token stop) {
 		super(parent, start, stop);
-		this.type = typeName;
+		this.type = type;
 		this.dataName = dataName;
 		this.values = values;
 		//TODO check for unic

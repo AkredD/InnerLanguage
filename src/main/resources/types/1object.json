@@ -39,6 +39,14 @@
 	"innerTypes" : [
 		{
 			"typeNode" : {
+				"classPath" : "java.lang.Void",
+				"className" : "Void",
+				"parent" : "java.lang.Object",
+				"instanceable" : false
+			}
+		},
+		{
+			"typeNode" : {
 				"classPath" : "java.lang.String",
 				"className" : "String",
 				"parent" : "java.lang.Object",

@@ -44,12 +44,20 @@ public final class BasicProvider {
 		return instance;
 	}
 
-	public Map<String, TypeWrapper> getTypesByClassName() {
-		return typesByClassName;
+	public TypeWrapper getTypesByClassName(String className) {
+		return typesByClassName.get(className);
+	}
+
+	public TypeWrapper getTypesByName(String name) {
+		return typesByName.get(name);
 	}
 
 	public Map<String, TypeWrapper> getTypesByName() {
 		return typesByName;
+	}
+
+	public Map<String, TypeWrapper> getTypesByClassName() {
+		return typesByClassName;
 	}
 
 	public void reload() {

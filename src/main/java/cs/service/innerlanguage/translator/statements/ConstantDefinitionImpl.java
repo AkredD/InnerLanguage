@@ -8,6 +8,7 @@ package cs.service.innerlanguage.translator.statements;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.statements.DataStatement;
+import cs.service.innerlanguage.translator.types.TypeWrapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.Token;
@@ -17,8 +18,8 @@ import org.antlr.v4.runtime.Token;
  * @author anisimov_a_v
  */
 public class ConstantDefinitionImpl extends DataStatement {
-	public ConstantDefinitionImpl(AbstractNodeContext parent, String typeName, String dataName, List<NodeContext> values, Token start, Token stop) {
-		super(parent, typeName, dataName, values, start, stop);
+	public ConstantDefinitionImpl(AbstractNodeContext parent, TypeWrapper type, String dataName, List<NodeContext> values, Token start, Token stop) {
+		super(parent, type, dataName, values, start, stop);
 	}
 
 	@Override

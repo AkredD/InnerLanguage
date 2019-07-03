@@ -12,11 +12,9 @@ import java.util.ResourceBundle;
  * @author anisimov_a_v
  */
 public enum ExceptionMessage {
-	AMBIGUOUS_ATTRIBUTE,
+	CANT_PARSE_DATE,
 	MISMATCH_INPUT,
-	NOT_ENOUGH_RIGHTS,
-	NO_SUCH_TABLE,
-	UNKNOWN_COLUMN;
+	TYPE_NOT_EXIST;
 	private static final String MESSAGES = "messages";
 	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.getDefault());
 
