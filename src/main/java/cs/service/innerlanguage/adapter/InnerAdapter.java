@@ -14,6 +14,7 @@ import cs.service.innerlanguage.translator.InnerVisitor;
 import cs.service.innerlanguage.translator.InnerVisitorImpl;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.types.basic.BasicProvider;
+import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -27,51 +28,68 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
  */
 public class InnerAdapter {
 	private static String query = "TYPE Main.\n"
-							+ "STATIC (\n"
-							+ "DATA: Integer a VALUES(123)\n"
-							+ ".\n"
-							+ "CONSTANT: Integer b VALUES(412, 312).\n"
-							+ "SYSTEM: BaseObject bo.\n"
-							+ ")\n"
-							+ "\n"
-							+ "FUNCTION Void main () \n"
-							+ "START.\n"
-							+ "if (a == TRUE AND FALSE)\n"
-							+ "START.\n"
-							+ "return a.\n"
-							+ "END.\n"
-							+ "ELSE\n"
-							+ "START.\n"
-							+ "return a. return a.\n"
-							+ "END.\n"
-							+ "data: Integer i values (asd).\n"
-							+ "while (i > 0)\n"
-							+ "START.\n"
-							+ "continue.\n"
-							+ "END.\n"
-							+ "return i.\n"
-							+ "END. \n"
-							+ "FUNCTION String getString () \n"
-							+ "START.\n"
-							+ "if (a == TRUE AND FALSE)\n"
-							+ "START.\n"
-							+ "return a.\n"
-							+ "END.\n"
-							+ "ELSE\n"
-							+ "START.\n"
-							+ "return a. return a.\n"
-							+ "END.\n"
-							+ "data: Integer i values (asd).\n"
-							+ "while (i > 0)\n"
-							+ "START.\n"
-							+ "continue.\n"
-							+ "END.\n"
-							+ "return i.\n"
-							+ "END. \n"
-							+ "END.";
+											+ "STATIC (\n"
+											+ "DATA: Integer a VALUES(123)\n"
+											+ ".\n"
+											+ "CONSTANT: Integer b VALUES(412, 312).\n"
+											+ "SYSTEM: BaseObject bo.\n"
+											+ ")\n"
+											+ "\n"
+											+ "FUNCTION Void main () \n"
+											+ "START.\n"
+											+ "if (a == TRUE AND FALSE)\n"
+											+ "START.\n"
+											+ "return a.\n"
+											+ "END.\n"
+											+ "ELSE\n"
+											+ "START.\n"
+											+ "return a. return a.\n"
+											+ "END.\n"
+											+ "data: Integer i values (asd).\n"
+											+ "while (i > 0)\n"
+											+ "START.\n"
+											+ "continue.\n"
+											+ "END.\n"
+											+ "return i.\n"
+											+ "END. \n"
+											+ "FUNCTION String getString () \n"
+											+ "START.\n"
+											+ "if (a == TRUE AND FALSE)\n"
+											+ "START.\n"
+											+ "return a.\n"
+											+ "END.\n"
+											+ "ELSE\n"
+											+ "START.\n"
+											+ "return a. return a.\n"
+											+ "END.\n"
+											+ "data: Integer i values (asd).\n"
+											+ "while (i > 0)\n"
+											+ "START.\n"
+											+ "continue.\n"
+											+ "END.\n"
+											+ "return i.\n"
+											+ "END. \n"
+											+ "END.";
 
 	public static void main(String[] args) {
 		BasicProvider.instance();
+		BasicProvider.instance().getTypesByName()
+				  .entrySet()
+				  .stream()
+				  .forEach(typeEntry -> {
+					  System.out.println("-------------");
+					  System.out.println(typeEntry.getKey() + " parent - "
+												+ ((typeEntry.getValue().getParent() == null) ? "null" :typeEntry.getValue().getParent().getClassName()));
+					  /*typeEntry.getValue().getMethods().forEach(method -> {
+						  System.out.println("method " + method.getMethodName() + " ("
+													+ method.getConstructor().getParameters()
+									 .stream()
+									 .map(constr -> {
+										 return constr.getKey().getClassName() + " " + constr.getValue();
+									 })
+									 .collect(Collectors.joining(", ")) + " )");
+					  });*/
+				  });
 		//InnerParser.InnerContext context = prepareContext(query);
 	}
 

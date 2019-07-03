@@ -15,11 +15,12 @@ import java.util.List;
  * @author anisimov_a_v
  */
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"classPath", "className", "parent", "methods"})
+@JsonPropertyOrder({"classPath", "className", "parent", "instanceable", "methods"})
 public class BaseTypeView {
 	private String classPath;
 	private String className;
 	private String parent;
+	private Boolean instanceable;
 	private List<BaseMethodView> methods;
 
 	public BaseTypeView() {
@@ -39,6 +40,10 @@ public class BaseTypeView {
 
 	public void setClassPath(String classPath) {
 		this.classPath = classPath;
+	}
+
+	public Boolean getInstanceable() {
+		return instanceable;
 	}
 
 	public List<BaseMethodView> getMethods() {

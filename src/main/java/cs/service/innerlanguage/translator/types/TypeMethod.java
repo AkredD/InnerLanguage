@@ -5,6 +5,8 @@
  */
 package cs.service.innerlanguage.translator.types;
 
+import cs.service.innerlanguage.translator.types.basic.BaseMethodView;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -13,15 +15,27 @@ import java.util.Set;
  */
 public class TypeMethod {
 	private final TypeWrapper output;
-	private final Set<TypeConstructor> constructors;
+	private final String methodName;
+	private final TypeConstructor constructor;
 
-	public TypeMethod(TypeWrapper output, Set<TypeConstructor> constructors) {
+	public TypeMethod(TypeWrapper output, String methodName, TypeConstructor constructor) {
 		this.output = output;
-		this.constructors = constructors;
+		this.constructor = constructor;
+		this.methodName = methodName;
 	}
 
-	public Set<TypeConstructor> getConstructors() {
-		return constructors;
+	public TypeMethod(BaseMethodView methodView, Map<String, TypeWrapper> typesByClassName) {
+		this.output = typesByClassName.get(methodView.getOutputClassName());
+		this.methodName = methodView.getMethodName();
+		this.constructor = new TypeConstructor(methodView.getConstructor(), typesByClassName);
+	}
+
+	public TypeConstructor getConstructor() {
+		return constructor;
+	}
+
+	public String getMethodName() {
+		return methodName;
 	}
 
 	public TypeWrapper getOutput() {

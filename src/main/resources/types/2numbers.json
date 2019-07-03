@@ -1,8 +1,9 @@
 {
 	"typeNode" : {
-		"classPath" : "java.lang",
+		"classPath" : "java.lang.Number",
 		"className" : "Number",
 		"parent" : "java.lang.Object",
+		"instanceable" : false,
 		"methods" : [
 			{
 				"outputClassName" : "java.lang.Double",
@@ -39,9 +40,10 @@
 	"innerTypes" : [
 		{
 			"typeNode" : {
-				"classPath" : "java.lang",
+				"classPath" : "java.lang.Double",
 				"className" : "Double",
 				"parent" : "java.lang.Number",
+				"instanceable" : true,
 				"methods" : [
 					{
 						"outputClassName" : "java.lang.Double",
@@ -67,9 +69,10 @@
 		},
 		{
 			"typeNode" : {
-				"classPath" : "java.lang",
+				"classPath" : "java.lang.Float",
 				"className" : "Float",
 				"parent" : "java.lang.Number",
+				"instanceable" : true,
 				"methods" : [
 					{
 						"outputClassName" : "java.lang.Float",
@@ -95,9 +98,10 @@
 		},
 		{
 			"typeNode" : {
-				"classPath" : "java.lang",
+				"classPath" : "java.lang.Byte",
 				"className" : "Byte",
 				"parent" : "java.lang.Number",
+				"instanceable" : true,
 				"methods" : [
 					{
 						"outputClassName" : "java.lang.String",
@@ -123,9 +127,10 @@
 		},
 		{
 			"typeNode" : {
-				"classPath" : "java.lang",
+				"classPath" : "java.lang.Integer",
 				"className" : "Integer",
 				"parent" : "java.lang.Number",
+				"instanceable" : true,
 				"methods" : [
 					{
 						"outputClassName" : "java.lang.String",
@@ -151,9 +156,10 @@
 		},
 		{
 			"typeNode" : {
-				"classPath" : "java.lang",
+				"classPath" : "java.lang.Long",
 				"className" : "Long",
 				"parent" : "java.lang.Number",
+				"instanceable" : true,
 				"methods" : [
 					{
 						"outputClassName" : "java.lang.Long",
@@ -179,9 +185,10 @@
 		},
 		{
 			"typeNode" : {
-				"classPath" : "java.lang",
+				"classPath" : "java.lang.Short",
 				"className" : "Short",
 				"parent" : "java.lang.Number",
+				"instanceable" : true,
 				"methods" : [
 					{
 						"outputClassName" : "java.lang.Short",
