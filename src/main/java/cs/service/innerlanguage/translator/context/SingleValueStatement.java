@@ -5,6 +5,8 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import org.antlr.v4.runtime.Token;
+
 /**
  *
  * @author akredd
@@ -12,8 +14,8 @@ package cs.service.innerlanguage.translator.context;
 public abstract class SingleValueStatement extends SimpleStatement{
     protected NodeContext value;
     
-    public SingleValueStatement(AbstractNodeContext parent, NodeContext value) {
-        super(parent);
+    public SingleValueStatement(AbstractNodeContext parent, NodeContext value, Token start, Token stop) {
+        super(parent, start, stop);
         this.value = value;
     }
     

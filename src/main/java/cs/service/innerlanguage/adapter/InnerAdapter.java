@@ -12,8 +12,12 @@ import cs.service.innerlanguage.parser.exceptions.ParsingException;
 import cs.service.innerlanguage.translator.InnerBaseVisitor;
 import cs.service.innerlanguage.translator.InnerVisitor;
 import cs.service.innerlanguage.translator.InnerVisitorImpl;
+import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.types.basic.BasicProvider;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
@@ -72,25 +76,48 @@ public class InnerAdapter {
 											+ "END.";
 
 	public static void main(String[] args) {
-		BasicProvider.instance();
+		showBasicTypes();
+		//InnerParser.InnerContext context = prepareContext(query);
+	}
+
+	private static void showBasicTypes() {
 		BasicProvider.instance().getTypesByName()
 				  .entrySet()
 				  .stream()
 				  .forEach(typeEntry -> {
-					  System.out.println("-------------");
+					  System.out.println("---------------------------------------");
 					  System.out.println(typeEntry.getKey() + " parent - "
-												+ ((typeEntry.getValue().getParent() == null) ? "null" :typeEntry.getValue().getParent().getClassName()));
-					  /*typeEntry.getValue().getMethods().forEach(method -> {
+												+ ((typeEntry.getValue().getParent() == null) ? "null" : typeEntry.getValue().getParent().getClassName()));
+					  typeEntry.getValue().getConstructors().forEach(costr -> {
+						  System.out.println("constructors  ("
+													+ costr.getConstructor().getParameters()
+									 .stream()
+									 .map(constr -> {
+										 return constr.getKey().getClassName() + " " + constr.getValue();
+									 })
+									 .collect(Collectors.joining(", ")) + " )");
+					  });
+					  System.out.println("----");
+					  typeEntry.getValue().getStaticMethods().forEach(stMethod -> {
+						  System.out.println("static methods " + stMethod.getMethodName() + " ("
+													+ stMethod.getConstructor().getParameters()
+									 .stream()
+									 .map(constr -> {
+										 return constr.getKey().getClassName() + " " + constr.getValue();
+									 })
+									 .collect(Collectors.joining(", ")) + " )");
+					  });
+					  System.out.println("----");
+					  typeEntry.getValue().getMethods().forEach(method -> {
 						  System.out.println("method " + method.getMethodName() + " ("
 													+ method.getConstructor().getParameters()
 									 .stream()
 									 .map(constr -> {
 										 return constr.getKey().getClassName() + " " + constr.getValue();
 									 })
-									 .collect(Collectors.joining(", ")) + " )");
-					  });*/
+									 .collect(Collectors.joining(", ")) + ")");
+					  });
 				  });
-		//InnerParser.InnerContext context = prepareContext(query);
 	}
 
 	private static InnerParser.InnerContext prepareContext(String csdmlQuery) {
@@ -106,7 +133,8 @@ public class InnerAdapter {
 			Object obj = visitor.visit(scriptCtx);
 			//System.out.println(csdmlQuery);
 			System.out.println("\n\n----------------------------------------------------------------------\n\n");
-			System.out.println(obj.toString());
+			System.out.println(((AbstractNodeContext) obj).getPosition());
+			//System.out.println(obj.toString());
 		} catch (ParseCancellationException ex) {
 			Throwable cause = ex.getCause();
 			String message;

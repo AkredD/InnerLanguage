@@ -5,14 +5,16 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import org.antlr.v4.runtime.Token;
+
 /**
  *
  * @author akredd
  */
 public class PlusEqImpl extends SingleValueStatement{
     
-    public PlusEqImpl(AbstractNodeContext parent, NodeContext value) {
-        super(parent, value);
+    public PlusEqImpl(AbstractNodeContext parent, NodeContext value, Token start, Token stop) {
+        super(parent, value, start, stop);
     }
     
 }

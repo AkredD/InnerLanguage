@@ -6,6 +6,7 @@
 package cs.service.innerlanguage.translator.context;
 
 import java.util.List;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -14,8 +15,8 @@ import java.util.List;
 public class WriteStatementImpl extends SimpleStatement{
     private List<NodeContext> values;
     
-    public WriteStatementImpl(AbstractNodeContext parent, List<NodeContext> values) {
-        super(parent);
+    public WriteStatementImpl(AbstractNodeContext parent, List<NodeContext> values, Token start, Token stop) {
+        super(parent, start, stop);
         this.values = values;
     }
 

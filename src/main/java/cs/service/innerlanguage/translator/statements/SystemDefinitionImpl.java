@@ -6,14 +6,15 @@
 package cs.service.innerlanguage.translator.statements;
 
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
  * @author anisimov_a_v
  */
 public class SystemDefinitionImpl extends DataStatement {
-	public SystemDefinitionImpl(AbstractNodeContext parent, String typeName, String dataName) {
-		super(parent, typeName, dataName, null);
+	public SystemDefinitionImpl(AbstractNodeContext parent, String typeName, String dataName, Token start, Token stop) {
+		super(parent, typeName, dataName, null, start, stop);
 	}
 
 	@Override

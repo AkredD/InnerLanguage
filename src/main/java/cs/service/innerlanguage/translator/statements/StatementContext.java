@@ -6,13 +6,14 @@
 package cs.service.innerlanguage.translator.statements;
 
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
  * @author anisimov_a_v
  */
 public abstract class StatementContext extends AbstractNodeContext {
-	protected StatementContext(AbstractNodeContext parent) {
-		super(parent);
+	protected StatementContext(AbstractNodeContext parent, Token start, Token stop) {
+		super(parent, start, stop);
 	}
 }

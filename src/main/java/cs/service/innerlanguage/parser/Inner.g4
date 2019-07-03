@@ -134,7 +134,7 @@ continueStatement   : CONTINUE ENDCOMMAND;
 
 breakStatement      : BREAK ENDCOMMAND;
 
-callStatement       : CALL TYPENAME ENDCOMMAND DATANAME 
+callStatement       : CALL (TYPENAME | DATANAME) ENDCOMMAND DATANAME
                       OPENBRACKET
                       (varValue (COMMA varValue)*)? 
                       CLOSEBRACKET;

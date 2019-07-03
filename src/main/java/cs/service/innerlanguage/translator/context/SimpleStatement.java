@@ -5,12 +5,14 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import org.antlr.v4.runtime.Token;
+
 /**
  *
  * @author root
  */
 public abstract class SimpleStatement extends StatementContext {
-    protected SimpleStatement(AbstractNodeContext parent) {
-        super(parent);
+    protected SimpleStatement(AbstractNodeContext parent, Token start, Token stop) {
+        super(parent, start, stop);
     }
 }

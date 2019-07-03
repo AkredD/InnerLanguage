@@ -5,14 +5,16 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import org.antlr.v4.runtime.Token;
+
 /**
  *
  * @author akredd
  */
 public class BreakImpl extends SimpleStatement{
     
-    public BreakImpl(AbstractNodeContext parent) {
-        super(parent);
+    public BreakImpl(AbstractNodeContext parent, Token start, Token stop) {
+        super(parent, start, stop);
     }
     
 }

@@ -8,6 +8,7 @@ package cs.service.innerlanguage.translator.context;
 import cs.service.innerlanguage.translator.statements.DataStatement;
 import java.util.HashMap;
 import java.util.Map;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -18,9 +19,13 @@ public abstract class AbstractNodeContext implements NodeContext {
 	protected Map<String, FunctionImpl> contextFunctions = new HashMap();
 	protected Map<String, TypeImpl> contextTypes = new HashMap();
 	protected AbstractNodeContext parent;
+	protected Token start;
+	protected Token stop;
 
-	protected AbstractNodeContext(AbstractNodeContext parent) {
+	protected AbstractNodeContext(AbstractNodeContext parent, Token start, Token stop) {
 		this.parent = parent;
+		this.start = start;
+		this.stop = stop;
 		if (parent != null) {
 			setParentMaps();
 		}
@@ -41,5 +46,10 @@ public abstract class AbstractNodeContext implements NodeContext {
 		if (parent != null) {
 			setParentMaps();
 		}
+	}
+
+	public String getPosition() {
+		return start.getLine() + ":" + start.getStartIndex() + " - " + stop.getLine() + ":" + stop.getStopIndex() + "\n"
+				  + start.getText();
 	}
 }

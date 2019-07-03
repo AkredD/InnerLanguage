@@ -6,6 +6,7 @@
 package cs.service.innerlanguage.translator.context;
 
 import java.util.List;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -14,8 +15,8 @@ import java.util.List;
 public class WhileImpl extends ExtendedStatement {
     private BinaryConditionImpl condition;
     
-    public WhileImpl(AbstractNodeContext parent, List<StatementContext> innerStatements) {
-        super(parent, innerStatements);
+    public WhileImpl(AbstractNodeContext parent, List<StatementContext> innerStatements, Token start, Token stop) {
+        super(parent, innerStatements, start, stop);
     }
     
 }

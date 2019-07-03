@@ -90,7 +90,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitSystemDef(InnerParser.SystemDefContext ctx) {
-		return new SystemDefinitionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText());
+		return new SystemDefinitionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText(), ctx.start, ctx.stop);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	public NodeContext visitConstantDef(InnerParser.ConstantDefContext ctx) {
 		List<NodeContext> values = null;
-		ConstantDefinitionImpl definition = new ConstantDefinitionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText(), null);
+		ConstantDefinitionImpl definition = new ConstantDefinitionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()
 					  .map(valueCtx -> {
@@ -129,7 +129,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	public NodeContext visitDataDef(InnerParser.DataDefContext ctx) {
 		List<NodeContext> values = null;
-		DataDefinitionImpl definition = new DataDefinitionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText(), null);
+		DataDefinitionImpl definition = new DataDefinitionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()
 					  .map(valueCtx -> {
@@ -156,7 +156,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	public NodeContext visitType(InnerParser.TypeContext ctx) {
 		List<DataStatement> staticBlock = null;
 		List<FunctionImpl> functions = null;
-		TypeImpl type = new TypeImpl(null, ctx.TYPENAME().getText(), null, null);
+		TypeImpl type = new TypeImpl(null, ctx.TYPENAME().getText(), null, null, ctx.start, ctx.stop);
 		if (ctx.staticBlock() != null) {
 			staticBlock = ctx.staticBlock().varDefinition()
 					  .stream()
@@ -205,11 +205,11 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	public NodeContext visitFunction(InnerParser.FunctionContext ctx) {
 		// TYPENAME(0) - function type name, DATANAME(0) - function name
-		FunctionImpl foo = new FunctionImpl(null, ctx.TYPENAME(0).getText(), ctx.DATANAME(0).getText(), null, null);
+		FunctionImpl foo = new FunctionImpl(null, ctx.TYPENAME(0).getText(), ctx.DATANAME(0).getText(), null, null, ctx.start, ctx.stop);
 		List<ParameterImpl> parameters = new ArrayList();
 		List<StatementContext> statements = null;
 		for (int i = 1; i < ctx.TYPENAME().size(); ++i) {
-			parameters.add(new ParameterImpl(foo, ctx.TYPENAME(i).getText(), ctx.DATANAME(i).getText()));
+			parameters.add(new ParameterImpl(foo, ctx.TYPENAME(i).getText(), ctx.DATANAME(i).getText(), ctx.start, ctx.stop));
 		}
 		if (ctx.statement() != null) {
 			statements = ctx.statement().stream()
@@ -248,7 +248,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitWriteStatement(InnerParser.WriteStatementContext ctx) {
-		WriteStatementImpl st = new WriteStatementImpl(null, null);
+		WriteStatementImpl st = new WriteStatementImpl(null, null, ctx.start, ctx.stop);
 		List<NodeContext> values = null;
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()
@@ -274,7 +274,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitCallStatement(InnerParser.CallStatementContext ctx) {
-		CallFunctionImpl callFoo = new CallFunctionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText(), null);
+		CallFunctionImpl callFoo = new CallFunctionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		List<NodeContext> values = null;
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()
@@ -300,7 +300,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitBreakStatement(InnerParser.BreakStatementContext ctx) {
-		return new BreakImpl(null);
+		return new BreakImpl(null, ctx.start, ctx.stop);
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitContinueStatement(InnerParser.ContinueStatementContext ctx) {
-		return new ContinueImpl(null);
+		return new ContinueImpl(null, ctx.start, ctx.stop);
 	}
 
 	/**
@@ -324,7 +324,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitReturnStatement(InnerParser.ReturnStatementContext ctx) {
-		ReturnImpl returnStatement = new ReturnImpl(null, null);
+		ReturnImpl returnStatement = new ReturnImpl(null, null, ctx.start, ctx.stop);
 		NodeContext value = ctx.varValue().accept(this);
 		if (AbstractNodeContext.class.isAssignableFrom(value.getClass())) {
 			((AbstractNodeContext) value).setParent(returnStatement);
@@ -342,7 +342,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitMinusEqStatemet(InnerParser.MinusEqStatemetContext ctx) {
-		MinusEqImpl minusStatement = new MinusEqImpl(null, ctx.DATANAME().getText(), null);
+		MinusEqImpl minusStatement = new MinusEqImpl(null, ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		NodeContext value = ctx.varValue().accept(this);
 		if (AbstractNodeContext.class.isAssignableFrom(value.getClass())) {
 			((AbstractNodeContext) value).setParent(minusStatement);
@@ -360,7 +360,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitPlusEqStatemet(InnerParser.PlusEqStatemetContext ctx) {
-		PlusEqImpl plusEqStatement = new PlusEqImpl(null, ctx.DATANAME().getText(), null);
+		PlusEqImpl plusEqStatement = new PlusEqImpl(null, ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		NodeContext value = ctx.varValue().accept(this);
 		if (AbstractNodeContext.class.isAssignableFrom(value.getClass())) {
 			((AbstractNodeContext) value).setParent(plusEqStatement);
@@ -378,7 +378,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitEqStatement(InnerParser.EqStatementContext ctx) {
-		EqImpl eqStatement = new EqImpl(null, ctx.DATANAME().getText(), null);
+		EqImpl eqStatement = new EqImpl(null, ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		NodeContext value = ctx.varValue().accept(this);
 		if (AbstractNodeContext.class.isAssignableFrom(value.getClass())) {
 			((AbstractNodeContext) value).setParent(eqStatement);
@@ -397,7 +397,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	public NodeContext visitWhileStatement(InnerParser.WhileStatementContext ctx) {
 		ExpressionContext expCtx = (ExpressionContext) ctx.condition().accept(this);
-		WhileImpl whileSt = new WhileImpl(null, null, expCtx);
+		WhileImpl whileSt = new WhileImpl(null, null, expCtx, ctx.start, ctx.stop);
 		whileSt.setInnerStatements(ctx.statement().stream()
 				  .map(stCtx -> {
 					  StatementContext st = (StatementContext) stCtx.accept(this);
@@ -422,7 +422,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		ExpressionContext expCtx = (ExpressionContext) ctx.condition().accept(this);
 		List<StatementContext> mainBlockContexts = new ArrayList();
 		List<StatementContext> elseBlockContexts = new ArrayList();
-		IfImpl ifSt = new IfImpl(null, null, expCtx);
+		IfImpl ifSt = new IfImpl(null, null, expCtx, ctx.start, ctx.stop);
 		expCtx.setParent(ifSt);
 		Integer startMainBlock = 0;
 		Integer startElseBlock = 0;
@@ -449,7 +449,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		}
 		ifSt.setMainBlockPart(mainBlockContexts);
 		ifSt.setElseBlockPart(elseBlockContexts);
-		return ifSt; //To change body of generated methods, choose Tools | Templates.
+		return ifSt;
 	}
 
 	/**
@@ -463,7 +463,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	public NodeContext visitExpression(InnerParser.ExpressionContext ctx) {
 		if (ctx.OPENBRACKET() != null) {
-			ExpressionContext expCtx = new ExpressionContext(null, true, null);
+			ExpressionContext expCtx = new ExpressionContext(null, true, null, ctx.start, ctx.stop);
 			NodeContext inner = ctx.expression().get(0).accept(this);
 			if (AbstractNodeContext.class.isAssignableFrom(inner.getClass())) {
 				((AbstractNodeContext) inner).setParent(expCtx);
@@ -472,7 +472,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return expCtx;
 		}
 		if (ctx.UNARYOPERATOR() != null) {
-			UnaryExpressionImpl unary = new UnaryExpressionImpl(null, null, ctx.UNARYOPERATOR().getText());
+			UnaryExpressionImpl unary = new UnaryExpressionImpl(null, null, ctx.UNARYOPERATOR().getText(), ctx.start, ctx.stop);
 			NodeContext inner = ctx.expression().get(0).accept(this);
 			if (AbstractNodeContext.class.isAssignableFrom(inner.getClass())) {
 				((AbstractNodeContext) inner).setParent(unary);
@@ -481,7 +481,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return unary;
 		}
 		if (ctx.expression().size() == 2) {
-			BinaryExpressionImpl expCtx = new BinaryExpressionImpl(null, null, null, ctx.OPERATOR().getText());
+			BinaryExpressionImpl expCtx = new BinaryExpressionImpl(null, null, null, ctx.OPERATOR().getText(), ctx.start, ctx.stop);
 			NodeContext left = (NodeContext) ctx.expression().get(0).accept(this);
 			NodeContext right = (NodeContext) ctx.expression().get(1).accept(this);
 			if (AbstractNodeContext.class.isAssignableFrom(left.getClass())) {
@@ -504,13 +504,13 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return new BaseValueImpl(ctx.DATE().getText());
 		}
 		if (ctx.DATANAME() != null) {
-			return new VariableValueImpl(null, ctx.DATANAME().getText());
+			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
 		}
 		if (ctx.callStatement() != null) {
 			return ctx.callStatement().accept(this);
 		}
 		System.out.println("smth wrong in expr");
-		return super.visitExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+		return super.visitExpression(ctx);
 	}
 
 	/**
@@ -523,7 +523,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	public NodeContext visitBoolExpression(InnerParser.BoolExpressionContext ctx) {
 		if (ctx.OPENBRACKET() != null) {
-			ExpressionContext expCtx = new ExpressionContext(null, true, null);
+			ExpressionContext expCtx = new ExpressionContext(null, true, null, ctx.start, ctx.stop);
 			NodeContext inner = ctx.boolExpression().accept(this);
 			if (AbstractNodeContext.class.isAssignableFrom(inner.getClass())) {
 				((AbstractNodeContext) inner).setParent(expCtx);
@@ -532,7 +532,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return expCtx;
 		}
 		if (ctx.expression() != null && !ctx.expression().isEmpty()) {
-			BinaryBoolExprImpl expCtx = new BinaryBoolExprImpl(null, null, null, ctx.CONDITIONOPERATOR().getText());
+			BinaryBoolExprImpl expCtx = new BinaryBoolExprImpl(null, null, null, ctx.CONDITIONOPERATOR().getText(), ctx.start, ctx.stop);
 			NodeContext left = (NodeContext) ctx.expression().get(0).accept(this);
 			NodeContext right = (NodeContext) ctx.expression().get(1).accept(this);
 			if (AbstractNodeContext.class.isAssignableFrom(left.getClass())) {
@@ -555,7 +555,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return new BaseValueImpl(ctx.DATE().getText());
 		}
 		if (ctx.DATANAME() != null) {
-			return new VariableValueImpl(null, ctx.DATANAME().getText());
+			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
 		}
 		if (ctx.callStatement() != null) {
 			return ctx.callStatement().accept(this);
@@ -575,7 +575,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	public NodeContext visitCondition(InnerParser.ConditionContext ctx) {
 		if (ctx.OPENBRACKET() != null) {
-			ExpressionContext expCtx = new ExpressionContext(null, true, null);
+			ExpressionContext expCtx = new ExpressionContext(null, true, null, ctx.start, ctx.stop);
 			NodeContext inner = ctx.condition().get(0).accept(this);
 			if (AbstractNodeContext.class.isAssignableFrom(inner.getClass())) {
 				((AbstractNodeContext) inner).setParent(expCtx);
@@ -584,7 +584,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return expCtx;
 		}
 		if (ctx.CONDITIONUNARYPERATOR() != null) {
-			UnaryConditionImpl unary = new UnaryConditionImpl(null, null, ctx.CONDITIONUNARYPERATOR().getText());
+			UnaryConditionImpl unary = new UnaryConditionImpl(null, null, ctx.CONDITIONUNARYPERATOR().getText(), ctx.start, ctx.stop);
 			NodeContext inner = ctx.condition().get(0).accept(this);
 			if (AbstractNodeContext.class.isAssignableFrom(inner.getClass())) {
 				((AbstractNodeContext) inner).setParent(unary);
@@ -593,7 +593,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return unary;
 		}
 		if (ctx.condition() != null && ctx.condition().size() == 2) {
-			BinaryConditionImpl expCtx = new BinaryConditionImpl(null, null, null, ctx.CONDITIONBOOLOPERATOR().getText());
+			BinaryConditionImpl expCtx = new BinaryConditionImpl(null, null, null, ctx.CONDITIONBOOLOPERATOR().getText(), ctx.start, ctx.stop);
 			NodeContext left = (NodeContext) ctx.condition().get(0).accept(this);
 			NodeContext right = (NodeContext) ctx.condition().get(1).accept(this);
 			if (AbstractNodeContext.class.isAssignableFrom(left.getClass())) {
@@ -607,7 +607,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return expCtx;
 		}
 		if (ctx.condition() != null && ctx.condition().size() == 1 && ctx.boolExpression() != null && !ctx.boolExpression().isEmpty()) {
-			BinaryConditionImpl expCtx = new BinaryConditionImpl(null, null, null, ctx.CONDITIONBOOLOPERATOR().getText());
+			BinaryConditionImpl expCtx = new BinaryConditionImpl(null, null, null, ctx.CONDITIONBOOLOPERATOR().getText(), ctx.start, ctx.stop);
 			NodeContext left = (NodeContext) ctx.condition().get(0).accept(this);
 			NodeContext right = (NodeContext) ctx.boolExpression().accept(this);
 			if (AbstractNodeContext.class.isAssignableFrom(left.getClass())) {
@@ -627,7 +627,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return new BaseValueImpl(ctx.BOOLEAN().getText());
 		}
 		if (ctx.DATANAME() != null) {
-			return new VariableValueImpl(null, ctx.DATANAME().getText());
+			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
 		}
 		if (ctx.callStatement() != null) {
 			return ctx.callStatement().accept(this);
@@ -659,7 +659,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return new BaseValueImpl(ctx.DATE().getText());
 		}
 		if (ctx.DATANAME() != null) {
-			return new VariableValueImpl(null, ctx.DATANAME().getText());
+			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
 		}
 		if (ctx.callStatement() != null) {
 			return ctx.callStatement().accept(this);

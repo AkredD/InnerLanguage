@@ -6,6 +6,7 @@
 package cs.service.innerlanguage.translator.context;
 
 import java.util.List;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -16,8 +17,8 @@ public class CallFunctionImpl extends SimpleStatement {
     private String functionName;
     private List<NodeContext> values;
     
-    public CallFunctionImpl(AbstractNodeContext parent, String typeName, String functionName, List<NodeContext> values) {
-        super(parent);
+    public CallFunctionImpl(AbstractNodeContext parent, String typeName, String functionName, List<NodeContext> values, Token start, Token stop) {
+        super(parent, start, stop);
         this.typeName = typeName;
         this.functionName = functionName;
         this.values = values;

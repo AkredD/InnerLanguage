@@ -9,6 +9,7 @@ import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.statements.SimpleStatement;
 import java.util.List;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -21,8 +22,8 @@ public abstract class DataStatement extends SimpleStatement {
 	protected List<NodeContext> values;
 	protected CallFunctionImpl callFunction;
 
-	protected DataStatement(AbstractNodeContext parent, String typeName, String dataName, List<NodeContext> values) {
-		super(parent);
+	protected DataStatement(AbstractNodeContext parent, String typeName, String dataName, List<NodeContext> values, Token start, Token stop) {
+		super(parent, start, stop);
 		this.type = typeName;
 		this.dataName = dataName;
 		this.values = values;

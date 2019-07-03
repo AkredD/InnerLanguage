@@ -9,6 +9,7 @@ import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -17,8 +18,8 @@ import java.util.stream.Collectors;
 public class WriteStatementImpl extends SimpleStatement {
 	private List<NodeContext> values;
 
-	public WriteStatementImpl(AbstractNodeContext parent, List<NodeContext> values) {
-		super(parent);
+	public WriteStatementImpl(AbstractNodeContext parent, List<NodeContext> values, Token start, Token stop) {
+		super(parent, start, stop);
 		this.values = values;
 	}
 

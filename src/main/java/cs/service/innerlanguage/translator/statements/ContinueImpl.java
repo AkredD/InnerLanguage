@@ -7,14 +7,15 @@ package cs.service.innerlanguage.translator.statements;
 
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.statements.SimpleStatement;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
  * @author anisimov_a_v
  */
 public class ContinueImpl extends SimpleStatement {
-	public ContinueImpl(AbstractNodeContext parent) {
-		super(parent);
+	public ContinueImpl(AbstractNodeContext parent, Token start, Token stop) {
+		super(parent, start, stop);
 	}
 
 	@Override

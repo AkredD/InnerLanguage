@@ -8,6 +8,7 @@ package cs.service.innerlanguage.translator.statements;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.statements.SingleValueStatement;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -16,8 +17,8 @@ import cs.service.innerlanguage.translator.statements.SingleValueStatement;
 public class EqImpl extends SingleValueStatement {
 	private String dataName;
 
-	public EqImpl(AbstractNodeContext parent, String dataName, NodeContext value) {
-		super(parent, value);
+	public EqImpl(AbstractNodeContext parent, String dataName, NodeContext value, Token start, Token stop) {
+		super(parent, value, start, stop);
 		this.dataName = dataName;
 	}
 

@@ -9,6 +9,7 @@ import cs.service.innerlanguage.translator.statements.ExtendedStatement;
 import cs.service.innerlanguage.translator.statements.StatementContext;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.Pair;
 
 /**
@@ -21,8 +22,8 @@ public class FunctionImpl extends WrapperStatement {
 	private List<ParameterImpl> parameters;
 	private List<StatementContext> innerStatements;
 
-	public FunctionImpl(AbstractNodeContext parent, String typeName, String functionName, List<ParameterImpl> parameters, List<StatementContext> innerStatements) {
-		super(parent);
+	public FunctionImpl(AbstractNodeContext parent, String typeName, String functionName, List<ParameterImpl> parameters, List<StatementContext> innerStatements, Token start, Token stop) {
+		super(parent, start, stop);
 		this.functionName = functionName;
 		this.typeName = typeName;
 		this.parameters = parameters;
