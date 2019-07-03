@@ -1,0 +1,108 @@
+{
+	"typeNode" : {
+		"classPath" : "java.lang.Object",
+		"className" : "Object",
+		"parent" : null,
+		"instanceable" : false,
+		"methods" : [
+			{
+				"outputClassName" : "java.lang.Object",
+				"methodName" : "clone",
+				"constructor" : null
+			},
+			{
+				"outputClassName" : "java.lang.Object",
+				"methodName" : "equals",
+				"constructor" : {
+					"parameters" : {
+						"obj" : "java.lang.Object"
+					}
+				}
+			},
+			{
+				"outputClassName" : "java.lang.Class",
+				"methodName" : "getClass",
+				"constructor" : null
+			},
+			{
+				"outputClassName" : "java.lang.Integer",
+				"methodName" : "hashCode",
+				"constructor" : null
+			},
+			{
+				"outputClassName" : "java.lang.String",
+				"methodName" : "toString",
+				"constructor" : null
+			}
+		]
+	},
+	"innerTypes" : [
+		{
+			"typeNode" : {
+				"classPath" : "java.lang.String",
+				"className" : "String",
+				"parent" : "java.lang.Object",
+				"instanceable" : true,
+				"methods" : [
+					{
+						"outputClassName" : "java.lang.Character",
+						"methodName" : "charAt",
+						"constructor" : {
+							"parameters" : {
+								"index" : "java.lang.Integer"
+							}
+						}
+					},
+					{
+						"outputClassName" : "java.lang.Integer",
+						"methodName" : "length",
+						"constructor" : null
+					},
+					{
+						"outputClassName" : "java.lang.String",
+						"methodName" : "toLowerCase",
+						"constructor" : null
+					},
+					{
+						"outputClassName" : "java.lang.String",
+						"methodName" : "valueOf",
+						"constructor" : {
+							"parameters" : {
+								"index" : "java.lang.Integer"
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"typeNode" : {
+				"classPath" : "java.lang.Character",
+				"className" : "Character",
+				"parent" : "java.lang.Object",
+				"instanceable" : true,
+				"methods" : [
+				]
+			}
+		},
+		{
+			"typeNode" : {
+				"classPath" : "java.lang.Boolean",
+				"className" : "Boolean",
+				"parent" : "java.lang.Object",
+				"instanceable" : true,
+				"methods" : [
+					{
+						"outputClassName" : "java.lang.String",
+						"methodName" : "valueOf",
+						"constructor" : {
+							"parameters" : {
+								"s" : "java.lang.String"
+							}
+						}
+					}
+				]
+			}
+		}
+	]
+}

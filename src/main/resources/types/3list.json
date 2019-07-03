@@ -1,0 +1,118 @@
+{
+	"typeNode" : {
+		"classPath" : "java.util.ArrayList",
+		"className" : "List",
+		"parent" : "java.lang.Object",
+		"instanceable" : true,
+		"methods" : [
+			{
+				"outputClassName" : "java.lang.Boolean",
+				"methodName" : "add",
+				"constructor" : {
+					"parameters" : {
+						"e" : "java.lang.Object"
+					}
+				}
+			},
+			{
+				"outputClassName" : "void",
+				"methodName" : "add",
+				"constructor" : {
+					"parameters" : {
+						"index" : "java.lang.Integer",
+						"e" : "java.lang.Object"
+					}
+				}
+			},
+			{
+				"outputClassName" : "java.lang.Boolean",
+				"methodName" : "addAll",
+				"constructor" : {
+					"parameters" : {
+						"c" : "java.util.ArrayList"
+					}
+				}
+			},
+			{
+				"outputClassName" : "java.lang.Boolean",
+				"methodName" : "addAll",
+				"constructor" : {
+					"parameters" : {
+						"index" : "java.lang.Integer",
+						"c" : "java.util.ArrayList"
+					}
+				}
+			},
+			{
+				"outputClassName" : "void",
+				"methodName" : "clear",
+				"constructor" : null
+			},
+			{
+				"outputClassName" : "java.lang.Boolean",
+				"methodName" : "contains",
+				"constructor" : {
+					"parameters" : {
+						"o" : "java.lang.Object"
+					}
+				}
+			},
+			{
+				"outputClassName" : "java.lang.Object",
+				"methodName" : "get",
+				"constructor" : {
+					"parameters" : {
+						"index" : "java.lang.Integer"
+					}
+				}
+			},
+			{
+				"outputClassName" : "java.lang.Integer",
+				"methodName" : "indexOf",
+				"constructor" : {
+					"parameters" : {
+						"o" : "java.lang.Object"
+					}
+				}
+			},
+			{
+				"outputClassName" : "java.lang.Boolean",
+				"methodName" : "isEmpty",
+				"constructor" : null
+			},
+			{
+				"outputClassName" : "java.lang.Object",
+				"methodName" : "remove",
+				"constructor" : {
+					"parameters" : {
+						"index" : "java.lang.Integer"
+					}
+				}
+			},
+			{
+				"outputClassName" : "java.lang.Boolean",
+				"methodName" : "remove",
+				"constructor" : {
+					"parameters" : {
+						"o" : "java.lang.Object"
+					}
+				}
+			},
+			{
+				"outputClassName" : "java.lang.Integer",
+				"methodName" : "size",
+				"constructor" : null
+			},
+			{
+				"outputClassName" : "java.lang.Object",
+				"methodName" : "set",
+				"constructor" : {
+					"parameters" : {
+						"index" : "java.lang.Integer",
+						"o" : "java.lang.Object"
+					}
+				}
+			}
+		]
+	}
+}
