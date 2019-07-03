@@ -6,6 +6,9 @@
 package cs.service.innerlanguage.translator;
 
 import cs.service.innerlanguage.parser.InnerParser;
+import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
+import cs.service.innerlanguage.parser.exceptions.ExecutionException;
+import cs.service.innerlanguage.parser.exceptions.InnerException;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.BaseValueImpl;
 import cs.service.innerlanguage.translator.context.BinaryBoolExprImpl;
@@ -34,13 +37,21 @@ import cs.service.innerlanguage.translator.context.UnaryExpressionImpl;
 import cs.service.innerlanguage.translator.context.VariableValueImpl;
 import cs.service.innerlanguage.translator.statements.WhileImpl;
 import cs.service.innerlanguage.translator.statements.WriteStatementImpl;
+import cs.service.innerlanguage.translator.types.basic.BasicProvider;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
+import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  *
@@ -90,7 +101,8 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitSystemDef(InnerParser.SystemDefContext ctx) {
-		return new SystemDefinitionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText(), ctx.start, ctx.stop);
+		checkTypeExistence(ctx.TYPENAME(), ctx.TYPENAME().getText());
+		return new SystemDefinitionImpl(null, BasicProvider.instance().getTypesByName().get(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), ctx.start, ctx.stop);
 	}
 
 	/**
@@ -102,8 +114,9 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitConstantDef(InnerParser.ConstantDefContext ctx) {
+		checkTypeExistence(ctx, ctx.TYPENAME().getText());
 		List<NodeContext> values = null;
-		ConstantDefinitionImpl definition = new ConstantDefinitionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
+		ConstantDefinitionImpl definition = new ConstantDefinitionImpl(null, BasicProvider.instance().getTypesByName().get(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()
 					  .map(valueCtx -> {
@@ -128,8 +141,9 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitDataDef(InnerParser.DataDefContext ctx) {
+		checkTypeExistence(ctx, ctx.TYPENAME().getText());
 		List<NodeContext> values = null;
-		DataDefinitionImpl definition = new DataDefinitionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
+		DataDefinitionImpl definition = new DataDefinitionImpl(null, BasicProvider.instance().getTypesByName().get(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()
 					  .map(valueCtx -> {
@@ -205,11 +219,13 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	public NodeContext visitFunction(InnerParser.FunctionContext ctx) {
 		// TYPENAME(0) - function type name, DATANAME(0) - function name
-		FunctionImpl foo = new FunctionImpl(null, ctx.TYPENAME(0).getText(), ctx.DATANAME(0).getText(), null, null, ctx.start, ctx.stop);
+		checkTypeExistence(ctx.TYPENAME(0), ctx.TYPENAME(0).getText());
+		FunctionImpl foo = new FunctionImpl(null, BasicProvider.instance().getTypesByName().get(ctx.TYPENAME(0).getText()), ctx.DATANAME(0).getText(), null, null, ctx.start, ctx.stop);
 		List<ParameterImpl> parameters = new ArrayList();
 		List<StatementContext> statements = null;
 		for (int i = 1; i < ctx.TYPENAME().size(); ++i) {
-			parameters.add(new ParameterImpl(foo, ctx.TYPENAME(i).getText(), ctx.DATANAME(i).getText(), ctx.start, ctx.stop));
+			checkTypeExistence(ctx.TYPENAME(i), ctx.TYPENAME(i).getText());
+			parameters.add(new ParameterImpl(foo, BasicProvider.instance().getTypesByName().get(ctx.TYPENAME(i).getText()), ctx.DATANAME(i).getText(), ctx.start, ctx.stop));
 		}
 		if (ctx.statement() != null) {
 			statements = ctx.statement().stream()
@@ -461,7 +477,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 * BinaryExpressionImpl || varValue)
 	 */
 	@Override
-	public NodeContext visitExpression(InnerParser.ExpressionContext ctx) {
+	public NodeContext visitExpression(InnerParser.ExpressionContext ctx) throws InnerException {
 		if (ctx.OPENBRACKET() != null) {
 			ExpressionContext expCtx = new ExpressionContext(null, true, null, ctx.start, ctx.stop);
 			NodeContext inner = ctx.expression().get(0).accept(this);
@@ -495,13 +511,18 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return expCtx;
 		}
 		if (ctx.DQ_STRING() != null) {
-			return new BaseValueImpl(ctx.DQ_STRING().getText());
+			return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("String"), ctx.DQ_STRING().getText());
 		}
 		if (ctx.NUMBER() != null) {
-			return new BaseValueImpl(ctx.NUMBER().getText());
+			Number number = NumberUtils.createNumber(ctx.NUMBER().getText());
+			return new BaseValueImpl(BasicProvider.instance().getTypesByName().get(number.getClass().getSimpleName()), number);
 		}
 		if (ctx.DATE() != null) {
-			return new BaseValueImpl(ctx.DATE().getText());
+			try {
+				return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Date"),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
+			} catch (ParseException ex) {
+				handleException(ExceptionMessage.CANT_PARSE_DATE, ctx.DATE().getText(), ctx.getStart());
+			}
 		}
 		if (ctx.DATANAME() != null) {
 			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
@@ -521,7 +542,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 * @return the value of NodeContext (ExpressionContext || BinaryBoolExprImpl || varValue)
 	 */
 	@Override
-	public NodeContext visitBoolExpression(InnerParser.BoolExpressionContext ctx) {
+	public NodeContext visitBoolExpression(InnerParser.BoolExpressionContext ctx) throws InnerException {
 		if (ctx.OPENBRACKET() != null) {
 			ExpressionContext expCtx = new ExpressionContext(null, true, null, ctx.start, ctx.stop);
 			NodeContext inner = ctx.boolExpression().accept(this);
@@ -546,13 +567,18 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return expCtx;
 		}
 		if (ctx.DQ_STRING() != null) {
-			return new BaseValueImpl(ctx.DQ_STRING().getText());
+			return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("String"), ctx.DQ_STRING().getText());
 		}
 		if (ctx.NUMBER() != null) {
-			return new BaseValueImpl(ctx.NUMBER().getText());
+			Number number = NumberUtils.createNumber(ctx.NUMBER().getText());
+			return new BaseValueImpl(BasicProvider.instance().getTypesByName().get(number.getClass().getSimpleName()), number);
 		}
 		if (ctx.DATE() != null) {
-			return new BaseValueImpl(ctx.DATE().getText());
+			try {
+				return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Date"),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
+			} catch (ParseException ex) {
+				handleException(ExceptionMessage.CANT_PARSE_DATE, ctx.DATE().getText(), ctx.getStart());
+			}
 		}
 		if (ctx.DATANAME() != null) {
 			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
@@ -624,7 +650,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return ctx.boolExpression().accept(this);
 		}
 		if (ctx.BOOLEAN() != null) {
-			return new BaseValueImpl(ctx.BOOLEAN().getText());
+			return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Boolean"), Boolean.valueOf(ctx.BOOLEAN().getText()));
 		}
 		if (ctx.DATANAME() != null) {
 			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
@@ -647,16 +673,21 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	public NodeContext visitVarValue(InnerParser.VarValueContext ctx) {
 		if (ctx.BOOLEAN() != null) {
-			return new BaseValueImpl(ctx.BOOLEAN().getText());
+			return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Boolean"), Boolean.valueOf(ctx.BOOLEAN().getText()));
 		}
 		if (ctx.DQ_STRING() != null) {
-			return new BaseValueImpl(ctx.DQ_STRING().getText());
+			return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("String"), ctx.DQ_STRING().getText());
 		}
 		if (ctx.NUMBER() != null) {
-			return new BaseValueImpl(ctx.NUMBER().getText());
+			Number number = NumberUtils.createNumber(ctx.NUMBER().getText());
+			return new BaseValueImpl(BasicProvider.instance().getTypesByName().get(number.getClass().getSimpleName()), number);
 		}
 		if (ctx.DATE() != null) {
-			return new BaseValueImpl(ctx.DATE().getText());
+			try {
+				return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Date"),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
+			} catch (ParseException ex) {
+				handleException(ExceptionMessage.CANT_PARSE_DATE, ctx.DATE().getText(), ctx.getStart());
+			}
 		}
 		if (ctx.DATANAME() != null) {
 			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
@@ -677,5 +708,22 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	protected NodeContext aggregateResult(NodeContext aggregate, NodeContext nextResult) {
 		return super.aggregateResult(aggregate, nextResult); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	private void handleException(ExceptionMessage cause, String details, Token start) {
+		String message = String.format(cause.getLocalizedMessage(), details);
+		throw new ExecutionException(message, start.getLine(), start.getCharPositionInLine());
+	}
+
+	private void checkTypeExistence(ParserRuleContext ctx, String typeName) {
+		if (!BasicProvider.instance().getTypesByName().containsKey(typeName)) {
+			handleException(ExceptionMessage.TYPE_NOT_EXIST, typeName, ctx.getStart());
+		}
+	}
+
+	private void checkTypeExistence(TerminalNode node, String typeName) {
+		if (!BasicProvider.instance().getTypesByName().containsKey(typeName)) {
+			handleException(ExceptionMessage.TYPE_NOT_EXIST, typeName, node.getSymbol());
+		}
 	}
 }

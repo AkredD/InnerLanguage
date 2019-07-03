@@ -7,6 +7,7 @@ package cs.service.innerlanguage.translator.context;
 
 import cs.service.innerlanguage.translator.statements.ExtendedStatement;
 import cs.service.innerlanguage.translator.statements.StatementContext;
+import cs.service.innerlanguage.translator.types.TypeWrapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.Token;
@@ -18,14 +19,14 @@ import org.antlr.v4.runtime.misc.Pair;
  */
 public class FunctionImpl extends WrapperStatement {
 	private String functionName;
-	private String typeName;
+	private TypeWrapper type;
 	private List<ParameterImpl> parameters;
 	private List<StatementContext> innerStatements;
 
-	public FunctionImpl(AbstractNodeContext parent, String typeName, String functionName, List<ParameterImpl> parameters, List<StatementContext> innerStatements, Token start, Token stop) {
+	public FunctionImpl(AbstractNodeContext parent, TypeWrapper type, String functionName, List<ParameterImpl> parameters, List<StatementContext> innerStatements, Token start, Token stop) {
 		super(parent, start, stop);
 		this.functionName = functionName;
-		this.typeName = typeName;
+		this.type = type;
 		this.parameters = parameters;
 		this.innerStatements = innerStatements;
 	}
@@ -41,7 +42,7 @@ public class FunctionImpl extends WrapperStatement {
 	@Override
 	public String toString() {
 		StringBuilder function = new StringBuilder();
-		function.append("public ").append(typeName).append(" ").append(functionName)
+		function.append("public ").append(type.getClassName()).append(" ").append(functionName)
 				  .append("(")
 				  .append(parameters.stream()
 							 .map(param -> {

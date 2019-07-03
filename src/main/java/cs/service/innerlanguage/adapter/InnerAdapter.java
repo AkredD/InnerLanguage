@@ -8,6 +8,7 @@ package cs.service.innerlanguage.adapter;
 import cs.service.innerlanguage.parser.InnerLexer;
 import cs.service.innerlanguage.parser.InnerParser;
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
+import cs.service.innerlanguage.parser.exceptions.InnerException;
 import cs.service.innerlanguage.parser.exceptions.ParsingException;
 import cs.service.innerlanguage.translator.InnerBaseVisitor;
 import cs.service.innerlanguage.translator.InnerVisitor;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
@@ -36,7 +38,6 @@ public class InnerAdapter {
 											+ "DATA: Integer a VALUES(123)\n"
 											+ ".\n"
 											+ "CONSTANT: Integer b VALUES(412, 312).\n"
-											+ "SYSTEM: BaseObject bo.\n"
 											+ ")\n"
 											+ "\n"
 											+ "FUNCTION Void main () \n"
@@ -76,8 +77,8 @@ public class InnerAdapter {
 											+ "END.";
 
 	public static void main(String[] args) {
-		showBasicTypes();
-		//InnerParser.InnerContext context = prepareContext(query);
+		//showBasicTypes();
+		InnerParser.InnerContext context = prepareContext(query);
 	}
 
 	private static void showBasicTypes() {
@@ -134,7 +135,7 @@ public class InnerAdapter {
 			//System.out.println(csdmlQuery);
 			System.out.println("\n\n----------------------------------------------------------------------\n\n");
 			System.out.println(((AbstractNodeContext) obj).getPosition());
-			//System.out.println(obj.toString());
+			System.out.println(obj.toString());
 		} catch (ParseCancellationException ex) {
 			Throwable cause = ex.getCause();
 			String message;
