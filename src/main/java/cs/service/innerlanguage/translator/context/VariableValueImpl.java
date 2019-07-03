@@ -5,6 +5,8 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import org.antlr.v4.runtime.Token;
+
 /**
  *
  * @author anisimov_a_v
@@ -12,8 +14,8 @@ package cs.service.innerlanguage.translator.context;
 public class VariableValueImpl extends AbstractNodeContext {
 	private String name;
 
-	public VariableValueImpl(AbstractNodeContext parent, String name) {
-		super(parent);
+	public VariableValueImpl(AbstractNodeContext parent, String name, Token start, Token stop) {
+		super(parent, start, stop);
 		this.name = name;
 	}
 

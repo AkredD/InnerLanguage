@@ -26,12 +26,10 @@ import java.util.logging.Logger;
 public final class BasicProvider {
 	private static final String TYPEPATH = "types";
 	private static BasicProvider instance;
-	private final Map<String, TypeWrapper> typesByName;
-	private final Map<String, TypeWrapper> typesByClassName;
+	private Map<String, TypeWrapper> typesByName;
+	private Map<String, TypeWrapper> typesByClassName;
 
 	private BasicProvider() {
-		this.typesByName = new HashMap();
-		this.typesByClassName = new HashMap();
 		reload();
 	}
 
@@ -55,6 +53,8 @@ public final class BasicProvider {
 	}
 
 	public void reload() {
+		this.typesByName = new HashMap();
+		this.typesByClassName = new HashMap();
 		try {
 			for (String name : getResourceFiles(TYPEPATH)) {
 				ObjectMapper mapper = new ObjectMapper();

@@ -7,14 +7,15 @@ package cs.service.innerlanguage.translator.context;
 
 import cs.service.innerlanguage.translator.statements.DataStatement;
 import java.util.List;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
  * @author anisimov_a_v
  */
 public class ParameterImpl extends DataStatement {
-	public ParameterImpl(AbstractNodeContext parent, String typeName, String dataName) {
-		super(parent, typeName, dataName, null);
+	public ParameterImpl(AbstractNodeContext parent, String typeName, String dataName, Token start, Token stop) {
+		super(parent, typeName, dataName, null, start, stop);
 	}
 
 	@Override

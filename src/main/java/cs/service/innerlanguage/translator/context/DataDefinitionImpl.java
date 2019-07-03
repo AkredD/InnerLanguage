@@ -6,6 +6,7 @@
 package cs.service.innerlanguage.translator.context;
 
 import java.util.List;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -14,7 +15,7 @@ import java.util.List;
 public class DataDefinitionImpl extends DataStatement {
     //TODO revert with new Object View
     
-    public DataDefinitionImpl(AbstractNodeContext parent, String typeName, String dataName, List<NodeContext> values) {
-        super(parent, typeName, dataName, values);
+    public DataDefinitionImpl(AbstractNodeContext parent, String typeName, String dataName, List<NodeContext> values, Token start, Token stop) {
+        super(parent, typeName, dataName, values, start, stop);
     }
 }

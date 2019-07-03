@@ -43,6 +43,17 @@
 				"className" : "String",
 				"parent" : "java.lang.Object",
 				"instanceable" : true,
+				"constructors" : [
+					{
+						"outputClassName" : null,
+						"methodName" : null,
+						"constructor" : {
+							"parameters" : {
+								"obj" : "java.lang.String"
+							}
+						}
+					}
+				],
 				"methods" : [
 					{
 						"outputClassName" : "java.lang.Character",
@@ -81,6 +92,17 @@
 				"className" : "Character",
 				"parent" : "java.lang.Object",
 				"instanceable" : true,
+				"constructors" : [
+					{
+						"outputClassName" : null,
+						"methodName" : null,
+						"constructor" : {
+							"parameters" : {
+								"obj" : "java.lang.Character"
+							}
+						}
+					}
+				],
 				"methods" : [
 				]
 			}
@@ -91,7 +113,7 @@
 				"className" : "Boolean",
 				"parent" : "java.lang.Object",
 				"instanceable" : true,
-				"methods" : [
+				"staticMethods" : [
 					{
 						"outputClassName" : "java.lang.String",
 						"methodName" : "valueOf",
@@ -103,6 +125,47 @@
 					}
 				]
 			}
+		},
+		{
+			"typeNode" : {
+				"classPath" : "java.util.Date",
+				"className" : "Date",
+				"parent" : "java.lang.Object",
+				"instanceable" : false,
+				"methods" : [
+				]
+			},
+			"innerTypes" : [
+				{
+					"typeNode" : {
+						"classPath" : "java.text.SimpleDateFormat",
+						"className" : "DateFormatter",
+						"parent" : "java.lang.Object",
+						"instanceable" : true,
+						"methods" : [
+							{
+								"outputClassName" : "java.util.Date",
+								"methodName" : "parse",
+								"constructor" : {
+									"parameters" : {
+										"date" : "java.lang.String"
+									}
+								}
+							},
+							{
+								"outputClassName" : "java.lang.String",
+								"methodName" : "format",
+								"constructor" : {
+									"parameters" : {
+										"date" : "java.util.Date"
+									}
+								}
+							}
+						]
+					}
+				}
+			]
+
 		}
 	]
 }

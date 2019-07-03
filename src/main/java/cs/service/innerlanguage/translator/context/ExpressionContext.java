@@ -5,6 +5,8 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import org.antlr.v4.runtime.Token;
+
 /**
  *
  * @author anisimov_a_v
@@ -13,13 +15,13 @@ public class ExpressionContext extends AbstractNodeContext {
 	protected Boolean inScope;
 	private NodeContext inner;
 
-	public ExpressionContext(AbstractNodeContext parent) {
-		super(parent);
+	protected ExpressionContext(AbstractNodeContext parent, Token start, Token stop) {
+		super(parent, start, stop);
 		this.inScope = false;
 	}
 
-	public ExpressionContext(AbstractNodeContext parent, Boolean inScope, NodeContext inner) {
-		super(parent);
+	public ExpressionContext(AbstractNodeContext parent, Boolean inScope, NodeContext inner, Token start, Token stop) {
+		super(parent, start, stop);
 		this.inScope = inScope;
 		this.inner = inner;
 	}

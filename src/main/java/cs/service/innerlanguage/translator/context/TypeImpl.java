@@ -9,6 +9,7 @@ import cs.service.innerlanguage.translator.statements.DataStatement;
 import cs.service.innerlanguage.parser.InnerParser;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -19,8 +20,8 @@ public class TypeImpl extends WrapperStatement {
 	private List<DataStatement> staticBlock;
 	private List<FunctionImpl> functions;
 
-	public TypeImpl(AbstractNodeContext parent, String typeName, List<DataStatement> staticBlock, List<FunctionImpl> functions) {
-		super(parent);
+	public TypeImpl(AbstractNodeContext parent, String typeName, List<DataStatement> staticBlock, List<FunctionImpl> functions, Token start, Token stop) {
+		super(parent, start, stop);
 		this.typeName = typeName;
 		this.staticBlock = staticBlock;
 		this.functions = functions;

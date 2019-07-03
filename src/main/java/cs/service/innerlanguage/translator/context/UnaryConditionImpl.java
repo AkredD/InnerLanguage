@@ -5,6 +5,8 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import org.antlr.v4.runtime.Token;
+
 /**
  *
  * @author anisimov_a_v
@@ -14,8 +16,8 @@ public class UnaryConditionImpl extends ExpressionContext {
 	//TODO revert operator
 	private String operator;
 
-	public UnaryConditionImpl(AbstractNodeContext parent, NodeContext operand, String operator) {
-		super(parent);
+	public UnaryConditionImpl(AbstractNodeContext parent, NodeContext operand, String operator, Token start, Token stop) {
+		super(parent, start, stop);
 		this.operand = operand;
 		this.operator = operator;
 	}

@@ -8,14 +8,15 @@ package cs.service.innerlanguage.translator.statements;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.statements.SingleValueStatement;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
  * @author anisimov_a_v
  */
 public class ReturnImpl extends SingleValueStatement {
-	public ReturnImpl(AbstractNodeContext parent, NodeContext value) {
-		super(parent, value);
+	public ReturnImpl(AbstractNodeContext parent, NodeContext value, Token start, Token stop) {
+		super(parent, value, start, stop);
 	}
 
 	@Override

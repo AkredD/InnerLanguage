@@ -5,14 +5,16 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import org.antlr.v4.runtime.Token;
+
 /**
  *
  * @author akredd
  */
 public class ReturnImpl extends SingleValueStatement{
     
-    public ReturnImpl(AbstractNodeContext parent, NodeContext value) {
-        super(parent, value);
+    public ReturnImpl(AbstractNodeContext parent, NodeContext value, Token start, Token stop) {
+        super(parent, value, start, stop);
     }
     
 }

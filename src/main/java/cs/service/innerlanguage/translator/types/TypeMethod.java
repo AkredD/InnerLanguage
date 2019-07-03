@@ -25,7 +25,7 @@ public class TypeMethod {
 	}
 
 	public TypeMethod(BaseMethodView methodView, Map<String, TypeWrapper> typesByClassName) {
-		this.output = typesByClassName.get(methodView.getOutputClassName());
+		this.output = (typesByClassName.containsKey(methodView.getOutputClassName())) ? typesByClassName.get(methodView.getOutputClassName()) : null;
 		this.methodName = methodView.getMethodName();
 		this.constructor = new TypeConstructor(methodView.getConstructor(), typesByClassName);
 	}

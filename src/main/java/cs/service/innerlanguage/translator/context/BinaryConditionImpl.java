@@ -5,6 +5,8 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import org.antlr.v4.runtime.Token;
+
 /**
  *
  * @author anisimov_a_v
@@ -15,8 +17,8 @@ public class BinaryConditionImpl extends ExpressionContext {
 	private String operator;
 	private NodeContext rightOperand;
 
-	public BinaryConditionImpl(AbstractNodeContext parent, NodeContext leftOperand, NodeContext rightOperand, String operator) {
-		super(parent);
+	public BinaryConditionImpl(AbstractNodeContext parent, NodeContext leftOperand, NodeContext rightOperand, String operator, Token start, Token stop) {
+		super(parent, start, stop);
 		this.leftOperand = leftOperand;
 		this.operator = operator;
 		this.rightOperand = rightOperand;

@@ -7,13 +7,14 @@ package cs.service.innerlanguage.translator.statements;
 
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.statements.StatementContext;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
  * @author anisimov_a_v
  */
 public abstract class SimpleStatement extends StatementContext {
-	protected SimpleStatement(AbstractNodeContext parent) {
-		super(parent);
+	protected SimpleStatement(AbstractNodeContext parent, Token start, Token stop) {
+		super(parent, start, stop);
 	}
 }

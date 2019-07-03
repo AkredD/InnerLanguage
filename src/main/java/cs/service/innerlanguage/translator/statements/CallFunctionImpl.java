@@ -10,6 +10,7 @@ import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.statements.SimpleStatement;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -20,8 +21,8 @@ public class CallFunctionImpl extends SimpleStatement {
 	private String functionName;
 	private List<NodeContext> values;
 
-	public CallFunctionImpl(AbstractNodeContext parent, String dataName, String functionName, List<NodeContext> values) {
-		super(parent);
+	public CallFunctionImpl(AbstractNodeContext parent, String dataName, String functionName, List<NodeContext> values, Token start, Token stop) {
+		super(parent, start, stop);
 		this.dataName = dataName;
 		this.functionName = functionName;
 		this.values = values;

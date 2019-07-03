@@ -8,6 +8,7 @@ package cs.service.innerlanguage.translator.statements;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.statements.StatementContext;
 import java.util.List;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -16,8 +17,8 @@ import java.util.List;
 public abstract class ExtendedStatement extends StatementContext {
 	protected List<StatementContext> innerStatements;
 
-	public ExtendedStatement(AbstractNodeContext parent, List<StatementContext> innerStatements) {
-		super(parent);
+	public ExtendedStatement(AbstractNodeContext parent, List<StatementContext> innerStatements, Token start, Token stop) {
+		super(parent, start, stop);
 		this.innerStatements = innerStatements;
 	}
 

@@ -10,6 +10,7 @@ import cs.service.innerlanguage.translator.context.ExpressionContext;
 import cs.service.innerlanguage.translator.statements.StatementContext;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -20,8 +21,8 @@ public class IfImpl extends ExtendedStatement {
 	private List<StatementContext> mainBlockPart;
 	private List<StatementContext> elseBlockPart;
 
-	public IfImpl(AbstractNodeContext parent, List<StatementContext> innerStatements, ExpressionContext ifCondition) {
-		super(parent, innerStatements);
+	public IfImpl(AbstractNodeContext parent, List<StatementContext> innerStatements, ExpressionContext ifCondition, Token start, Token stop) {
+		super(parent, innerStatements, start, stop);
 		this.ifCondition = ifCondition;
 	}
 

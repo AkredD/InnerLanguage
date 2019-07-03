@@ -9,6 +9,7 @@ import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.ExpressionContext;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -17,8 +18,8 @@ import java.util.stream.Collectors;
 public class WhileImpl extends ExtendedStatement {
 	private ExpressionContext whileCondition;
 
-	public WhileImpl(AbstractNodeContext parent, List<StatementContext> innerStatements, ExpressionContext whileCondition) {
-		super(parent, innerStatements);
+	public WhileImpl(AbstractNodeContext parent, List<StatementContext> innerStatements, ExpressionContext whileCondition, Token start, Token stop) {
+		super(parent, innerStatements, start, stop);
 		this.whileCondition = whileCondition;
 	}
 

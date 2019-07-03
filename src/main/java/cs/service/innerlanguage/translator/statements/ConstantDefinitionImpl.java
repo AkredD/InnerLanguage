@@ -10,14 +10,15 @@ import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.statements.DataStatement;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
  * @author anisimov_a_v
  */
 public class ConstantDefinitionImpl extends DataStatement {
-	public ConstantDefinitionImpl(AbstractNodeContext parent, String typeName, String dataName, List<NodeContext> values) {
-		super(parent, typeName, dataName, values);
+	public ConstantDefinitionImpl(AbstractNodeContext parent, String typeName, String dataName, List<NodeContext> values, Token start, Token stop) {
+		super(parent, typeName, dataName, values, start, stop);
 	}
 
 	@Override

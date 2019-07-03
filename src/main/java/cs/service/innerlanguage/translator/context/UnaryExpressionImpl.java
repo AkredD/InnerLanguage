@@ -8,6 +8,7 @@ package cs.service.innerlanguage.translator.context;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.ExpressionContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -18,8 +19,8 @@ public class UnaryExpressionImpl extends ExpressionContext {
 	//TODO revert operator
 	private String operator;
 
-	public UnaryExpressionImpl(AbstractNodeContext parent, NodeContext operand, String operator) {
-		super(parent);
+	public UnaryExpressionImpl(AbstractNodeContext parent, NodeContext operand, String operator, Token start, Token stop) {
+		super(parent, start, stop);
 		this.operand = operand;
 		this.operator = operator;
 	}

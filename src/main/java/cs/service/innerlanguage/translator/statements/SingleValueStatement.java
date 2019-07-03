@@ -7,6 +7,7 @@ package cs.service.innerlanguage.translator.statements;
 
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -15,8 +16,8 @@ import cs.service.innerlanguage.translator.context.NodeContext;
 public abstract class SingleValueStatement extends SimpleStatement {
 	protected NodeContext value;
 
-	public SingleValueStatement(AbstractNodeContext parent, NodeContext value) {
-		super(parent);
+	public SingleValueStatement(AbstractNodeContext parent, NodeContext value, Token start, Token stop) {
+		super(parent, start, stop);
 		this.value = value;
 	}
 
