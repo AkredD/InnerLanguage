@@ -27,12 +27,24 @@ public class TypeImpl extends WrapperStatement {
 		this.functions = functions;
 	}
 
+	public List<DataStatement> getStaticBlock() {
+		return staticBlock;
+	}
+
 	public void setStaticBlock(List<DataStatement> staticBlock) {
 		this.staticBlock = staticBlock;
 	}
 
+	public List<FunctionImpl> getFunctions() {
+		return functions;
+	}
+
 	public void setFunctions(List<FunctionImpl> functions) {
 		this.functions = functions;
+	}
+
+	public String getTypeName() {
+		return typeName;
 	}
 
 	@Override
