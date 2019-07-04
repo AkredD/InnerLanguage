@@ -37,6 +37,7 @@ import cs.service.innerlanguage.translator.context.UnaryExpressionImpl;
 import cs.service.innerlanguage.translator.context.VariableValueImpl;
 import cs.service.innerlanguage.translator.statements.WhileImpl;
 import cs.service.innerlanguage.translator.statements.WriteStatementImpl;
+import cs.service.innerlanguage.translator.types.TypeWrapper;
 import cs.service.innerlanguage.translator.types.basic.BasicProvider;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -290,7 +291,17 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitCallStatement(InnerParser.CallStatementContext ctx) {
-		CallFunctionImpl callFoo = new CallFunctionImpl(null, ctx.TYPENAME().getText(), ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
+		String typeName = (ctx.TYPENAME() != null) ? ctx.TYPENAME().getText() : null;
+		VariableValueImpl var = null;
+		if (ctx.dataname() != null) {
+			TypeWrapper castType = null;
+			if (ctx.dataname().TYPENAME() != null) {
+				checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
+				castType = BasicProvider.instance().getTypesByName().get(ctx.dataname().TYPENAME().getText());
+			}
+			var = new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
+		}
+		CallFunctionImpl callFoo = new CallFunctionImpl(null, var, typeName, ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		List<NodeContext> values = null;
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()
@@ -357,7 +368,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 * @return the value of MinusEqImpl
 	 */
 	@Override
-	public NodeContext visitMinusEqStatemet(InnerParser.MinusEqStatemetContext ctx) {
+	public NodeContext visitMinusEqStatement(InnerParser.MinusEqStatementContext ctx) {
 		MinusEqImpl minusStatement = new MinusEqImpl(null, ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		NodeContext value = ctx.varValue().accept(this);
 		if (AbstractNodeContext.class.isAssignableFrom(value.getClass())) {
@@ -375,7 +386,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 * @return the value of PlusEqImpl
 	 */
 	@Override
-	public NodeContext visitPlusEqStatemet(InnerParser.PlusEqStatemetContext ctx) {
+	public NodeContext visitPlusEqStatement(InnerParser.PlusEqStatementContext ctx) {
 		PlusEqImpl plusEqStatement = new PlusEqImpl(null, ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		NodeContext value = ctx.varValue().accept(this);
 		if (AbstractNodeContext.class.isAssignableFrom(value.getClass())) {
@@ -396,7 +407,8 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	public NodeContext visitEqStatement(InnerParser.EqStatementContext ctx) {
 		EqImpl eqStatement = new EqImpl(null, ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		NodeContext value = ctx.varValue().accept(this);
-		if (AbstractNodeContext.class.isAssignableFrom(value.getClass())) {
+		if (AbstractNodeContext.class
+				  .isAssignableFrom(value.getClass())) {
 			((AbstractNodeContext) value).setParent(eqStatement);
 		}
 		eqStatement.setValue(value);
@@ -519,13 +531,18 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		}
 		if (ctx.DATE() != null) {
 			try {
-				return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Date"),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
+				return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
 			} catch (ParseException ex) {
 				handleException(ExceptionMessage.CANT_PARSE_DATE, ctx.DATE().getText(), ctx.getStart());
 			}
 		}
-		if (ctx.DATANAME() != null) {
-			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
+		if (ctx.dataname() != null) {
+			TypeWrapper castType = null;
+			if (ctx.dataname().TYPENAME() != null) {
+				checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
+				castType = BasicProvider.instance().getTypesByName().get(ctx.dataname().TYPENAME().getText());
+			}
+			return new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
 		}
 		if (ctx.callStatement() != null) {
 			return ctx.callStatement().accept(this);
@@ -575,13 +592,18 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		}
 		if (ctx.DATE() != null) {
 			try {
-				return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Date"),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
+				return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
 			} catch (ParseException ex) {
 				handleException(ExceptionMessage.CANT_PARSE_DATE, ctx.DATE().getText(), ctx.getStart());
 			}
 		}
-		if (ctx.DATANAME() != null) {
-			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
+		if (ctx.dataname() != null) {
+			TypeWrapper castType = null;
+			if (ctx.dataname().TYPENAME() != null) {
+				checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
+				castType = BasicProvider.instance().getTypesByName().get(ctx.dataname().TYPENAME().getText());
+			}
+			return new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
 		}
 		if (ctx.callStatement() != null) {
 			return ctx.callStatement().accept(this);
@@ -652,8 +674,13 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		if (ctx.BOOLEAN() != null) {
 			return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Boolean"), Boolean.valueOf(ctx.BOOLEAN().getText()));
 		}
-		if (ctx.DATANAME() != null) {
-			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
+		if (ctx.dataname() != null) {
+			TypeWrapper castType = null;
+			if (ctx.dataname().TYPENAME() != null) {
+				checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
+				castType = BasicProvider.instance().getTypesByName().get(ctx.dataname().TYPENAME().getText());
+			}
+			return new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
 		}
 		if (ctx.callStatement() != null) {
 			return ctx.callStatement().accept(this);
@@ -684,13 +711,18 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		}
 		if (ctx.DATE() != null) {
 			try {
-				return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Date"),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
+				return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
 			} catch (ParseException ex) {
 				handleException(ExceptionMessage.CANT_PARSE_DATE, ctx.DATE().getText(), ctx.getStart());
 			}
 		}
-		if (ctx.DATANAME() != null) {
-			return new VariableValueImpl(null, ctx.DATANAME().getText(), ctx.start, ctx.stop);
+		if (ctx.dataname() != null) {
+			TypeWrapper castType = null;
+			if (ctx.dataname().TYPENAME() != null) {
+				checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
+				castType = BasicProvider.instance().getTypesByName().get(ctx.dataname().TYPENAME().getText());
+			}
+			return new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
 		}
 		if (ctx.callStatement() != null) {
 			return ctx.callStatement().accept(this);

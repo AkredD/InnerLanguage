@@ -83,7 +83,9 @@ CONSTANTDEF : CONSTANTFR COLON;
 SYSTEMDEF   : SYSTEMFR COLON;
 
 // Parser
-varValue            : (DATANAME | BOOLEAN | NUMBER | DQ_STRING | DATE | callStatement | expression | condition);
+varValue            : (dataname | BOOLEAN | NUMBER | DQ_STRING | DATE | callStatement | expression | condition);
+
+dataname					: (OPENBRACKET TYPENAME CLOSEBRACKET)? DATANAME;
 
 condition           : condition CONDITIONBOOLOPERATOR condition
                         | boolExpression 
@@ -91,17 +93,17 @@ condition           : condition CONDITIONBOOLOPERATOR condition
                         | CONDITIONUNARYPERATOR condition
                         | boolExpression CONDITIONBOOLOPERATOR condition
                         | condition CONDITIONBOOLOPERATOR boolExpression
-                        | (BOOLEAN | DATANAME | callStatement);
+                        | (BOOLEAN | dataname | callStatement);
                         
 
 boolExpression      :   OPENBRACKET boolExpression CLOSEBRACKET
                         | expression CONDITIONOPERATOR expression
-                        | (DQ_STRING | NUMBER | DATE | DATANAME | callStatement);
+                        | (DQ_STRING | NUMBER | DATE | dataname | callStatement);
 
 expression          : OPENBRACKET expression CLOSEBRACKET
                         | expression OPERATOR expression
                         | UNARYOPERATOR expression
-                        | (DQ_STRING | NUMBER | DATE | DATANAME | callStatement);
+                        | (DQ_STRING | NUMBER | DATE | dataname | callStatement);
 
 ifStatement         : IF OPENBRACKET condition CLOSEBRACKET
                         (
@@ -134,7 +136,7 @@ continueStatement   : CONTINUE ENDCOMMAND;
 
 breakStatement      : BREAK ENDCOMMAND;
 
-callStatement       : CALL (TYPENAME | DATANAME) ENDCOMMAND DATANAME
+callStatement       : CALL (TYPENAME | dataname) ENDCOMMAND DATANAME
                       OPENBRACKET
                       (varValue (COMMA varValue)*)? 
                       CLOSEBRACKET;
@@ -152,7 +154,7 @@ statement   :   (ifStatement
                 | eqStatement
                 | plusEqStatement
                 | minusEqStatement
-                | callStatement ENDCOMMAND
+                | (TYPENAME)? callStatement ENDCOMMAND
                 | writeStatement);
 
 function    : 

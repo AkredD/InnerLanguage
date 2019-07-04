@@ -100,4 +100,12 @@ public class TypeWrapper {
 	public TypeWrapper getParent() {
 		return parent;
 	}
+
+	@Override
+	public String toString() {
+		if (className.equals("Void")) {
+			return "void";
+		}
+		return this.classPath;
+	}
 }

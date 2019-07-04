@@ -14,7 +14,8 @@ import java.util.ResourceBundle;
 public enum ExceptionMessage {
 	CANT_PARSE_DATE,
 	MISMATCH_INPUT,
-	TYPE_NOT_EXIST;
+	TYPE_NOT_EXIST,
+	METHODS_DOESNT_EXISTS;
 	private static final String MESSAGES = "messages";
 	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.getDefault());
 

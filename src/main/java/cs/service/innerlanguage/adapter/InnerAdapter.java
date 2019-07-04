@@ -68,7 +68,7 @@ public class InnerAdapter {
 											+ "return a. return a.\n"
 											+ "END.\n"
 											+ "data: Integer i values (asd).\n"
-											+ "while (i > 0)\n"
+											+ "while (((Integer) i) > 0)\n"
 											+ "START.\n"
 											+ "continue.\n"
 											+ "END.\n"
@@ -78,7 +78,9 @@ public class InnerAdapter {
 
 	public static void main(String[] args) {
 		//showBasicTypes();
+
 		InnerParser.InnerContext context = prepareContext(query);
+		java.lang.String a = "das:";
 	}
 
 	private static void showBasicTypes() {

@@ -31,18 +31,34 @@ public class FunctionImpl extends WrapperStatement {
 		this.innerStatements = innerStatements;
 	}
 
+	public String getFunctionName() {
+		return functionName;
+	}
+
+	public List<ParameterImpl> getParameters() {
+		return parameters;
+	}
+
 	public void setParameters(List<ParameterImpl> parameters) {
 		this.parameters = parameters;
+	}
+
+	public List<StatementContext> getInnerStatements() {
+		return innerStatements;
 	}
 
 	public void setInnerStatements(List<StatementContext> innerStatements) {
 		this.innerStatements = innerStatements;
 	}
 
+	public TypeWrapper getType() {
+		return type;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder function = new StringBuilder();
-		function.append("public ").append(type.getClassName()).append(" ").append(functionName)
+		function.append("public ").append(type).append(" ").append(functionName)
 				  .append("(")
 				  .append(parameters.stream()
 							 .map(param -> {

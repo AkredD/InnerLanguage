@@ -31,6 +31,14 @@ public abstract class AbstractNodeContext implements NodeContext {
 		}
 	}
 
+	public Token getStart() {
+		return start;
+	}
+
+	public Token getStop() {
+		return stop;
+	}
+
 	private void setParentMaps() {
 		this.contextTypes = parent.contextTypes;
 		this.contextFunctions = parent.contextFunctions;
@@ -50,6 +58,6 @@ public abstract class AbstractNodeContext implements NodeContext {
 
 	public String getPosition() {
 		return start.getLine() + ":" + start.getStartIndex() + " - " + stop.getLine() + ":" + stop.getStopIndex() + "\n"
-				  + start.getText();
+				 + start.getText();
 	}
 }

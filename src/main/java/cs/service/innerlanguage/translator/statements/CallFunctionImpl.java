@@ -7,6 +7,7 @@ package cs.service.innerlanguage.translator.statements;
 
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
+import cs.service.innerlanguage.translator.context.VariableValueImpl;
 import cs.service.innerlanguage.translator.statements.SimpleStatement;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,15 +18,33 @@ import org.antlr.v4.runtime.Token;
  * @author anisimov_a_v
  */
 public class CallFunctionImpl extends SimpleStatement {
-	private String dataName;
+	private VariableValueImpl var;
+	private String typeName;
 	private String functionName;
 	private List<NodeContext> values;
 
-	public CallFunctionImpl(AbstractNodeContext parent, String dataName, String functionName, List<NodeContext> values, Token start, Token stop) {
+	public CallFunctionImpl(AbstractNodeContext parent, VariableValueImpl var, String typeName, String functionName, List<NodeContext> values, Token start, Token stop) {
 		super(parent, start, stop);
-		this.dataName = dataName;
+		this.var = var;
+		this.typeName = typeName;
 		this.functionName = functionName;
 		this.values = values;
+	}
+
+	public VariableValueImpl getVar() {
+		return var;
+	}
+
+	public String getFunctionName() {
+		return functionName;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public List<NodeContext> getValues() {
+		return values;
 	}
 
 	public void setValues(List<NodeContext> values) {
@@ -34,7 +53,7 @@ public class CallFunctionImpl extends SimpleStatement {
 
 	@Override
 	public String toString() {
-		return ((dataName == null) ? "" : dataName + ".")
+		return ((var == null) ? ((typeName == null) ? "" : typeName + ".") : var.toString() + ".")
 				 + functionName + " ("
 				 + values.stream()
 				  .map(val -> {

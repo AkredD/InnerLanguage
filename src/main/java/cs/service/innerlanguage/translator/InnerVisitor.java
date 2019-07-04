@@ -22,6 +22,15 @@ public interface InnerVisitor<T> extends ParseTreeVisitor<T> {
 	T visitVarValue(InnerParser.VarValueContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link InnerParser#dataname}.
+	 *
+	 * @param ctx the parse tree
+	 *
+	 * @return the visitor result
+	 */
+	T visitDataname(InnerParser.DatanameContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link InnerParser#condition}.
 	 *
 	 * @param ctx the parse tree
@@ -76,22 +85,22 @@ public interface InnerVisitor<T> extends ParseTreeVisitor<T> {
 	T visitEqStatement(InnerParser.EqStatementContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link InnerParser#plusEqStatemet}.
+	 * Visit a parse tree produced by {@link InnerParser#plusEqStatement}.
 	 *
 	 * @param ctx the parse tree
 	 *
 	 * @return the visitor result
 	 */
-	T visitPlusEqStatemet(InnerParser.PlusEqStatemetContext ctx);
+	T visitPlusEqStatement(InnerParser.PlusEqStatementContext ctx);
 
 	/**
-	 * Visit a parse tree produced by {@link InnerParser#minusEqStatemet}.
+	 * Visit a parse tree produced by {@link InnerParser#minusEqStatement}.
 	 *
 	 * @param ctx the parse tree
 	 *
 	 * @return the visitor result
 	 */
-	T visitMinusEqStatemet(InnerParser.MinusEqStatemetContext ctx);
+	T visitMinusEqStatement(InnerParser.MinusEqStatementContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link InnerParser#returnStatement}.

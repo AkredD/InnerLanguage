@@ -33,6 +33,18 @@ public class InnerBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override
+	public T visitDataname(InnerParser.DatanameContext ctx) {
+		return visitChildren(ctx);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>
+	 * The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override
 	public T visitCondition(InnerParser.ConditionContext ctx) {
 		return visitChildren(ctx);
 	}
@@ -105,7 +117,7 @@ public class InnerBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override
-	public T visitPlusEqStatemet(InnerParser.PlusEqStatemetContext ctx) {
+	public T visitPlusEqStatement(InnerParser.PlusEqStatementContext ctx) {
 		return visitChildren(ctx);
 	}
 
@@ -117,7 +129,7 @@ public class InnerBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override
-	public T visitMinusEqStatemet(InnerParser.MinusEqStatemetContext ctx) {
+	public T visitMinusEqStatement(InnerParser.MinusEqStatementContext ctx) {
 		return visitChildren(ctx);
 	}
 

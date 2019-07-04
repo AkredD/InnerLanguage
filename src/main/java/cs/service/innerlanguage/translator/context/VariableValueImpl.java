@@ -5,6 +5,7 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import cs.service.innerlanguage.translator.types.TypeWrapper;
 import org.antlr.v4.runtime.Token;
 
 /**
@@ -13,14 +14,24 @@ import org.antlr.v4.runtime.Token;
  */
 public class VariableValueImpl extends AbstractNodeContext {
 	private String name;
+	private TypeWrapper castType;
 
-	public VariableValueImpl(AbstractNodeContext parent, String name, Token start, Token stop) {
+	public VariableValueImpl(AbstractNodeContext parent, String name, TypeWrapper castType, Token start, Token stop) {
 		super(parent, start, stop);
 		this.name = name;
+		this.castType = castType;
+	}
+
+	public TypeWrapper getCastType() {
+		return castType;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	@Override
 	public String toString() {
-		return name;
+		return ((castType == null) ? "" : "((" + castType + ") ") + name + ((castType == null) ? "" : ")");
 	}
 }
