@@ -44,11 +44,11 @@ public final class BasicProvider {
 		return instance;
 	}
 
-	public TypeWrapper getTypesByClassName(String className) {
+	public TypeWrapper getTypeByClassName(String className) {
 		return typesByClassName.get(className);
 	}
 
-	public TypeWrapper getTypesByName(String name) {
+	public TypeWrapper getTypeByName(String name) {
 		return typesByName.get(name);
 	}
 

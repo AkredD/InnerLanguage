@@ -19,18 +19,21 @@ import org.antlr.v4.runtime.Token;
  */
 public class DataDefinitionImpl extends DataStatement {
 	//TODO revert with new Object View
-	public DataDefinitionImpl(AbstractNodeContext parent, TypeWrapper type, String dataName, List<NodeContext> values, Token start, Token stop) {
-		super(parent, type, dataName, values, start, stop);
+	public DataDefinitionImpl(AbstractNodeContext parent, TypeWrapper type, String dataName, List<NodeContext> values, Boolean instance, Token start, Token stop) {
+		super(parent, type, dataName, values, instance, start, stop);
 	}
 
 	@Override
 	public String toString() {
-		return type + " " + dataName + " = new " + type + " ("
-				 + values.stream()
-				  .map(value -> {
-					  return value.toString();
-				  })
-				  .collect(Collectors.joining(", "))
-				 + ")";
+		return type + " " + dataName
+				 + ((isInstance())
+					 ? " = new " + type + " ("
+						+ values.stream()
+							 .map(value -> {
+								 return value.toString();
+							 })
+							 .collect(Collectors.joining(", "))
+						+ ")"
+					 : "");
 	}
 }

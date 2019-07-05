@@ -26,6 +26,14 @@ public class ExpressionContext extends AbstractNodeContext {
 		this.inner = inner;
 	}
 
+	public Boolean getInScope() {
+		return inScope;
+	}
+
+	public NodeContext getInner() {
+		return inner;
+	}
+
 	public void setInner(NodeContext inner) {
 		this.inner = inner;
 	}

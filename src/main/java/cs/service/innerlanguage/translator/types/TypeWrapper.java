@@ -108,4 +108,18 @@ public class TypeWrapper {
 		}
 		return this.classPath;
 	}
+
+	public Boolean isAssignableFrom(TypeWrapper type) {
+		if (className.equals(type.getClassName())) {
+			return true;
+		}
+		if (type.getParent() == null) {
+			return false;
+		}
+		return isAssignableFrom(type.getParent());
+	}
+
+	public Boolean isMemberOf(TypeWrapper type) {
+		return type.isAssignableFrom(this);
+	}
 }

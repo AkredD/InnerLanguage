@@ -16,9 +16,9 @@ import java.util.Set;
 public interface IInspector {
 	public <T extends NodeContext> void inspect(T node);
 
-	public <T extends ExtendedStatement> void startInspecting(T node);
+	public <T extends NodeContext> void startInspecting(T node);
 
-	public <T extends ExtendedStatement> void endInspecting(T node);
+	public <T extends NodeContext> void endInspecting(T node);
 
 	public Set<Class> getInspectingSubjects();
 }

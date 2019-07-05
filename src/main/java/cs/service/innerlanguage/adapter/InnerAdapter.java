@@ -5,6 +5,7 @@
  */
 package cs.service.innerlanguage.adapter;
 
+import cs.service.innerlanguage.inspector.InspectManager;
 import cs.service.innerlanguage.parser.InnerLexer;
 import cs.service.innerlanguage.parser.InnerParser;
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
@@ -15,6 +16,7 @@ import cs.service.innerlanguage.translator.InnerVisitor;
 import cs.service.innerlanguage.translator.InnerVisitorImpl;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
+import cs.service.innerlanguage.translator.context.TypeImpl;
 import cs.service.innerlanguage.translator.types.basic.BasicProvider;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -35,12 +37,12 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 public class InnerAdapter {
 	private static String query = "TYPE Main.\n"
 											+ "STATIC (\n"
-											+ "DATA: Integer a VALUES(123)\n"
+											+ "DATA: Boolean a VALUES(true)\n"
 											+ ".\n"
-											+ "CONSTANT: Integer b VALUES(412, 312).\n"
+											+ "CONSTANT: Integer b VALUES().\n"
 											+ ")\n"
 											+ "\n"
-											+ "FUNCTION Void main () \n"
+											+ "FUNCTION Void main (Integer e) \n"
 											+ "START.\n"
 											+ "if (a == TRUE AND FALSE)\n"
 											+ "START.\n"
@@ -50,7 +52,7 @@ public class InnerAdapter {
 											+ "START.\n"
 											+ "return a. return a.\n"
 											+ "END.\n"
-											+ "data: Integer i values (asd).\n"
+											+ "data: Integer i values (41).\n"
 											+ "while (i > 0)\n"
 											+ "START.\n"
 											+ "continue.\n"
@@ -67,8 +69,8 @@ public class InnerAdapter {
 											+ "START.\n"
 											+ "return a. return a.\n"
 											+ "END.\n"
-											+ "data: Integer i values (asd).\n"
-											+ "while (((Integer) i) > 0)\n"
+											+ "data: Integer i values (41).\n"
+											+ "while (((Integer) b) > 0)\n"
 											+ "START.\n"
 											+ "continue.\n"
 											+ "END.\n"
@@ -78,9 +80,7 @@ public class InnerAdapter {
 
 	public static void main(String[] args) {
 		//showBasicTypes();
-
 		InnerParser.InnerContext context = prepareContext(query);
-		java.lang.String a = "das:";
 	}
 
 	private static void showBasicTypes() {
@@ -134,6 +134,8 @@ public class InnerAdapter {
 		try {
 			scriptCtx = parser.inner();
 			Object obj = visitor.visit(scriptCtx);
+			InspectManager manager = new InspectManager();
+			manager.inspectType((TypeImpl) obj);
 			//System.out.println(csdmlQuery);
 			System.out.println("\n\n----------------------------------------------------------------------\n\n");
 			System.out.println(((AbstractNodeContext) obj).getPosition());

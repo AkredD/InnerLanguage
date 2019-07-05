@@ -53,7 +53,7 @@
 				"instanceable" : true,
 				"constructors" : [
 					{
-						"outputClassName" : null,
+						"outputClassName" : "java.lang.String",
 						"methodName" : null,
 						"constructor" : {
 							"parameters" : {
@@ -102,7 +102,7 @@
 				"instanceable" : true,
 				"constructors" : [
 					{
-						"outputClassName" : null,
+						"outputClassName" : "java.lang.Character",
 						"methodName" : null,
 						"constructor" : {
 							"parameters" : {
@@ -121,6 +121,17 @@
 				"className" : "Boolean",
 				"parent" : "java.lang.Object",
 				"instanceable" : true,
+				"constructors" : [
+					{
+						"outputClassName" : "java.lang.Boolean",
+						"methodName" : null,
+						"constructor" : {
+							"parameters" : {
+								"obj" : "java.lang.Boolean"
+							}
+						}
+					}
+				],
 				"staticMethods" : [
 					{
 						"outputClassName" : "java.lang.String",

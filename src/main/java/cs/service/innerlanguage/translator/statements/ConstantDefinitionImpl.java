@@ -19,7 +19,7 @@ import org.antlr.v4.runtime.Token;
  */
 public class ConstantDefinitionImpl extends DataStatement {
 	public ConstantDefinitionImpl(AbstractNodeContext parent, TypeWrapper type, String dataName, List<NodeContext> values, Token start, Token stop) {
-		super(parent, type, dataName, values, start, stop);
+		super(parent, type, dataName, values, true, start, stop);
 	}
 
 	@Override

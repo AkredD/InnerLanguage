@@ -22,8 +22,16 @@ public class UnaryConditionImpl extends ExpressionContext {
 		this.operator = operator;
 	}
 
+	public NodeContext getOperand() {
+		return operand;
+	}
+
 	public void setOperand(NodeContext operand) {
 		this.operand = operand;
+	}
+
+	public String getOperator() {
+		return operator;
 	}
 
 	@Override

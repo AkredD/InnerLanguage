@@ -24,8 +24,20 @@ public class BinaryConditionImpl extends ExpressionContext {
 		this.rightOperand = rightOperand;
 	}
 
+	public NodeContext getLeftOperand() {
+		return leftOperand;
+	}
+
 	public void setLeftOperand(NodeContext leftOperand) {
 		this.leftOperand = leftOperand;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public NodeContext getRightOperand() {
+		return rightOperand;
 	}
 
 	public void setRightOperand(NodeContext rightOperand) {

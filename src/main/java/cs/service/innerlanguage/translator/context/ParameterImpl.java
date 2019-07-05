@@ -16,7 +16,7 @@ import org.antlr.v4.runtime.Token;
  */
 public class ParameterImpl extends DataStatement {
 	public ParameterImpl(AbstractNodeContext parent, TypeWrapper type, String dataName, Token start, Token stop) {
-		super(parent, type, dataName, null, start, stop);
+		super(parent, type, dataName, null, false, start, stop);
 	}
 
 	@Override
