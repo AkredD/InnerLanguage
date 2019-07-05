@@ -21,17 +21,34 @@ public abstract class DataStatement extends SimpleStatement {
 	protected TypeWrapper type;
 	protected String dataName;
 	protected List<NodeContext> values;
-	protected CallFunctionImpl callFunction;
+	protected boolean instance;
 
-	protected DataStatement(AbstractNodeContext parent, TypeWrapper type, String dataName, List<NodeContext> values, Token start, Token stop) {
+	protected DataStatement(AbstractNodeContext parent, TypeWrapper type, String dataName, List<NodeContext> values, Boolean instance, Token start, Token stop) {
 		super(parent, start, stop);
 		this.type = type;
 		this.dataName = dataName;
+		this.instance = instance;
 		this.values = values;
 		//TODO check for unic
 	}
 
+	public String getDataName() {
+		return dataName;
+	}
+
+	public TypeWrapper getType() {
+		return type;
+	}
+
+	public List<NodeContext> getValues() {
+		return values;
+	}
+
 	public void setValues(List<NodeContext> values) {
 		this.values = values;
+	}
+
+	public boolean isInstance() {
+		return instance;
 	}
 }

@@ -23,6 +23,14 @@ public class WhileImpl extends ExtendedStatement {
 		this.whileCondition = whileCondition;
 	}
 
+	public List<StatementContext> getInnerStatements() {
+		return innerStatements;
+	}
+
+	public ExpressionContext getWhileCondition() {
+		return whileCondition;
+	}
+
 	public void setWhileCondition(ExpressionContext whileCondition) {
 		this.whileCondition = whileCondition;
 	}

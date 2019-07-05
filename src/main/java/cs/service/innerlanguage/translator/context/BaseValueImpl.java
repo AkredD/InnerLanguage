@@ -20,6 +20,14 @@ public class BaseValueImpl implements NodeContext {
 		this.type = type;
 	}
 
+	public TypeWrapper getType() {
+		return type;
+	}
+
+	public Object getValue() {
+		return value;
+	}
+
 	@Override
 	public String toString() {
 		return value.toString();

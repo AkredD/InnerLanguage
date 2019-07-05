@@ -46,7 +46,7 @@
 				"instanceable" : true,
 				"constructors" : [
 					{
-						"outputClassName" : null,
+						"outputClassName" : "java.lang.Double",
 						"methodName" : null,
 						"constructor" : {
 							"parameters" : {
@@ -86,7 +86,7 @@
 				"instanceable" : true,
 				"constructors" : [
 					{
-						"outputClassName" : null,
+						"outputClassName" : "java.lang.Float",
 						"methodName" : null,
 						"constructor" : {
 							"parameters" : {
@@ -126,7 +126,7 @@
 				"instanceable" : true,
 				"constructors" : [
 					{
-						"outputClassName" : null,
+						"outputClassName" : "java.lang.Byte",
 						"methodName" : null,
 						"constructor" : {
 							"parameters" : {
@@ -166,7 +166,7 @@
 				"instanceable" : true,
 				"constructors" : [
 					{
-						"outputClassName" : null,
+						"outputClassName" : "java.lang.Integer",
 						"methodName" : null,
 						"constructor" : {
 							"parameters" : {
@@ -206,7 +206,7 @@
 				"instanceable" : true,
 				"constructors" : [
 					{
-						"outputClassName" : null,
+						"outputClassName" : "java.lang.Long",
 						"methodName" : null,
 						"constructor" : {
 							"parameters" : {
@@ -246,7 +246,7 @@
 				"instanceable" : true,
 				"constructors" : [
 					{
-						"outputClassName" : null,
+						"outputClassName" : "java.lang.Short",
 						"methodName" : null,
 						"constructor" : {
 							"parameters" : {

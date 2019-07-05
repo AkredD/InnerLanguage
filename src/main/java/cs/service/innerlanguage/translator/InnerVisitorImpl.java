@@ -144,7 +144,9 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	public NodeContext visitDataDef(InnerParser.DataDefContext ctx) {
 		checkTypeExistence(ctx, ctx.TYPENAME().getText());
 		List<NodeContext> values = null;
-		DataDefinitionImpl definition = new DataDefinitionImpl(null, BasicProvider.instance().getTypesByName().get(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
+		//(ctx.VALUES() != null) meanes that it is instance of Type
+		DataDefinitionImpl definition = new DataDefinitionImpl(null, BasicProvider.instance().getTypesByName().get(ctx.TYPENAME().getText())
+				  , ctx.DATANAME().getText(), null, (ctx.VALUES() != null) , ctx.start, ctx.stop);
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()
 					  .map(valueCtx -> {
@@ -291,7 +293,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitCallStatement(InnerParser.CallStatementContext ctx) {
-		String typeName = (ctx.TYPENAME() != null) ? ctx.TYPENAME().getText() : null;
+		TypeWrapper type = null;
 		VariableValueImpl var = null;
 		if (ctx.dataname() != null) {
 			TypeWrapper castType = null;
@@ -301,7 +303,11 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			}
 			var = new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
 		}
-		CallFunctionImpl callFoo = new CallFunctionImpl(null, var, typeName, ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
+		if (ctx.TYPENAME() != null) {
+			checkTypeExistence(ctx.TYPENAME(), ctx.TYPENAME().getText());
+			type = BasicProvider.instance().getTypesByName().get(ctx.TYPENAME().getText());
+		}
+		CallFunctionImpl callFoo = new CallFunctionImpl(null, var, type, ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		List<NodeContext> values = null;
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()

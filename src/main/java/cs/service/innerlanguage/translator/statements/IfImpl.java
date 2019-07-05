@@ -26,12 +26,24 @@ public class IfImpl extends ExtendedStatement {
 		this.ifCondition = ifCondition;
 	}
 
+	public ExpressionContext getIfCondition() {
+		return ifCondition;
+	}
+
 	public void setIfCondition(ExpressionContext ifCondition) {
 		this.ifCondition = ifCondition;
 	}
 
+	public List<StatementContext> getMainBlockPart() {
+		return mainBlockPart;
+	}
+
 	public void setMainBlockPart(List<StatementContext> mainBlockPart) {
 		this.mainBlockPart = mainBlockPart;
+	}
+
+	public List<StatementContext> getElseBlockPart() {
+		return elseBlockPart;
 	}
 
 	public void setElseBlockPart(List<StatementContext> elseBlockPart) {
