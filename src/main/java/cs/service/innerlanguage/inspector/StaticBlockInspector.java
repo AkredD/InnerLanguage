@@ -22,7 +22,7 @@ public class StaticBlockInspector extends AbstractInspector {
 	}
 
 	@Override
-	public <T extends ExtendedStatement> void endInspecting(T node) {
+	public <T extends NodeContext> void endInspecting(T node) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
@@ -37,7 +37,7 @@ public class StaticBlockInspector extends AbstractInspector {
 	}
 
 	@Override
-	public <T extends ExtendedStatement> void startInspecting(T node) {
+	public <T extends NodeContext> void startInspecting(T node) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 }

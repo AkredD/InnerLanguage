@@ -29,7 +29,8 @@ public enum ExceptionMessage {
 	NO_SUITABLE_CONSTRUCTORS_FOUND,
 	TYPE_HAS_NO_STATIC_METHODS_WITH_THIS_NAME,
 	TYPE_HAS_NO_METHODS_WITH_THIS_NAME,
-	NAME_ALREADY_IN_USE;
+	NAME_ALREADY_IN_USE,
+	DUPLICATE_FUNCTION_NAME;
 	private static final String MESSAGES = "messages";
 	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.getDefault());
 

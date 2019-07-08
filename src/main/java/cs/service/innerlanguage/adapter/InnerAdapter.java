@@ -18,9 +18,13 @@ import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.context.TypeImpl;
 import cs.service.innerlanguage.translator.types.basic.BasicProvider;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
@@ -29,58 +33,25 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.apache.commons.io.IOUtils;
 
 /**
  *
  * @author anisimov_a_v
  */
 public class InnerAdapter {
-	private static String query = "TYPE Main.\n"
-											+ "STATIC (\n"
-											+ "DATA: Boolean a VALUES(true)\n"
-											+ ".\n"
-											+ "CONSTANT: Integer b VALUES().\n"
-											+ ")\n"
-											+ "\n"
-											+ "FUNCTION Void main (Integer e) \n"
-											+ "START.\n"
-											+ "if (a == TRUE AND FALSE)\n"
-											+ "START.\n"
-											+ "return a.\n"
-											+ "END.\n"
-											+ "ELSE\n"
-											+ "START.\n"
-											+ "return a. return a.\n"
-											+ "END.\n"
-											+ "data: Integer i values (41).\n"
-											+ "while (i > 0)\n"
-											+ "START.\n"
-											+ "continue.\n"
-											+ "END.\n"
-											+ "return i.\n"
-											+ "END. \n"
-											+ "FUNCTION String getString () \n"
-											+ "START.\n"
-											+ "if (a == TRUE AND FALSE)\n"
-											+ "START.\n"
-											+ "return a.\n"
-											+ "END.\n"
-											+ "ELSE\n"
-											+ "START.\n"
-											+ "return a. return a.\n"
-											+ "END.\n"
-											+ "data: Integer i values (41).\n"
-											+ "while (((Integer) b) > 0)\n"
-											+ "START.\n"
-											+ "continue.\n"
-											+ "END.\n"
-											+ "return i.\n"
-											+ "END. \n"
-											+ "END.";
+	private Integer a = new Integer(32);
+	private Integer b = new Integer(a);
 
 	public static void main(String[] args) {
 		//showBasicTypes();
-		InnerParser.InnerContext context = prepareContext(query);
+		String a = null;
+		try {
+			a = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("examples" + File.separator + "main"), "UTF-8");
+		} catch (IOException ex) {
+			Logger.getLogger(InnerAdapter.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		InnerParser.InnerContext context = prepareContext(a);
 	}
 
 	private static void showBasicTypes() {

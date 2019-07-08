@@ -1,0 +1,47 @@
+TYPE Main.
+	STATIC (
+		DATA: Integer a VALUES(412).
+		CONSTANT: Integer b VALUES(4321).
+	)
+	FUNCTION Void main (Integer e)
+		START.
+			DATA: Integer g VALUES(a).
+			if ((a == 412) AND FALSE)
+				START.
+					DATA: Boolean gg VALUES(true).
+					return a.
+				END.
+			ELSE
+				START.
+					DATA: Boolean gg VALUES(true).
+					return a.
+					return a.
+				END.
+			DATA: Boolean gg VALUES(true).
+			data: Integer i values (41).
+			while (i > 0)
+				START.
+					continue.
+				END.
+			return i.
+		END.
+
+	FUNCTION String mainA ()
+		START.
+			if (a == 12 AND FALSE)
+				START.
+					return a.
+				END.
+			ELSE
+				START.
+					return a.
+					return a.
+				END.
+			data: Integer i values (41).
+			while (((Integer) b) > 0)
+				START.
+					continue.
+				END.
+			return i.
+		END.
+END.

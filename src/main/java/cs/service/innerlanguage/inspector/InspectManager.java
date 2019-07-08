@@ -69,14 +69,12 @@ public class InspectManager {
 		if (type.getFunctions() == null || type.getFunctions().isEmpty()) {
 			handleException(ExceptionMessage.METHODS_DOESNT_EXISTS, type.getTypeName(), type.getStart());
 		}
-		functionContext = type.getFunctions()
-				  .stream()
-				  .collect(Collectors.toMap(
-							 fun -> {
-								 return fun.getFunctionName();
-							 }, fun -> {
-								 return fun;
-							 }));
+		type.getFunctions().forEach(foo -> {
+			if (functionContext.containsKey(foo.getFunctionName())) {
+				handleException(ExceptionMessage.DUPLICATE_FUNCTION_NAME, foo.getStart(), foo.getFunctionName());
+			}
+			functionContext.put(foo.getFunctionName(), foo);
+		});
 		if (type.getStaticBlock() != null && !type.getStaticBlock().isEmpty()) {
 			variableContext = type.getStaticBlock()
 					  .stream()
@@ -337,6 +335,13 @@ public class InspectManager {
 		} else if (expr instanceof BinaryConditionImpl) {
 			exprType = getVarValueType(((BinaryConditionImpl) expr).getLeftOperand(), expr.getStart());
 			TypeWrapper secondExprType = getVarValueType(((BinaryConditionImpl) expr).getRightOperand(), expr.getStart());
+			if ((((BinaryConditionImpl) expr).getOperator().equals("==") || ((BinaryConditionImpl) expr).getOperator().equals("<>"))) {
+				if ((exprType.isMemberOf(secondExprType) || exprType.isAssignableFrom(secondExprType))) {
+					return BasicProvider.instance().getTypeByName("Boolean");
+				} else {
+					handleException(ExceptionMessage.INCOMPATIBLE_TYPES, expr.getStart(), exprType.getClassName(), secondExprType.getClassName());
+				}
+			}
 			if (!secondExprType.equals(BasicProvider.instance().getTypeByName("Boolean"))
 				 || !exprType.equals(BasicProvider.instance().getTypeByName("Boolean"))) {
 				handleException(ExceptionMessage.BAD_OPERATOR_TYPES, expr.getStart(), (((BinaryConditionImpl) expr).getOperator()), exprType.getClassName(), secondExprType.getClassName());
