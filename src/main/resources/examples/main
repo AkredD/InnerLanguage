@@ -28,7 +28,7 @@ TYPE Main.
 		START.
 			if (a == 12 AND FALSE)
 				START.
-
+					
 				END.
 			ELSE
 				START.
@@ -37,8 +37,21 @@ TYPE Main.
 			data: Integer i values (41).
 			while (((Integer) b) > 0)
 				START.
+					while (((Integer) b) > 0)
+						START.
+							if (a == 12 AND FALSE)
+								START.
+									break.
+								END.
+							ELSE
+								START.
+									continue.
+								END.
+							continue.
+						END.
 					continue.
 				END.
+				
 			return a.
 		END.
 END.

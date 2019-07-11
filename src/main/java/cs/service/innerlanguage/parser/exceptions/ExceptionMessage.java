@@ -33,7 +33,8 @@ public enum ExceptionMessage {
 	DUPLICATE_FUNCTION_NAME,
 	MISS_RETURN_STATEMENT,
 	UNREACHABLE_STATEMENT,
-	WRONG_RETURN_TYPE;
+	WRONG_RETURN_TYPE,
+	ENDPOINT_OUT_OF_CONTEXT;
 	private static final String MESSAGES = "messages";
 	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.getDefault());
 

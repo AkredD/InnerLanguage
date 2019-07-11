@@ -23,4 +23,8 @@ public abstract class ITreeTraversal {
 	public StatementContext getElement() {
 		return element;
 	}
+
+	public ITreeTraversal getParent() {
+		return parent;
+	}
 }
