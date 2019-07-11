@@ -53,7 +53,7 @@ TYPE Main.
 						END.
 					continue.
 				END.
-				
+			write (CALL a.equals (a), a, a).
 			return a.
 		END.
 END.

@@ -7,6 +7,7 @@ package cs.service.innerlanguage.translator.statements;
 
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.Token;
@@ -16,11 +17,15 @@ import org.antlr.v4.runtime.Token;
  * @author anisimov_a_v
  */
 public class WriteStatementImpl extends SimpleStatement {
-	private List<NodeContext> values;
+	private List<NodeContext> values = new ArrayList();
 
 	public WriteStatementImpl(AbstractNodeContext parent, List<NodeContext> values, Token start, Token stop) {
 		super(parent, start, stop);
 		this.values = values;
+	}
+
+	public List<NodeContext> getValues() {
+		return values;
 	}
 
 	public void setValues(List<NodeContext> values) {
@@ -32,9 +37,9 @@ public class WriteStatementImpl extends SimpleStatement {
 		return "System.out.println("
 				 + values.stream()
 				  .map(value -> {
-					  return value.toString();
+					  return value.toString() + ".toString()";
 				  })
-				  .collect(Collectors.joining("\n"))
+				  .collect(Collectors.joining(" + \" \\n \" + "))
 				 + ")";
 	}
 }
