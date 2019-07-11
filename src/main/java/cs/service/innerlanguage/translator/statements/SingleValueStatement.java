@@ -21,6 +21,10 @@ public abstract class SingleValueStatement extends SimpleStatement {
 		this.value = value;
 	}
 
+	public NodeContext getValue() {
+		return value;
+	}
+
 	public void setValue(NodeContext value) {
 		this.value = value;
 	}

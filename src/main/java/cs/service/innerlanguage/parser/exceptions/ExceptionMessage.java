@@ -30,7 +30,10 @@ public enum ExceptionMessage {
 	TYPE_HAS_NO_STATIC_METHODS_WITH_THIS_NAME,
 	TYPE_HAS_NO_METHODS_WITH_THIS_NAME,
 	NAME_ALREADY_IN_USE,
-	DUPLICATE_FUNCTION_NAME;
+	DUPLICATE_FUNCTION_NAME,
+	MISS_RETURN_STATEMENT,
+	UNREACHABLE_STATEMENT,
+	WRONG_RETURN_TYPE;
 	private static final String MESSAGES = "messages";
 	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.getDefault());
 

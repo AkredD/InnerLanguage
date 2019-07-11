@@ -53,7 +53,7 @@ public class InspectManager {
 	private final List<IInspector> inspectors = new ArrayList();
 
 	public InspectManager() {
-		IInspector[] inspectors = {new ContextInspector(this)};
+		IInspector[] inspectors = {new ContextInspector(this), new ReturnOrderInspector(this), new ReturnTypeInspector(this)};
 		this.inspectors.addAll(Arrays.asList(inspectors));
 	}
 

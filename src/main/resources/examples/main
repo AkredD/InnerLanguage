@@ -3,7 +3,7 @@ TYPE Main.
 		DATA: Integer a VALUES(412).
 		CONSTANT: Integer b VALUES(4321).
 	)
-	FUNCTION Void main (Integer e)
+	FUNCTION Integer main (Integer e)
 		START.
 			DATA: Integer g VALUES(a).
 			if ((a == 412) AND FALSE)
@@ -14,8 +14,6 @@ TYPE Main.
 			ELSE
 				START.
 					DATA: Boolean gg VALUES(true).
-					return a.
-					return a.
 				END.
 			DATA: Boolean gg VALUES(true).
 			data: Integer i values (41).
@@ -23,18 +21,17 @@ TYPE Main.
 				START.
 					continue.
 				END.
-			return i.
+			return g.
 		END.
 
-	FUNCTION String mainA ()
+	FUNCTION Integer mainA ()
 		START.
 			if (a == 12 AND FALSE)
 				START.
-					return a.
+
 				END.
 			ELSE
 				START.
-					return a.
 					return a.
 				END.
 			data: Integer i values (41).
@@ -42,6 +39,6 @@ TYPE Main.
 				START.
 					continue.
 				END.
-			return i.
+			return a.
 		END.
 END.

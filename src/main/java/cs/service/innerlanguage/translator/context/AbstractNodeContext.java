@@ -49,6 +49,10 @@ public abstract class AbstractNodeContext implements NodeContext {
 		parent = null;
 	}
 
+	public AbstractNodeContext getParent() {
+		return parent;
+	}
+
 	public void setParent(AbstractNodeContext parent) {
 		this.parent = parent;
 		if (parent != null) {
