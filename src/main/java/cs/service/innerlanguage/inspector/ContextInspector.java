@@ -26,7 +26,7 @@ import org.antlr.v4.runtime.Token;
  * @author anisimov_a_v
  */
 public class ContextInspector extends AbstractInspector {
-	private static Set<Class> inspectingSubjects = new HashSet();
+	private static final Set<Class> inspectingSubjects = new HashSet();
 	private Set<String> actualLocalContext = new HashSet();
 	private Stack<Set<String>> contextStack = new Stack();
 
