@@ -34,7 +34,8 @@ public enum ExceptionMessage {
 	MISS_RETURN_STATEMENT,
 	UNREACHABLE_STATEMENT,
 	WRONG_RETURN_TYPE,
-	ENDPOINT_OUT_OF_CONTEXT;
+	ENDPOINT_OUT_OF_CONTEXT,
+	OPERATOR_DOESNT_SUPPORT_TYPE;
 	private static final String MESSAGES = "messages";
 	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.getDefault());
 

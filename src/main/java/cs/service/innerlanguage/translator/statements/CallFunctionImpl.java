@@ -55,7 +55,7 @@ public class CallFunctionImpl extends SimpleStatement {
 	@Override
 	public String toString() {
 		return ((var == null) ? ((type == null) ? "" : type + ".") : var.toString() + ".")
-				 + functionName + " ("
+				 + functionName + "("
 				 + values.stream()
 				  .map(val -> {
 					  return val.toString();
