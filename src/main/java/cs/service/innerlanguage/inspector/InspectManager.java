@@ -55,7 +55,7 @@ public class InspectManager {
 	public InspectManager() {
 		IInspector[] inspectors = {new ContextInspector(this), new ReturnOrderInspector(this),
 											new ReturnTypeInspector(this), new ContinueBreakInspector(this),
-											new EqInspector(this)};
+											new EqInspector(this), new CallTypeInspector(this)};
 		this.inspectors.addAll(Arrays.asList(inspectors));
 	}
 
