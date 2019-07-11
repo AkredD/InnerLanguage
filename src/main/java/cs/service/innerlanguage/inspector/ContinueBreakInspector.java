@@ -47,7 +47,6 @@ public class ContinueBreakInspector extends AbstractInspector {
 	@Override
 	public <T extends NodeContext> void endInspecting(T node) {
 		if (node instanceof WhileImpl) {
-			//visit
 			Map<NodeContext, List<BranchLinkedStatement>> whileStatement = whileStatementsStack.pop();
 			visitTraversalWrapper(whileStatement.get((WhileImpl) node).get(0));
 		}

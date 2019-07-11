@@ -82,7 +82,7 @@ public class InnerAdapter {
 									 .collect(Collectors.joining(", ")) + " )");
 					  });
 					  System.out.println("----");
-					  typeEntry.getValue().getMethods().forEach(method -> {
+					  typeEntry.getValue().getAllMethods().forEach(method -> {
 						  System.out.println("method " + method.getMethodName() + " ("
 													+ method.getConstructor().getParameters()
 									 .stream()

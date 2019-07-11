@@ -54,7 +54,8 @@ public class InspectManager {
 
 	public InspectManager() {
 		IInspector[] inspectors = {new ContextInspector(this), new ReturnOrderInspector(this),
-											new ReturnTypeInspector(this), new ContinueBreakInspector(this)};
+											new ReturnTypeInspector(this), new ContinueBreakInspector(this),
+											new EqInspector(this)};
 		this.inspectors.addAll(Arrays.asList(inspectors));
 	}
 
@@ -208,7 +209,7 @@ public class InspectManager {
 							  return false;
 						  }
 						  for (int i = 0; i < method.getConstructor().getParameters().size(); ++i) {
-							  if (!fooData.getValue().get(i).equals(method.getConstructor().getParameters().get(i).getKey())) {
+							  if (!fooData.getValue().get(i).isMemberOf(method.getConstructor().getParameters().get(i).getKey())) {
 								  return false;
 							  }
 						  }
@@ -259,12 +260,12 @@ public class InspectManager {
 		Optional<TypeWrapper> method = null;
 		if (callFoo.getType() != null) {
 			//static method call
-			if (callFoo.getType().getStaticMethods() == null || callFoo.getType().getStaticMethods().isEmpty()) {
+			if (callFoo.getType().gettAllStaticMethods() == null || callFoo.getType().gettAllStaticMethods().isEmpty()) {
 				handleException(ExceptionMessage.NO_COLLABLE_STATIC_METHODS, callFoo.getType().getClassName(), callFoo.getStart());
 			}
-			method = findMethod.apply(new Pair<>(callFoo.getFunctionName(), valueTypes), callFoo.getType().getStaticMethods());
+			method = findMethod.apply(new Pair<>(callFoo.getFunctionName(), valueTypes), callFoo.getType().gettAllStaticMethods());
 			if (!method.isPresent()) {
-				Optional<TypeMethod> reqMethod = getRequirdMethodByName.apply(callFoo.getFunctionName(), callFoo.getType().getStaticMethods());
+				Optional<TypeMethod> reqMethod = getRequirdMethodByName.apply(callFoo.getFunctionName(), callFoo.getType().gettAllStaticMethods());
 				if (!reqMethod.isPresent()) {
 					handleException(ExceptionMessage.TYPE_HAS_NO_STATIC_METHODS_WITH_THIS_NAME, callFoo.getStart(),
 										 callFoo.getType().getClassName(), callFoo.getFunctionName());
@@ -273,15 +274,16 @@ public class InspectManager {
 			}
 		} else {
 			//object method call
-			if (callFoo.getType().getMethods() == null || callFoo.getType().getMethods().isEmpty()) {
-				handleException(ExceptionMessage.NO_COLLABLE_METHODS, callFoo.getStart(), callFoo.getVar().getName(), getVariableType(callFoo.getVar()).getClassName());
+			TypeWrapper callableObjectType = getVariableType(callFoo.getVar());
+			if (callableObjectType.getAllMethods() == null || callableObjectType.getAllMethods().isEmpty()) {
+				handleException(ExceptionMessage.NO_COLLABLE_METHODS, callFoo.getStart(), callFoo.getVar().getName(), callableObjectType.getClassName());
 			}
-			method = findMethod.apply(new Pair<>(callFoo.getFunctionName(), valueTypes), callFoo.getType().getMethods());
+			method = findMethod.apply(new Pair<>(callFoo.getFunctionName(), valueTypes), callableObjectType.getAllMethods());
 			if (!method.isPresent()) {
-				Optional<TypeMethod> reqMethod = getRequirdMethodByName.apply(callFoo.getFunctionName(), callFoo.getType().getMethods());
+				Optional<TypeMethod> reqMethod = getRequirdMethodByName.apply(callFoo.getFunctionName(), callableObjectType.getAllMethods());
 				if (!reqMethod.isPresent()) {
 					handleException(ExceptionMessage.TYPE_HAS_NO_METHODS_WITH_THIS_NAME, callFoo.getStart(),
-										 callFoo.getVar().getName(), getVariableType(callFoo.getVar()).getClassName(), callFoo.getFunctionName());
+										 callFoo.getVar().getName(), callableObjectType.getClassName(), callFoo.getFunctionName());
 				}
 				handleNoSuitableMethodFound(callFoo, reqMethod.get(), valueTypes);
 			}

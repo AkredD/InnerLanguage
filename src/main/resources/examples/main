@@ -26,7 +26,8 @@ TYPE Main.
 
 	FUNCTION Integer mainA ()
 		START.
-			if (a == 12 AND FALSE)
+			a += a.
+			if (CALL a.equals (a) AND FALSE)
 				START.
 					
 				END.
@@ -47,7 +48,6 @@ TYPE Main.
 								START.
 									continue.
 								END.
-							continue.
 						END.
 					continue.
 				END.

@@ -27,6 +27,8 @@ public class TypeWrapper {
 	private List<BaseMethodView> methodsView;
 	private List<BaseMethodView> staticMethodsView;
 	private List<BaseMethodView> constructorsView;
+	private List<TypeMethod> allStaticMethods;
+	private List<TypeMethod> allMethods;
 
 	public TypeWrapper(String classPath, String className, TypeWrapper parent, Boolean instanceablel, List<TypeMethod> methods, List<TypeMethod> constructors, List<TypeMethod> staticMethods) {
 		this.classPath = classPath;
@@ -58,6 +60,19 @@ public class TypeWrapper {
 
 	public List<TypeMethod> getStaticMethods() {
 		return staticMethods;
+	}
+
+	public synchronized List<TypeMethod> gettAllStaticMethods() {
+		if (allStaticMethods != null) {
+			return allStaticMethods;
+		}
+		allStaticMethods = new ArrayList();
+		TypeWrapper viewingType = this;
+		while (viewingType != null) {
+			allStaticMethods.addAll(viewingType.getStaticMethods());
+			viewingType = viewingType.getParent();
+		}
+		return allStaticMethods;
 	}
 
 	public void initMethods(Map<String, TypeWrapper> typesByClassName) {
@@ -95,6 +110,19 @@ public class TypeWrapper {
 
 	public List<TypeMethod> getMethods() {
 		return methods;
+	}
+
+	public synchronized List<TypeMethod> getAllMethods() {
+		if (allMethods != null) {
+			return allMethods;
+		}
+		allMethods = new ArrayList();
+		TypeWrapper viewingType = this;
+		while (viewingType != null) {
+			allMethods.addAll(viewingType.getMethods());
+			viewingType = viewingType.getParent();
+		}
+		return allMethods;
 	}
 
 	public TypeWrapper getParent() {

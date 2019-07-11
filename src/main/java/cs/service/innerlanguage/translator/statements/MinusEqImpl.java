@@ -22,6 +22,10 @@ public class MinusEqImpl extends SingleValueStatement {
 		this.dataName = dataName;
 	}
 
+	public String getDataName() {
+		return dataName;
+	}
+
 	@Override
 	public String toString() {
 		return dataName + " -= " + value.toString();

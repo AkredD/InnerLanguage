@@ -11,7 +11,7 @@
 				"constructor" : null
 			},
 			{
-				"outputClassName" : "java.lang.Object",
+				"outputClassName" : "java.lang.Boolean",
 				"methodName" : "equals",
 				"constructor" : {
 					"parameters" : {

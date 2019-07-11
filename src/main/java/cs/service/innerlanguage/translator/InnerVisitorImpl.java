@@ -745,7 +745,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 
 	@Override
 	protected NodeContext aggregateResult(NodeContext aggregate, NodeContext nextResult) {
-		return super.aggregateResult(aggregate, nextResult); //To change body of generated methods, choose Tools | Templates.
+		return (aggregate == null) ? nextResult : aggregate;
 	}
 
 	private void handleException(ExceptionMessage cause, String details, Token start) {
