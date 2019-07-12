@@ -13,6 +13,7 @@
 			{
 				"outputClassName" : "java.lang.Boolean",
 				"methodName" : "equals",
+				"primitive" : true,
 				"constructor" : {
 					"parameters" : {
 						"obj" : "java.lang.Object"
@@ -27,6 +28,7 @@
 			{
 				"outputClassName" : "java.lang.Integer",
 				"methodName" : "hashCode",
+				"primitive" : true,
 				"constructor" : null
 			},
 			{
@@ -66,6 +68,7 @@
 					{
 						"outputClassName" : "java.lang.Character",
 						"methodName" : "charAt",
+						"primitive" : true,
 						"constructor" : {
 							"parameters" : {
 								"index" : "java.lang.Integer"
@@ -75,6 +78,7 @@
 					{
 						"outputClassName" : "java.lang.Integer",
 						"methodName" : "length",
+						"primitive" : true,
 						"constructor" : null
 					},
 					{

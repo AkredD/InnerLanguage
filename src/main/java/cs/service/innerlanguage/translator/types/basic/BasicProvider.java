@@ -90,7 +90,7 @@ public final class BasicProvider {
 									 return new Pair<>(param.getType(), param.getDataName());
 								 })
 								 .collect(Collectors.toList()));
-					  TypeMethod method = new TypeMethod(foo.getType(), foo.getFunctionName(), constructor);
+					  TypeMethod method = new TypeMethod(foo.getType(), foo.getFunctionName(), false, constructor);
 					  return method;
 				  })
 				  .collect(Collectors.toList());

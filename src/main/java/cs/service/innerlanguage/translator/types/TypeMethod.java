@@ -16,18 +16,21 @@ import java.util.Set;
 public class TypeMethod {
 	private final TypeWrapper output;
 	private final String methodName;
+	private final boolean primitive;
 	private final TypeConstructor constructor;
 
-	public TypeMethod(TypeWrapper output, String methodName, TypeConstructor constructor) {
+	public TypeMethod(TypeWrapper output, String methodName, Boolean primitive, TypeConstructor constructor) {
 		this.output = output;
 		this.constructor = constructor;
 		this.methodName = methodName;
+		this.primitive = primitive;
 	}
 
 	public TypeMethod(BaseMethodView methodView, Map<String, TypeWrapper> typesByClassName) {
 		this.output = (typesByClassName.containsKey(methodView.getOutputClassName())) ? typesByClassName.get(methodView.getOutputClassName()) : null;
 		this.methodName = methodView.getMethodName();
 		this.constructor = new TypeConstructor(methodView.getConstructor(), typesByClassName);
+		this.primitive = methodView.isPrimitive();
 	}
 
 	public TypeConstructor getConstructor() {
@@ -40,5 +43,9 @@ public class TypeMethod {
 
 	public TypeWrapper getOutput() {
 		return output;
+	}
+
+	public boolean isPrimitive() {
+		return primitive;
 	}
 }

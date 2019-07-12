@@ -14,10 +14,11 @@ import java.util.Set;
  * @author anisimov_a_v
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"outputClassName", "methodName", "constructor"})
+@JsonPropertyOrder({"outputClassName", "methodName", "primitive", "constructor"})
 public class BaseMethodView {
 	private String outputClassName;
 	private String methodName;
+	private boolean primitive;
 	private BaseTypeConstructorView constructor;
 
 	public BaseMethodView() {
@@ -45,5 +46,13 @@ public class BaseMethodView {
 
 	public void setOutputClassName(String outputClassName) {
 		this.outputClassName = outputClassName;
+	}
+
+	public boolean isPrimitive() {
+		return primitive;
+	}
+
+	public void setPrimitive(boolean primitive) {
+		this.primitive = primitive;
 	}
 }
