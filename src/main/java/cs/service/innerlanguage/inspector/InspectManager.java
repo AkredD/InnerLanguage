@@ -15,6 +15,7 @@ import cs.service.innerlanguage.translator.context.BinaryExpressionImpl;
 import cs.service.innerlanguage.translator.context.ExpressionContext;
 import cs.service.innerlanguage.translator.context.FunctionImpl;
 import cs.service.innerlanguage.translator.context.NodeContext;
+import cs.service.innerlanguage.translator.context.NullImpl;
 import cs.service.innerlanguage.translator.context.TypeImpl;
 import cs.service.innerlanguage.translator.context.UnaryConditionImpl;
 import cs.service.innerlanguage.translator.context.UnaryExpressionImpl;
@@ -310,6 +311,9 @@ public class InspectManager {
 	}
 
 	public TypeWrapper getVarValueType(NodeContext value, Token start) {
+		if (value instanceof NullImpl) {
+			return BasicProvider.instance().getNullType();
+		}
 		if (value instanceof BaseValueImpl) {
 			return ((BaseValueImpl) value).getType();
 		}
