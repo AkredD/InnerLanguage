@@ -24,7 +24,7 @@ public class ConstantDefinitionImpl extends DataStatement {
 
 	@Override
 	public String toString() {
-		return "final " + type + " " + dataName + " = new " + type + " ("
+		return "final " + type + " " + dataName + " = new " + type + "("
 				 + values.stream()
 				  .map(value -> {
 					  return value.toString();

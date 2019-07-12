@@ -27,7 +27,7 @@ public class DataDefinitionImpl extends DataStatement {
 	public String toString() {
 		return type + " " + dataName
 				 + ((isInstance())
-					 ? " = new " + type + " ("
+					 ? " = new " + type + "("
 						+ values.stream()
 							 .map(value -> {
 								 return value.toString();

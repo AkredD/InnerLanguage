@@ -41,7 +41,7 @@ public class WhileImpl extends ExtendedStatement {
 		ifSt.append("while (").append(whileCondition.toString()).append(") {\n")
 				  .append(innerStatements.stream()
 							 .map(st -> {
-								 return "\t" + st.toString() + ((ExtendedStatement.class.isAssignableFrom(st.getClass())) ? "" : ";") + "\n";
+								 return "\t" + st.toString().replaceAll("\n", "\n\t") + ((ExtendedStatement.class.isAssignableFrom(st.getClass())) ? "" : ";") + "\n";
 							 })
 							 .collect(Collectors.joining()))
 				  .append("}");
