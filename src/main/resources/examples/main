@@ -5,7 +5,7 @@ TYPE Main.
 	)
 	FUNCTION Integer main (Integer e)
 		START.
-			DATA: Integer g VALUES(a).
+			DATA: Integer g VALUES(null).
 			g = a + g + ((a*a) + g + ((432))).
 			if ((a == 412) AND FALSE)
 				START.
@@ -28,7 +28,7 @@ TYPE Main.
 	FUNCTION Integer mainA ()
 		START.
 			a += a.
-			CALL mainA (a).
+			CALL main (null).
 			if (CALL a.equals (a) AND FALSE)
 				START.
 					

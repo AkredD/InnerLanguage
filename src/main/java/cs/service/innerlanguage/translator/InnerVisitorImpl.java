@@ -26,6 +26,7 @@ import cs.service.innerlanguage.translator.context.FunctionImpl;
 import cs.service.innerlanguage.translator.statements.IfImpl;
 import cs.service.innerlanguage.translator.statements.MinusEqImpl;
 import cs.service.innerlanguage.translator.context.NodeContext;
+import cs.service.innerlanguage.translator.context.NullImpl;
 import cs.service.innerlanguage.translator.context.ParameterImpl;
 import cs.service.innerlanguage.translator.statements.PlusEqImpl;
 import cs.service.innerlanguage.translator.statements.ReturnImpl;
@@ -711,6 +712,9 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitVarValue(InnerParser.VarValueContext ctx) {
+		if (ctx.NULL() != null) {
+			return new NullImpl();
+		}
 		if (ctx.BOOLEAN() != null) {
 			return new BaseValueImpl(BasicProvider.instance().getTypesByName().get("Boolean"), Boolean.valueOf(ctx.BOOLEAN().getText()));
 		}

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
 import cs.service.innerlanguage.parser.exceptions.ExecutionException;
 import cs.service.innerlanguage.translator.context.TypeImpl;
+import cs.service.innerlanguage.translator.types.NullTypeWrapper;
 import cs.service.innerlanguage.translator.types.TypeConstructor;
 import cs.service.innerlanguage.translator.types.TypeMethod;
 import cs.service.innerlanguage.translator.types.TypeWrapper;
@@ -38,6 +39,7 @@ public final class BasicProvider {
 	private Map<String, TypeWrapper> typesByName;
 	private Map<String, TypeWrapper> typesByClassName;
 	private List<TypeWrapper> customTypes;
+	private NullTypeWrapper nullType = new NullTypeWrapper();
 
 	private BasicProvider() {
 		customTypes = new ArrayList();
@@ -53,6 +55,10 @@ public final class BasicProvider {
 			}
 		}
 		return instance;
+	}
+
+	public NullTypeWrapper getNullType() {
+		return nullType;
 	}
 
 	public TypeWrapper getTypeByClassName(String className) {
