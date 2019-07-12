@@ -35,7 +35,9 @@ public enum ExceptionMessage {
 	UNREACHABLE_STATEMENT,
 	WRONG_RETURN_TYPE,
 	ENDPOINT_OUT_OF_CONTEXT,
-	OPERATOR_DOESNT_SUPPORT_TYPE;
+	OPERATOR_DOESNT_SUPPORT_TYPE,
+	FUNCTION_DOESNT_EXISTS,
+	TYPE_ALREADY_EXISTS;
 	private static final String MESSAGES = "messages";
 	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.getDefault());
 

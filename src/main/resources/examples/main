@@ -28,7 +28,7 @@ TYPE Main.
 	FUNCTION Integer mainA ()
 		START.
 			a += a.
-			CALL a.equals (a).
+			CALL mainA (a).
 			if (CALL a.equals (a) AND FALSE)
 				START.
 					

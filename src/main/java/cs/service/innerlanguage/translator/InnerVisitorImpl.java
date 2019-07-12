@@ -145,8 +145,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		checkTypeExistence(ctx, ctx.TYPENAME().getText());
 		List<NodeContext> values = null;
 		//(ctx.VALUES() != null) meanes that it is instance of Type
-		DataDefinitionImpl definition = new DataDefinitionImpl(null, BasicProvider.instance().getTypesByName().get(ctx.TYPENAME().getText())
-				  , ctx.DATANAME().getText(), null, (ctx.VALUES() != null) , ctx.start, ctx.stop);
+		DataDefinitionImpl definition = new DataDefinitionImpl(null, BasicProvider.instance().getTypesByName().get(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), null, (ctx.VALUES() != null), ctx.start, ctx.stop);
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()
 					  .map(valueCtx -> {
@@ -295,17 +294,24 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	public NodeContext visitCallStatement(InnerParser.CallStatementContext ctx) {
 		TypeWrapper type = null;
 		VariableValueImpl var = null;
-		if (ctx.dataname() != null) {
-			TypeWrapper castType = null;
-			if (ctx.dataname().TYPENAME() != null) {
-				checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
-				castType = BasicProvider.instance().getTypesByName().get(ctx.dataname().TYPENAME().getText());
+		//call inner type function
+		if (ctx.TYPENAME() == null && ctx.dataname() == null) {
+			//do nothing
+		} else {
+			//call object method
+			if (ctx.dataname() != null) {
+				TypeWrapper castType = null;
+				if (ctx.dataname().TYPENAME() != null) {
+					checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
+					castType = BasicProvider.instance().getTypesByName().get(ctx.dataname().TYPENAME().getText());
+				}
+				var = new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
 			}
-			var = new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
-		}
-		if (ctx.TYPENAME() != null) {
-			checkTypeExistence(ctx.TYPENAME(), ctx.TYPENAME().getText());
-			type = BasicProvider.instance().getTypesByName().get(ctx.TYPENAME().getText());
+			//call type static method
+			if (ctx.TYPENAME() != null) {
+				checkTypeExistence(ctx.TYPENAME(), ctx.TYPENAME().getText());
+				type = BasicProvider.instance().getTypesByName().get(ctx.TYPENAME().getText());
+			}
 		}
 		CallFunctionImpl callFoo = new CallFunctionImpl(null, var, type, ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		List<NodeContext> values = null;

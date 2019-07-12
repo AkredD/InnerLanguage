@@ -60,7 +60,7 @@ BREAK               : 'BREAK'       | 'break';
 STATIC              : 'STATIC'      | 'static' ; 
 CALL                : 'CALL'        | 'call' ;
 WRITE               : 'WRITE'       | 'write' ;
-
+NULL					  : 'null';
 
 OPERATOR                :    (PLUS | MINUS | MULTIPLICATION | DIVISION | MOD | POWER);
 
@@ -83,7 +83,7 @@ CONSTANTDEF : CONSTANTFR COLON;
 SYSTEMDEF   : SYSTEMFR COLON;
 
 // Parser
-varValue            : (dataname | BOOLEAN | NUMBER | DQ_STRING | DATE | callStatement | expression | condition);
+varValue            : (NULL | dataname | BOOLEAN | NUMBER | DQ_STRING | DATE | callStatement | expression | condition);
 
 dataname					: (OPENBRACKET TYPENAME CLOSEBRACKET)? DATANAME;
 
@@ -136,7 +136,7 @@ continueStatement   : CONTINUE ENDCOMMAND;
 
 breakStatement      : BREAK ENDCOMMAND;
 
-callStatement       : CALL (TYPENAME | dataname) ENDCOMMAND DATANAME
+callStatement       : CALL ((TYPENAME | dataname) ENDCOMMAND)? DATANAME
                       OPENBRACKET
                       (varValue (COMMA varValue)*)? 
                       CLOSEBRACKET;
