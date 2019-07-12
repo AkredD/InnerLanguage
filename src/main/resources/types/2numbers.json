@@ -8,31 +8,37 @@
 			{
 				"outputClassName" : "java.lang.Double",
 				"methodName" : "doubleValue",
+				"primitive" : true,
 				"constructor" : null
 			},
 			{
 				"outputClassName" : "java.lang.Float",
 				"methodName" : "floatValue",
+				"primitive" : true,
 				"constructor" : null
 			},
 			{
 				"outputClassName" : "java.lang.Byte",
 				"methodName" : "byteValue",
+				"primitive" : true,
 				"constructor" : null
 			},
 			{
 				"outputClassName" : "java.lang.Integer",
 				"methodName" : "intValue",
+				"primitive" : true,
 				"constructor" : null
 			},
 			{
 				"outputClassName" : "java.lang.Long",
 				"methodName" : "doubleValue",
+				"primitive" : true,
 				"constructor" : null
 			},
 			{
 				"outputClassName" : "java.lang.Short",
 				"methodName" : "shortValue",
+				"primitive" : true,
 				"constructor" : null
 			}
 		]
@@ -68,6 +74,7 @@
 					{
 						"outputClassName" : "java.lang.Integer",
 						"methodName" : "compare",
+						"primitive" : true,
 						"constructor" : {
 							"parameters" : {
 								"d1" : "java.lang.Double",
@@ -108,6 +115,7 @@
 					{
 						"outputClassName" : "java.lang.Integer",
 						"methodName" : "compare",
+						"primitive" : true,
 						"constructor" : {
 							"parameters" : {
 								"d1" : "java.lang.Float",
@@ -148,6 +156,7 @@
 					{
 						"outputClassName" : "java.lang.Integer",
 						"methodName" : "compare",
+						"primitive" : true,
 						"constructor" : {
 							"parameters" : {
 								"d1" : "java.lang.Byte",
@@ -188,6 +197,7 @@
 					{
 						"outputClassName" : "java.lang.Integer",
 						"methodName" : "compare",
+						"primitive" : true,
 						"constructor" : {
 							"parameters" : {
 								"d1" : "java.lang.Integer",
@@ -228,6 +238,7 @@
 					{
 						"outputClassName" : "java.lang.Integer",
 						"methodName" : "compare",
+						"primitive" : true,
 						"constructor" : {
 							"parameters" : {
 								"d1" : "java.lang.Long",
@@ -268,6 +279,7 @@
 					{
 						"outputClassName" : "java.lang.Integer",
 						"methodName" : "compare",
+						"primitive" : true,
 						"constructor" : {
 							"parameters" : {
 								"d1" : "java.lang.Short",

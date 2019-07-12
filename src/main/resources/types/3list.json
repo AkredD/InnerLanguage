@@ -8,6 +8,7 @@
 			{
 				"outputClassName" : "java.lang.Boolean",
 				"methodName" : "add",
+				"primitive" : true,
 				"constructor" : {
 					"parameters" : {
 						"e" : "java.lang.Object"
@@ -17,6 +18,7 @@
 			{
 				"outputClassName" : "void",
 				"methodName" : "add",
+				"primitive" : true,
 				"constructor" : {
 					"parameters" : {
 						"index" : "java.lang.Integer",
@@ -27,6 +29,7 @@
 			{
 				"outputClassName" : "java.lang.Boolean",
 				"methodName" : "addAll",
+				"primitive" : true,
 				"constructor" : {
 					"parameters" : {
 						"c" : "java.util.ArrayList"
@@ -36,6 +39,7 @@
 			{
 				"outputClassName" : "java.lang.Boolean",
 				"methodName" : "addAll",
+				"primitive" : true,
 				"constructor" : {
 					"parameters" : {
 						"index" : "java.lang.Integer",
@@ -51,6 +55,7 @@
 			{
 				"outputClassName" : "java.lang.Boolean",
 				"methodName" : "contains",
+				"primitive" : true,
 				"constructor" : {
 					"parameters" : {
 						"o" : "java.lang.Object"
@@ -60,6 +65,7 @@
 			{
 				"outputClassName" : "java.lang.Object",
 				"methodName" : "get",
+				"primitive" : true,
 				"constructor" : {
 					"parameters" : {
 						"index" : "java.lang.Integer"
@@ -69,6 +75,7 @@
 			{
 				"outputClassName" : "java.lang.Integer",
 				"methodName" : "indexOf",
+				"primitive" : true,
 				"constructor" : {
 					"parameters" : {
 						"o" : "java.lang.Object"
@@ -78,11 +85,13 @@
 			{
 				"outputClassName" : "java.lang.Boolean",
 				"methodName" : "isEmpty",
+				"primitive" : true,
 				"constructor" : null
 			},
 			{
 				"outputClassName" : "java.lang.Object",
 				"methodName" : "remove",
+				"primitive" : true,
 				"constructor" : {
 					"parameters" : {
 						"index" : "java.lang.Integer"
@@ -92,6 +101,7 @@
 			{
 				"outputClassName" : "java.lang.Boolean",
 				"methodName" : "remove",
+				"primitive" : true,
 				"constructor" : {
 					"parameters" : {
 						"o" : "java.lang.Object"
@@ -101,6 +111,7 @@
 			{
 				"outputClassName" : "java.lang.Integer",
 				"methodName" : "size",
+				"primitive" : true,
 				"constructor" : null
 			},
 			{

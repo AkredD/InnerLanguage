@@ -28,8 +28,7 @@ TYPE Main.
 	FUNCTION Integer mainA ()
 		START.
 			a += a.
-			CALL main (null).
-			if (CALL a.equals (a) AND FALSE)
+			if (true AND FALSE)
 				START.
 					
 				END.
@@ -53,7 +52,7 @@ TYPE Main.
 						END.
 					continue.
 				END.
-			write (CALL a.equals (a), a, a).
+			write (CALL a.equals(a), a, a).
 			return a.
 		END.
 END.
