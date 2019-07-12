@@ -60,7 +60,7 @@ BREAK               : 'BREAK'       | 'break';
 STATIC              : 'STATIC'      | 'static' ; 
 CALL                : 'CALL'        | 'call' ;
 WRITE               : 'WRITE'       | 'write' ;
-
+NULL					  : 'null';
 
 OPERATOR                :    (PLUS | MINUS | MULTIPLICATION | DIVISION | MOD | POWER);
 
@@ -83,7 +83,9 @@ CONSTANTDEF : CONSTANTFR COLON;
 SYSTEMDEF   : SYSTEMFR COLON;
 
 // Parser
-varValue            : (DATANAME | BOOLEAN | NUMBER | DQ_STRING | DATE | callStatement);
+varValue            : (NULL | dataname | BOOLEAN | NUMBER | DQ_STRING | DATE | callStatement | expression | condition);
+
+dataname					: (OPENBRACKET TYPENAME CLOSEBRACKET)? DATANAME;
 
 condition           : condition CONDITIONBOOLOPERATOR condition
                         | boolExpression 
@@ -91,17 +93,17 @@ condition           : condition CONDITIONBOOLOPERATOR condition
                         | CONDITIONUNARYPERATOR condition
                         | boolExpression CONDITIONBOOLOPERATOR condition
                         | condition CONDITIONBOOLOPERATOR boolExpression
-                        | (BOOLEAN | DATANAME | callStatement);
+                        | (BOOLEAN | dataname | callStatement);
                         
 
 boolExpression      :   OPENBRACKET boolExpression CLOSEBRACKET
                         | expression CONDITIONOPERATOR expression
-                        | (DQ_STRING | NUMBER | DATE | DATANAME | callStatement);
+                        | (DQ_STRING | NUMBER | DATE | dataname | callStatement);
 
 expression          : OPENBRACKET expression CLOSEBRACKET
                         | expression OPERATOR expression
                         | UNARYOPERATOR expression
-                        | (DQ_STRING | NUMBER | DATE | DATANAME | callStatement);
+                        | (DQ_STRING | NUMBER | DATE | dataname | callStatement);
 
 ifStatement         : IF OPENBRACKET condition CLOSEBRACKET
                         (
@@ -122,23 +124,22 @@ whileStatement      : WHILE OPENBRACKET condition CLOSEBRACKET
                           ENDSTATEMENT ENDCOMMAND
                         );
 
-eqStatement         : DATANAME EQ (expression | condition) ENDCOMMAND;
+eqStatement         : DATANAME EQ varValue ENDCOMMAND;
 
-plusEqStatemet      : DATANAME PLUSEQ  expression ENDCOMMAND;
+plusEqStatement      : DATANAME PLUSEQ  varValue ENDCOMMAND;
 
-minusEqStatemet     : DATANAME MINUSEQ expression ENDCOMMAND;
+minusEqStatement     : DATANAME MINUSEQ varValue ENDCOMMAND;
 
-returnStatement     : RETURN (DATANAME | condition | expression) ENDCOMMAND;
+returnStatement     : RETURN varValue ENDCOMMAND;
 
 continueStatement   : CONTINUE ENDCOMMAND;
 
 breakStatement      : BREAK ENDCOMMAND;
 
-callStatement       : CALL DATANAME 
+callStatement       : CALL ((TYPENAME | dataname) ENDCOMMAND)? DATANAME
                       OPENBRACKET
                       (varValue (COMMA varValue)*)? 
-                      CLOSEBRACKET
-                    | OPENBRACKET callStatement CLOSEBRACKET;
+                      CLOSEBRACKET;
 
 writeStatement      : WRITE OPENBRACKET (varValue (COMMA varValue)*)? CLOSEBRACKET ENDCOMMAND;
 
@@ -151,9 +152,9 @@ statement   :   (ifStatement
                 | constantDef
                 | systemDef
                 | eqStatement
-                | plusEqStatemet
-                | minusEqStatemet
-                | callStatement ENDCOMMAND
+                | plusEqStatement
+                | minusEqStatement
+                | (TYPENAME)? callStatement ENDCOMMAND
                 | writeStatement);
 
 function    : 
@@ -165,7 +166,7 @@ function    :
                     (statement)+ 
                 ENDSTATEMENT ENDCOMMAND;
 
-staticBlock : STATIC OPENBRACKET (dataDef | constantDef | systemDef)+ CLOSEBRACKET;
+staticBlock : STATIC OPENBRACKET (varDefinition)+ CLOSEBRACKET;
 
 type        :   
             TYPE TYPENAME ENDCOMMAND 
@@ -173,10 +174,12 @@ type        :
                 (function)+ 
                 ENDSTATEMENT ENDCOMMAND;
 
-dataDef     : DATADEF TYPENAME DATANAME (VALUES OPENBRACKET varValue (COMMA varValue)* CLOSEBRACKET)? ENDCOMMAND ;
+varDefinition   : dataDef | constantDef | systemDef;
 
-constantDef : CONSTANTDEF TYPENAME DATANAME VALUES OPENBRACKET varValue (COMMA varValue)* CLOSEBRACKET ENDCOMMAND;
+dataDef         : DATADEF TYPENAME DATANAME (VALUES OPENBRACKET (varValue (COMMA varValue)*)? CLOSEBRACKET)? ENDCOMMAND ;
 
-systemDef   : SYSTEMDEF TYPENAME DATANAME ENDCOMMAND;
+constantDef     : CONSTANTDEF TYPENAME DATANAME VALUES OPENBRACKET (varValue (COMMA varValue)*)? CLOSEBRACKET ENDCOMMAND;
 
-inner       : type EOF ;
+systemDef       : SYSTEMDEF TYPENAME DATANAME ENDCOMMAND;
+
+inner           : type EOF ;

@@ -51,6 +51,7 @@ public class InspectManager {
 	private Map<String, FunctionImpl> functionContext = new HashMap();
 	private Map<String, DataStatement> variableContext = new HashMap();
 	private final List<IInspector> inspectors = new ArrayList();
+	private TypeImpl visitingType;
 
 	public InspectManager() {
 		IInspector[] inspectors = {new ContextInspector(this), new ReturnOrderInspector(this),
@@ -69,6 +70,7 @@ public class InspectManager {
 	}
 
 	public void inspectType(TypeImpl type) {
+		this.visitingType = type;
 		if (type.getFunctions() == null || type.getFunctions().isEmpty()) {
 			handleException(ExceptionMessage.METHODS_DOESNT_EXISTS, type.getTypeName(), type.getStart());
 		}
@@ -78,6 +80,7 @@ public class InspectManager {
 			}
 			functionContext.put(foo.getFunctionName(), foo);
 		});
+		BasicProvider.instance().registerType(type);
 		if (type.getStaticBlock() != null && !type.getStaticBlock().isEmpty()) {
 			variableContext = type.getStaticBlock()
 					  .stream()
@@ -259,7 +262,21 @@ public class InspectManager {
 	public TypeWrapper getCallStatementReturnType(CallFunctionImpl callFoo) {
 		List<TypeWrapper> valueTypes = getTypesOfVarList.apply(callFoo.getValues(), callFoo.getStart());
 		Optional<TypeWrapper> method = null;
-		if (callFoo.getType() != null) {
+		if (callFoo.getType() == null && callFoo.getVar() == null) {
+			//inner method call
+			if (!functionContext.containsKey(callFoo.getFunctionName())) {
+				handleException(ExceptionMessage.FUNCTION_DOESNT_EXISTS, callFoo.getStart(), callFoo.getFunctionName());
+			}
+			method = findMethod.apply(new Pair<>(callFoo.getFunctionName(), valueTypes), BasicProvider.instance().getTypeByName(visitingType.getTypeName()).getAllMethods());
+			if (!method.isPresent()) {
+				Optional<TypeMethod> reqMethod = getRequirdMethodByName.apply(callFoo.getFunctionName(), BasicProvider.instance().getTypeByName(visitingType.getTypeName()).getAllMethods());
+				if (!reqMethod.isPresent()) {
+					handleException(ExceptionMessage.TYPE_HAS_NO_STATIC_METHODS_WITH_THIS_NAME, callFoo.getStart(),
+										 visitingType.getTypeName(), callFoo.getFunctionName());
+				}
+				handleNoSuitableMethodFound(callFoo, reqMethod.get(), valueTypes);
+			}
+		} else if (callFoo.getType() != null) {
 			//static method call
 			if (callFoo.getType().gettAllStaticMethods() == null || callFoo.getType().gettAllStaticMethods().isEmpty()) {
 				handleException(ExceptionMessage.NO_COLLABLE_STATIC_METHODS, callFoo.getType().getClassName(), callFoo.getStart());

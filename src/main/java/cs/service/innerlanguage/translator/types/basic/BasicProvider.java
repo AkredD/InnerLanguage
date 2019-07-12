@@ -6,7 +6,13 @@
 package cs.service.innerlanguage.translator.types.basic;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
+import cs.service.innerlanguage.parser.exceptions.ExecutionException;
+import cs.service.innerlanguage.translator.context.TypeImpl;
+import cs.service.innerlanguage.translator.types.TypeConstructor;
+import cs.service.innerlanguage.translator.types.TypeMethod;
 import cs.service.innerlanguage.translator.types.TypeWrapper;
+import cs.service.innerlanguage.utils.Pair;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -25,11 +33,14 @@ import java.util.logging.Logger;
  */
 public final class BasicProvider {
 	private static final String TYPEPATH = "types";
+	private static final String DEFAULT_CLASS_PATH = "cs.service.registerTypes";
 	private static BasicProvider instance;
 	private Map<String, TypeWrapper> typesByName;
 	private Map<String, TypeWrapper> typesByClassName;
+	private List<TypeWrapper> customTypes;
 
 	private BasicProvider() {
+		customTypes = new ArrayList();
 		reload();
 	}
 
@@ -60,9 +71,36 @@ public final class BasicProvider {
 		return typesByClassName;
 	}
 
+	public void registerType(TypeImpl type) {
+		if (typesByName.containsKey(type.getTypeName())) {
+			handleException(ExceptionMessage.TYPE_ALREADY_EXISTS, type.getStart(), type.getTypeName());
+		}
+		List<TypeMethod> methods = type.getFunctions().stream()
+				  .map(foo -> {
+					  TypeConstructor constructor = new TypeConstructor((foo.getParameters() == null)
+																						 ? null
+																						 : foo.getParameters().stream()
+								 .map(param -> {
+									 return new Pair<>(param.getType(), param.getDataName());
+								 })
+								 .collect(Collectors.toList()));
+					  TypeMethod method = new TypeMethod(foo.getType(), foo.getFunctionName(), constructor);
+					  return method;
+				  })
+				  .collect(Collectors.toList());
+		TypeWrapper customType = new TypeWrapper(DEFAULT_CLASS_PATH + "." + type.getTypeName(), type.getTypeName(), typesByName.get("Object"), Boolean.TRUE, methods, null, null);
+		customTypes.add(customType);
+		typesByName.put(customType.getClassName(), customType);
+		typesByClassName.put(customType.getClassPath(), customType);
+	}
+
 	public void reload() {
 		this.typesByName = new HashMap();
 		this.typesByClassName = new HashMap();
+		customTypes.forEach(type -> {
+			typesByName.put(type.getClassName(), type);
+			typesByClassName.put(type.getClassPath(), type);
+		});
 		try {
 			for (String name : getResourceFiles(TYPEPATH)) {
 				ObjectMapper mapper = new ObjectMapper();
@@ -116,5 +154,10 @@ public final class BasicProvider {
 
 	private ClassLoader getContextClassLoader() {
 		return Thread.currentThread().getContextClassLoader();
+	}
+
+	private void handleException(ExceptionMessage cause, Token start, String... details) {
+		String message = String.format(cause.getLocalizedMessage(), (Object[]) details);
+		throw new ExecutionException(message, start.getLine(), start.getCharPositionInLine());
 	}
 }
