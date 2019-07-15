@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs.service.innerlanguage.translator.types;
+package cs.service.innerlanguage.provider.types;
 
-import cs.service.innerlanguage.translator.types.basic.BaseMethodView;
-import cs.service.innerlanguage.translator.types.basic.BaseTypeView;
+import cs.service.innerlanguage.provider.types.basic.BaseMethodView;
+import cs.service.innerlanguage.provider.types.basic.BaseTypeView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

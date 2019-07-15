@@ -7,7 +7,7 @@ package cs.service.innerlanguage.translator.context;
 
 import cs.service.innerlanguage.translator.statements.ExtendedStatement;
 import cs.service.innerlanguage.translator.statements.StatementContext;
-import cs.service.innerlanguage.translator.types.TypeWrapper;
+import cs.service.innerlanguage.provider.types.TypeWrapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.Token;
