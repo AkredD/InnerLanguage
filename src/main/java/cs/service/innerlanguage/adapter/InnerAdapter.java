@@ -17,7 +17,7 @@ import cs.service.innerlanguage.translator.InnerVisitorImpl;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.context.TypeImpl;
-import cs.service.innerlanguage.translator.types.basic.BasicProvider;
+import cs.service.innerlanguage.provider.types.basic.BasicProvider;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;

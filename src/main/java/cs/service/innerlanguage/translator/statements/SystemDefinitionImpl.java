@@ -6,7 +6,7 @@
 package cs.service.innerlanguage.translator.statements;
 
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
-import cs.service.innerlanguage.translator.types.TypeWrapper;
+import cs.service.innerlanguage.provider.types.TypeWrapper;
 import org.antlr.v4.runtime.Token;
 
 /**

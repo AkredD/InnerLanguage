@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs.service.innerlanguage.translator.types.basic;
+package cs.service.innerlanguage.provider.types.basic;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
 import cs.service.innerlanguage.parser.exceptions.ExecutionException;
 import cs.service.innerlanguage.translator.context.TypeImpl;
-import cs.service.innerlanguage.translator.types.NullTypeWrapper;
-import cs.service.innerlanguage.translator.types.TypeConstructor;
-import cs.service.innerlanguage.translator.types.TypeMethod;
-import cs.service.innerlanguage.translator.types.TypeWrapper;
+import cs.service.innerlanguage.provider.types.NullTypeWrapper;
+import cs.service.innerlanguage.provider.types.TypeConstructor;
+import cs.service.innerlanguage.provider.types.TypeMethod;
+import cs.service.innerlanguage.provider.types.TypeWrapper;
 import cs.service.innerlanguage.utils.Pair;
 import java.io.BufferedReader;
 import java.io.File;
