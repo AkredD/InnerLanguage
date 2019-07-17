@@ -11,18 +11,20 @@ import cs.service.innerlanguage.parser.InnerParser;
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
 import cs.service.innerlanguage.parser.exceptions.InnerException;
 import cs.service.innerlanguage.parser.exceptions.ParsingException;
+import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.translator.InnerBaseVisitor;
 import cs.service.innerlanguage.translator.InnerVisitor;
 import cs.service.innerlanguage.translator.InnerVisitorImpl;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.context.TypeImpl;
-import cs.service.innerlanguage.provider.types.basic.BasicProvider;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -43,19 +45,23 @@ public class InnerAdapter {
 	private Integer a = new Integer(32);
 	private Integer b = new Integer(a);
 
+	public int[] someMethod(String aa, char aaaa) {
+		return new int[] {1};
+	}
+
+	public int someMethod2(InnerAdapter[] d) {
+		return 1;
+	}
+
 	public static void main(String[] args) {
 		//showBasicTypes();
-		String a = null;
-		try {
-			a = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("examples" + File.separator + "main"), "UTF-8");
-		} catch (IOException ex) {
-			Logger.getLogger(InnerAdapter.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		InnerParser.InnerContext context = prepareContext(a);
+		MainProvider.instance();
+		//showBasicTypes();
+		//InnerParser.InnerContext context = prepareContext(a);
 	}
 
 	private static void showBasicTypes() {
-		BasicProvider.instance().getTypesByName()
+		MainProvider.instance().getBasicTypesByName()
 				  .entrySet()
 				  .stream()
 				  .forEach(typeEntry -> {

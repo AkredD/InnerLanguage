@@ -1,7 +1,7 @@
 {
 	"typeNode" : {
 		"classPath" : "java.util.ArrayList",
-		"className" : "List",
+		"className" : "ArrayList",
 		"parent" : "java.lang.Object",
 		"instanceable" : true,
 		"methods" : [

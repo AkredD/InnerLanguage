@@ -37,7 +37,10 @@ public enum ExceptionMessage {
 	ENDPOINT_OUT_OF_CONTEXT,
 	OPERATOR_DOESNT_SUPPORT_TYPE,
 	FUNCTION_DOESNT_EXISTS,
-	TYPE_ALREADY_EXISTS;
+	TYPE_ALREADY_EXISTS,
+	VARARGS_DOESNT_SUPPORT,
+	PRIMITVE_ARRAYS_DOENST_SUPPORT,
+	RUNTIME_TYPE_LOAD_EXCEPTION;
 	private static final String MESSAGES = "messages";
 	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.getDefault());
 

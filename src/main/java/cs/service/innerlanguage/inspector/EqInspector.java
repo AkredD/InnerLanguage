@@ -6,12 +6,12 @@
 package cs.service.innerlanguage.inspector;
 
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
+import cs.service.innerlanguage.provider.MainProvider;
+import cs.service.innerlanguage.provider.types.TypeWrapper;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.statements.EqImpl;
 import cs.service.innerlanguage.translator.statements.MinusEqImpl;
 import cs.service.innerlanguage.translator.statements.PlusEqImpl;
-import cs.service.innerlanguage.translator.types.TypeWrapper;
-import cs.service.innerlanguage.translator.types.basic.BasicProvider;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -60,8 +60,8 @@ public class EqInspector extends AbstractInspector {
 			}
 			TypeWrapper type = inspectManager.getVarValueType(((PlusEqImpl) node).getValue(), ((PlusEqImpl) node).getStart());
 			TypeWrapper expectingType = inspectManager.getVariableContext().get(((PlusEqImpl) node).getDataName()).getType();
-			if (!expectingType.isMemberOf(BasicProvider.instance().getTypeByName("String"))
-				 && !expectingType.isMemberOf(BasicProvider.instance().getTypeByName("Number"))) {
+			if (!expectingType.isMemberOf(MainProvider.instance().getBasicTypeByName("String"))
+				 && !expectingType.isMemberOf(MainProvider.instance().getBasicTypeByName("Number"))) {
 				inspectManager.handleException(ExceptionMessage.OPERATOR_DOESNT_SUPPORT_TYPE, ((PlusEqImpl) node).getStart(), expectingType.getClassName());
 			}
 			if (!type.equals(expectingType)) {
@@ -74,7 +74,7 @@ public class EqInspector extends AbstractInspector {
 			}
 			TypeWrapper type = inspectManager.getVarValueType(((MinusEqImpl) node).getValue(), ((MinusEqImpl) node).getStart());
 			TypeWrapper expectingType = inspectManager.getVariableContext().get(((MinusEqImpl) node).getDataName()).getType();
-			if (!expectingType.isMemberOf(BasicProvider.instance().getTypeByName("Number"))) {
+			if (!expectingType.isMemberOf(MainProvider.instance().getBasicTypeByName("Number"))) {
 				inspectManager.handleException(ExceptionMessage.OPERATOR_DOESNT_SUPPORT_TYPE, ((MinusEqImpl) node).getStart(), expectingType.getClassName());
 			}
 			if (!type.equals(expectingType)) {
