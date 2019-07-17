@@ -8,8 +8,11 @@ package cs.service.innerlanguage.provider.types;
 import cs.service.innerlanguage.provider.types.basic.BaseMethodView;
 import cs.service.innerlanguage.provider.types.basic.BaseTypeView;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -19,8 +22,8 @@ import java.util.stream.Collectors;
 public class TypeWrapper {
 	private final String classPath;
 	private final String className;
-	private final TypeWrapper parent;
 	private final Boolean instanceablel;
+	private List<TypeWrapper> parentList;
 	private List<TypeMethod> constructors;
 	private List<TypeMethod> methods;
 	private List<TypeMethod> staticMethods;
@@ -30,20 +33,20 @@ public class TypeWrapper {
 	private List<TypeMethod> allStaticMethods;
 	private List<TypeMethod> allMethods;
 
-	public TypeWrapper(String classPath, String className, TypeWrapper parent, Boolean instanceablel, List<TypeMethod> methods, List<TypeMethod> constructors, List<TypeMethod> staticMethods) {
+	public TypeWrapper(String classPath, String className, List<TypeWrapper> parentList, Boolean instanceablel, List<TypeMethod> methods, List<TypeMethod> constructors, List<TypeMethod> staticMethods) {
 		this.classPath = classPath;
 		this.className = className;
-		this.parent = parent;
+		this.parentList = parentList;
 		this.constructors = constructors;
 		this.methods = methods;
 		this.instanceablel = instanceablel;
 		this.staticMethods = staticMethods;
 	}
 
-	public TypeWrapper(BaseTypeView view, TypeWrapper parent) {
+	public TypeWrapper(BaseTypeView view, List<TypeWrapper> parentList) {
 		this.classPath = view.getClassPath();
 		this.className = view.getClassName();
-		this.parent = parent;
+		this.parentList = parentList;
 		this.instanceablel = view.getInstanceable();
 		this.methodsView = view.getMethods();
 		this.constructorsView = view.getConstructors();
@@ -54,6 +57,10 @@ public class TypeWrapper {
 		return constructors;
 	}
 
+	public void setConstructors(List<TypeMethod> constructors) {
+		this.constructors = constructors;
+	}
+
 	public Boolean getInstanceablel() {
 		return instanceablel;
 	}
@@ -62,16 +69,23 @@ public class TypeWrapper {
 		return staticMethods;
 	}
 
-	public synchronized List<TypeMethod> gettAllStaticMethods() {
+	public void setStaticMethods(List<TypeMethod> staticMethods) {
+		this.staticMethods = staticMethods;
+	}
+
+	public synchronized List<TypeMethod> getAllStaticMethods() {
 		if (allStaticMethods != null) {
 			return allStaticMethods;
 		}
 		allStaticMethods = new ArrayList();
-		TypeWrapper viewingType = this;
-		while (viewingType != null) {
-			allStaticMethods.addAll(viewingType.getStaticMethods());
-			viewingType = viewingType.getParent();
+		Set<TypeMethod> staticMethodsSet = new HashSet();
+		if (parentList != null) {
+			parentList.forEach(parent -> {
+				staticMethodsSet.addAll(parent.getAllStaticMethods());
+			});
 		}
+		staticMethodsSet.addAll(this.methods);
+		allStaticMethods.addAll(staticMethodsSet);
 		return allStaticMethods;
 	}
 
@@ -112,21 +126,28 @@ public class TypeWrapper {
 		return methods;
 	}
 
+	public void setMethods(List<TypeMethod> methods) {
+		this.methods = methods;
+	}
+
 	public synchronized List<TypeMethod> getAllMethods() {
 		if (allMethods != null) {
 			return allMethods;
 		}
 		allMethods = new ArrayList();
-		TypeWrapper viewingType = this;
-		while (viewingType != null) {
-			allMethods.addAll(viewingType.getMethods());
-			viewingType = viewingType.getParent();
+		Set<TypeMethod> methodsSet = new HashSet();
+		if (parentList != null) {
+			parentList.forEach(parent -> {
+				methodsSet.addAll(parent.getAllMethods());
+			});
 		}
+		methodsSet.addAll(this.methods);
+		allMethods.addAll(methodsSet);
 		return allMethods;
 	}
 
-	public TypeWrapper getParent() {
-		return parent;
+	public List<TypeWrapper> getParentList() {
+		return parentList;
 	}
 
 	@Override
@@ -141,10 +162,17 @@ public class TypeWrapper {
 		if (className.equals(type.getClassName())) {
 			return true;
 		}
-		if (type.getParent() == null) {
+		if (type.getParentList() == null) {
 			return false;
 		}
-		return isAssignableFrom(type.getParent());
+		return type.getParentList()
+				  .parallelStream()
+				  .map(parent -> {
+					  return isAssignableFrom(parent);
+				  })
+				  .filter(e -> e)
+				  .findAny()
+				  .isPresent();
 	}
 
 	public Boolean isMemberOf(TypeWrapper type) {

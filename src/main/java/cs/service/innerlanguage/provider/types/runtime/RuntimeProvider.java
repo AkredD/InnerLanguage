@@ -21,6 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -38,15 +40,22 @@ import org.reflections.util.FilterBuilder;
  */
 public class RuntimeProvider {
 	private MainProvider mainProvider;
-	private final List<TypeWrapper> systemTypes;
-	private final Map<String, TypeWrapper> typesByName;
-	private final Map<String, TypeWrapper> typesByClassName;
+	private final List<TypeWrapper> systemTypes = new ArrayList();
+	private final Map<String, TypeWrapper> typesByName = new HashMap();
+	private final Map<String, TypeWrapper> typesByClassName = new HashMap();
+	private Boolean ignorePrimitiveArrays;
+	private Boolean ignoreVarargs;
 
 	public RuntimeProvider(MainProvider mainProvaider) {
-		this.systemTypes = new ArrayList();
 		this.mainProvider = mainProvaider;
-		this.typesByName = new HashMap();
-		this.typesByClassName = new HashMap();
+	}
+
+	public void setIgnorePrimitiveArrays(Boolean ignorePrimitiveArrays) {
+		this.ignorePrimitiveArrays = ignorePrimitiveArrays;
+	}
+
+	public void setIgnoreVarargs(Boolean ignoreVarargs) {
+		this.ignoreVarargs = ignoreVarargs;
 	}
 
 	public void reload() {
@@ -71,6 +80,15 @@ public class RuntimeProvider {
 			Logger.getLogger(MainProvider.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
+	private final Function<Class, TypeWrapper> getTypeWrapperByClass = (clazz) -> {
+		if (!(typesByClassName.containsKey(clazz.getName())
+				|| mainProvider.getBasicTypesByClassName().containsKey(clazz.getName()))) {
+			register(clazz.getName());
+		}
+		return ((typesByClassName.containsKey(clazz.getName()))
+				  ? typesByClassName.get(clazz.getName())
+				  : mainProvider.getBasicTypesByClassName().get(clazz.getName()));
+	};
 
 	private void register(String className) {
 		try {
@@ -82,35 +100,25 @@ public class RuntimeProvider {
 				return;
 			}
 			//registering super class
-			TypeWrapper parent = null;
-			if (clazz.getSuperclass() == null && (clazz.getInterfaces() == null || clazz.getInterfaces().length == 0)) {
-				parent = mainProvider.getBasicTypeByName("Object");
-			} else if (clazz.getSuperclass() != null && (clazz.getInterfaces() == null || clazz.getInterfaces().length == 0)) {
-				if (!(typesByClassName.containsKey(clazz.getSuperclass().getName())
-						|| mainProvider.getBasicTypesByClassName().containsKey(clazz.getSuperclass().getName()))) {
-					register(clazz.getSuperclass().getName());
-				}
-				parent = (typesByClassName.containsKey(clazz.getSuperclass().getName()))
-							? typesByClassName.get(clazz.getSuperclass().getName())
-							: mainProvider.getBasicTypesByClassName().get(clazz.getSuperclass().getName());
-			} else if (clazz.getSuperclass() == null && (clazz.getInterfaces() != null || clazz.getInterfaces().length == 1)) {
-				if (!(typesByClassName.containsKey(clazz.getInterfaces()[0].getName())
-						|| mainProvider.getBasicTypesByClassName().containsKey(clazz.getInterfaces()[0].getName()))) {
-					register(clazz.getInterfaces()[0].getName());
-				}
-				parent = (typesByClassName.containsKey(clazz.getInterfaces()[0].getName()))
-							? typesByClassName.get(clazz.getInterfaces()[0].getName())
-							: mainProvider.getBasicTypesByClassName().get(clazz.getInterfaces()[0].getName());
-			} else {
-				mainProvider.handleException(ExceptionMessage.RUNTIME_TYPE_LOAD_EXCEPTION, clazz.getName());
+			List<TypeWrapper> parentList = new ArrayList();
+			if ((clazz.getSuperclass() == null && (clazz.getInterfaces() == null || clazz.getInterfaces().length == 0))) {
+				parentList.add(mainProvider.getBasicTypeByName("Object"));
+			}
+			if (clazz.getSuperclass() != null) {
+				parentList.add(getTypeWrapperByClass.apply(clazz.getSuperclass()));
+			}
+			if (clazz.getInterfaces() != null) {
+				Arrays.asList(clazz.getInterfaces()).forEach(interfaceClazz -> {
+					parentList.add(getTypeWrapperByClass.apply(interfaceClazz));
+				});
 			}
 			Boolean instanceablel = Modifier.isAbstract(clazz.getModifiers()) || clazz.isInterface();
-			List<TypeMethod> methods = formMethods(clazz, false);
-			List<TypeMethod> staticMethods = formMethods(clazz, true);
-			List<TypeMethod> constructors = formConstructors(clazz);
-			TypeWrapper type = new TypeWrapper(clazz.getName(), clazz.getSimpleName(), parent, !instanceablel, methods, constructors, staticMethods);
+			TypeWrapper type = new TypeWrapper(clazz.getName(), clazz.getSimpleName(), parentList, !instanceablel, null, null, null);
 			typesByName.put(type.getClassName(), type);
 			typesByClassName.put(type.getClassPath(), type);
+			type.setMethods(formMethods(clazz, false));
+			type.setStaticMethods(formMethods(clazz, true));
+			type.setConstructors(formConstructors(clazz));
 		} catch (ClassNotFoundException ex) {
 			Logger.getLogger(RuntimeProvider.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -138,19 +146,22 @@ public class RuntimeProvider {
 			return Arrays.asList(clazz.getMethods()).stream()
 					  .filter(method -> method.getDeclaringClass().equals(clazz))
 					  .filter(method -> !Modifier.isStatic(method.getModifiers()) ^ needStatic)
+					  .filter(method -> !ignorePrimitiveArrays || !method.getReturnType().getName().startsWith("["))
+					  .filter(method -> !ignoreVarargs || !method.isVarArgs())
 					  .peek(method -> {
 						  if (method.isVarArgs()) {
 							  mainProvider.handleException(ExceptionMessage.VARARGS_DOESNT_SUPPORT, method.getName(), clazz.getSimpleName());
 						  }
 						  if (method.getReturnType().getName().startsWith("[")) {
-							  mainProvider.handleException(ExceptionMessage.PRIMITVE_ARRAYS_DOENST_SUPPORT, method.getName(), clazz.getSimpleName());
+							  mainProvider.handleException(ExceptionMessage.PRIMITVE_ARRAYS_DOESNT_SUPPORT, method.getName(), clazz.getSimpleName());
 						  }
 					  })
 					  .map(method -> {
 						  TypeConstructor methodConstructor = new TypeConstructor(Arrays.asList(method.getParameterTypes())
 									 .stream()
 									 .map(paramClazz -> {
-										 return getTypeWrapperByClass(paramClazz, method.getName());
+										 TypeWrapper type = getTypeWrapperByClass(paramClazz, method.getName());
+										 return type;
 									 })
 									 .map(type -> {
 										 return new Pair<>(type, "o" + type.getClassName());
@@ -167,7 +178,7 @@ public class RuntimeProvider {
 	private TypeWrapper getTypeWrapperByClass(Class clazz, String methodName) {
 		if (clazz.isPrimitive()) {
 			if (clazz.getName().startsWith("[")) {
-				mainProvider.handleException(ExceptionMessage.PRIMITVE_ARRAYS_DOENST_SUPPORT, methodName, clazz.getSimpleName());
+				mainProvider.handleException(ExceptionMessage.PRIMITVE_ARRAYS_DOESNT_SUPPORT, methodName, clazz.getSimpleName());
 			}
 			TypeWrapper primitive = null;
 			switch (clazz.getName()) {
@@ -187,13 +198,16 @@ public class RuntimeProvider {
 					primitive = mainProvider.getBasicTypeByName("Double");
 					break;
 				case "char":
-					primitive = mainProvider.getBasicTypeByName("Char");
+					primitive = mainProvider.getBasicTypeByName("Character");
 					break;
 				case "byte":
 					primitive = mainProvider.getBasicTypeByName("Byte");
 					break;
 				case "boolean":
 					primitive = mainProvider.getBasicTypeByName("Boolean");
+					break;
+				case "void":
+					primitive = mainProvider.getBasicTypeByName("Void");
 					break;
 			}
 			return primitive;

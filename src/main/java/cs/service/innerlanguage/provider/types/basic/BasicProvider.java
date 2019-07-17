@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public final class BasicProvider {
 					  return method;
 				  })
 				  .collect(Collectors.toList());
-		TypeWrapper customType = new TypeWrapper(DEFAULT_CLASS_PATH + "." + type.getTypeName(), type.getTypeName(), typesByName.get("Object"), Boolean.TRUE, methods, null, null);
+		TypeWrapper customType = new TypeWrapper(DEFAULT_CLASS_PATH + "." + type.getTypeName(), type.getTypeName(), Arrays.asList(typesByName.get("Object")), Boolean.TRUE, methods, null, null);
 		customTypes.add(customType);
 		typesByName.put(customType.getClassName(), customType);
 		typesByClassName.put(customType.getClassPath(), customType);
@@ -114,7 +115,7 @@ public final class BasicProvider {
 		BaseTypeView typeView = tree.getTypeNode();
 		TypeWrapper type = new TypeWrapper(typeView,
 													  typesByClassName.containsKey(typeView.getParent())
-													  ? typesByClassName.get(typeView.getParent())
+													  ? Arrays.asList(typesByClassName.get(typeView.getParent()))
 													  : null);
 		typesByName.put(type.getClassName(), type);
 		typesByClassName.put(type.getClassPath(), type);

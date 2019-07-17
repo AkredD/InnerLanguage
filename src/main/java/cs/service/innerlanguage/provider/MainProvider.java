@@ -43,13 +43,12 @@ import org.reflections.util.FilterBuilder;
 public class MainProvider {
 	private static MainProvider instance;
 	private BasicProvider basicProvider;
-        private RuntimeProvider runtimeProvider;
+	private RuntimeProvider runtimeProvider;
 	private NullTypeWrapper nullType = new NullTypeWrapper();
 
 	private MainProvider() {
 		this.basicProvider = new BasicProvider(this);
-                this.runtimeProvider = new RuntimeProvider(this);
-		reload();
+		this.runtimeProvider = new RuntimeProvider(this);
 	}
 
 	public static MainProvider instance() {
@@ -61,6 +60,16 @@ public class MainProvider {
 			}
 		}
 		return instance;
+	}
+
+	public MainProvider ignorePrimitiveArrays(Boolean ignore) {
+		runtimeProvider.setIgnorePrimitiveArrays(ignore);
+		return this;
+	}
+
+	public MainProvider ignoreVarargs(Boolean ignore) {
+		runtimeProvider.setIgnoreVarargs(ignore);
+		return this;
 	}
 
 	public NullTypeWrapper getNullType() {
@@ -87,20 +96,20 @@ public class MainProvider {
 		basicProvider.registerType(type);
 	}
 
-	public void handleException(ExceptionMessage cause,  String... details) {
+	public void handleException(ExceptionMessage cause, String... details) {
 		String message = String.format(cause.getLocalizedMessage(), (Object[]) details);
 		throw new PreparationException(message);
 	}
-        
-        public void handleException(ExceptionMessage cause, Token start, String... details) {
+
+	public void handleException(ExceptionMessage cause, Token start, String... details) {
 		String message = String.format(cause.getLocalizedMessage(), (Object[]) details);
 		throw new ExecutionException(message, start.getLine(), start.getCharPositionInLine());
 	}
 
-	public void reload() {
+	public MainProvider reload() {
 		basicProvider.reload();
-                runtimeProvider.reload();
-		
+		runtimeProvider.reload();
+		return this;
 	}
 
 	public List<String> getResourceFiles(String path) throws IOException {
