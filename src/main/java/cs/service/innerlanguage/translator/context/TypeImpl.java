@@ -7,7 +7,12 @@ package cs.service.innerlanguage.translator.context;
 
 import cs.service.innerlanguage.translator.statements.DataStatement;
 import cs.service.innerlanguage.parser.InnerParser;
+import cs.service.innerlanguage.provider.types.TypeWrapper;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.Token;
 
@@ -19,12 +24,18 @@ public class TypeImpl extends WrapperStatement {
 	private String typeName;
 	private List<DataStatement> staticBlock;
 	private List<FunctionImpl> functions;
+	private final Set<TypeWrapper> injectedTypes;
 
 	public TypeImpl(AbstractNodeContext parent, String typeName, List<DataStatement> staticBlock, List<FunctionImpl> functions, Token start, Token stop) {
 		super(parent, start, stop);
 		this.typeName = typeName;
 		this.staticBlock = staticBlock;
 		this.functions = functions;
+		this.injectedTypes = new HashSet();
+	}
+
+	public Set<TypeWrapper> getInjectedTypes() {
+		return injectedTypes;
 	}
 
 	public List<DataStatement> getStaticBlock() {
@@ -51,6 +62,12 @@ public class TypeImpl extends WrapperStatement {
 	public String toString() {
 		StringBuilder function = new StringBuilder();
 		function.append("public class ").append(typeName).append(" {\n")
+				  .append(injectedTypes.stream()
+							 .map(injectingType -> {
+								 return "\t@javax.inject.Inject\n"
+										  + "\tprivate " + injectingType + " system" + injectingType.getClassName() + ";\n";
+							 })
+							 .collect(Collectors.joining()))
 				  .append(staticBlock.stream()
 							 .map(staticVar -> {
 								 return "\tprivate " + staticVar.toString() + ";\n";

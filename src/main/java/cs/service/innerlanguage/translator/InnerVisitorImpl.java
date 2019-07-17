@@ -104,6 +104,9 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	public NodeContext visitSystemDef(InnerParser.SystemDefContext ctx) {
 		checkTypeExistence(ctx.TYPENAME(), ctx.TYPENAME().getText());
+		if (!MainProvider.instance().getTypeByName(ctx.TYPENAME().getText()).getInjecting()) {
+			handleException(ExceptionMessage.THIS_TYPE_CANT_BE_A_SYSTEM, ctx.TYPENAME().getText(), ctx.getStart());
+		}
 		return new SystemDefinitionImpl(null, MainProvider.instance().getTypeByName(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), ctx.start, ctx.stop);
 	}
 

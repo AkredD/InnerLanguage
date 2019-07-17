@@ -1,0 +1,13 @@
+{
+	"typeNode" : {
+		"classPath" : "cs.somepackage.SystemClass",
+		"className" : "SystemClass",
+		"parent" : "java.lang.Object",
+		"instanceable" : false,
+		"injecting" : true,
+		"methods" : []
+	},
+	"innerTypes" : [
+
+	]
+}

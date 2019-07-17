@@ -2,6 +2,7 @@ TYPE Main.
 	STATIC (
 		DATA: Integer a VALUES(412).
 		CONSTANT: Integer b VALUES(4321).
+		SYSTEM: SystemClass sys.
 	)
 	FUNCTION Integer main (Integer e)
 		START.
