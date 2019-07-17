@@ -12,6 +12,7 @@ TYPE Main.
 			if ((a == 412) AND FALSE)
 				START.
 					DATA: Boolean gg VALUES(true).
+					SYSTEM: SystemClass sys1.
 					return a.
 				END.
 			ELSE

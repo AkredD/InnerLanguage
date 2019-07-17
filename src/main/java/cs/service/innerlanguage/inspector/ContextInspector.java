@@ -60,6 +60,9 @@ public class ContextInspector extends AbstractInspector {
 		inspectManager.checkDataInitialization(data);
 		inspectManager.getVariableContext().put(data.getDataName(), data);
 		actualLocalContext.add(data.getDataName());
+		if (node instanceof SystemDefinitionImpl) {
+			((SystemDefinitionImpl) node).registerSystemTypeDefinition();
+		}
 	}
 
 	@Override
