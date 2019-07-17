@@ -4,6 +4,7 @@
 		"className" : "Number",
 		"parent" : "java.lang.Object",
 		"instanceable" : false,
+		"injecting" : false,
 		"methods" : [
 			{
 				"outputClassName" : "java.lang.Double",
@@ -50,6 +51,7 @@
 				"className" : "Double",
 				"parent" : "java.lang.Number",
 				"instanceable" : true,
+				"injecting" : false,
 				"constructors" : [
 					{
 						"outputClassName" : "java.lang.Double",
@@ -91,6 +93,7 @@
 				"className" : "Float",
 				"parent" : "java.lang.Number",
 				"instanceable" : true,
+				"injecting" : false,
 				"constructors" : [
 					{
 						"outputClassName" : "java.lang.Float",
@@ -132,6 +135,7 @@
 				"className" : "Byte",
 				"parent" : "java.lang.Number",
 				"instanceable" : true,
+				"injecting" : false,
 				"constructors" : [
 					{
 						"outputClassName" : "java.lang.Byte",
@@ -173,6 +177,7 @@
 				"className" : "Integer",
 				"parent" : "java.lang.Number",
 				"instanceable" : true,
+				"injecting" : false,
 				"constructors" : [
 					{
 						"outputClassName" : "java.lang.Integer",
@@ -214,6 +219,7 @@
 				"className" : "Long",
 				"parent" : "java.lang.Number",
 				"instanceable" : true,
+				"injecting" : false,
 				"constructors" : [
 					{
 						"outputClassName" : "java.lang.Long",
@@ -255,6 +261,7 @@
 				"className" : "Short",
 				"parent" : "java.lang.Number",
 				"instanceable" : true,
+				"injecting" : false,
 				"constructors" : [
 					{
 						"outputClassName" : "java.lang.Short",

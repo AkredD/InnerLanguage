@@ -5,6 +5,7 @@ TYPE Main.
 	)
 	FUNCTION Integer main (Integer e)
 		START.
+			data: NullTypeWrapper wrapper VALUES().
 			DATA: Integer g VALUES(null).
 			g = a + g + ((a*a) + g + ((432))).
 			if ((a == 412) AND FALSE)

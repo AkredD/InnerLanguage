@@ -4,6 +4,7 @@
 		"className" : "ArrayList",
 		"parent" : "java.lang.Object",
 		"instanceable" : true,
+		"injecting" : false,
 		"methods" : [
 			{
 				"outputClassName" : "java.lang.Boolean",
@@ -16,7 +17,7 @@
 				}
 			},
 			{
-				"outputClassName" : "void",
+				"outputClassName" : "java.lang.Void",
 				"methodName" : "add",
 				"primitive" : true,
 				"constructor" : {
@@ -48,7 +49,7 @@
 				}
 			},
 			{
-				"outputClassName" : "void",
+				"outputClassName" : "java.lang.Void",
 				"methodName" : "clear",
 				"constructor" : null
 			},

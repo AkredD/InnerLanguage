@@ -42,8 +42,8 @@ import org.reflections.util.FilterBuilder;
  */
 public class MainProvider {
 	private static MainProvider instance;
-	private BasicProvider basicProvider;
-	private RuntimeProvider runtimeProvider;
+	private final BasicProvider basicProvider;
+	private final RuntimeProvider runtimeProvider;
 	private NullTypeWrapper nullType = new NullTypeWrapper();
 
 	private MainProvider() {
@@ -88,6 +88,14 @@ public class MainProvider {
 				 : runtimeProvider.getTypeByName(name);
 	}
 
+	public Boolean containsName(String name) {
+		return getBasicTypesByName().containsKey(name) || getRuntimeTypesByName().containsKey(name);
+	}
+
+	public Boolean containsClassName(String className) {
+		return getBasicTypesByClassName().containsKey(className) || getRuntimeTypesByClassName().containsKey(className);
+	}
+
 	public Map<String, TypeWrapper> getBasicTypesByName() {
 		return basicProvider.getTypesByName();
 	}
@@ -104,8 +112,14 @@ public class MainProvider {
 		return runtimeProvider.getTypesByClassName();
 	}
 
-	public void registerType(TypeImpl type) {
+	public TypeWrapper registerType(TypeImpl type) {
 		basicProvider.registerType(type);
+		return getTypeByName(type.getTypeName());
+	}
+
+	public TypeWrapper registerType(String className) {
+		runtimeProvider.register(className);
+		return getTypeByName(className);
 	}
 
 	public void handleException(ExceptionMessage cause, String... details) {
@@ -120,6 +134,7 @@ public class MainProvider {
 
 	public MainProvider reload() {
 		basicProvider.reload();
+		System.err.println("----------------------------------------------------------------------------");
 		runtimeProvider.reload();
 		return this;
 	}
