@@ -134,7 +134,6 @@ public class MainProvider {
 
 	public MainProvider reload() {
 		basicProvider.reload();
-		System.err.println("----------------------------------------------------------------------------");
 		runtimeProvider.reload();
 		return this;
 	}
