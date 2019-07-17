@@ -60,8 +60,8 @@ public class EqInspector extends AbstractInspector {
 			}
 			TypeWrapper type = inspectManager.getVarValueType(((PlusEqImpl) node).getValue(), ((PlusEqImpl) node).getStart());
 			TypeWrapper expectingType = inspectManager.getVariableContext().get(((PlusEqImpl) node).getDataName()).getType();
-			if (!expectingType.isMemberOf(MainProvider.instance().getBasicTypeByName("String"))
-				 && !expectingType.isMemberOf(MainProvider.instance().getBasicTypeByName("Number"))) {
+			if (!expectingType.isMemberOf(MainProvider.instance().getTypeByName("String"))
+				 && !expectingType.isMemberOf(MainProvider.instance().getTypeByName("Number"))) {
 				inspectManager.handleException(ExceptionMessage.OPERATOR_DOESNT_SUPPORT_TYPE, ((PlusEqImpl) node).getStart(), expectingType.getClassName());
 			}
 			if (!type.equals(expectingType)) {
@@ -74,7 +74,7 @@ public class EqInspector extends AbstractInspector {
 			}
 			TypeWrapper type = inspectManager.getVarValueType(((MinusEqImpl) node).getValue(), ((MinusEqImpl) node).getStart());
 			TypeWrapper expectingType = inspectManager.getVariableContext().get(((MinusEqImpl) node).getDataName()).getType();
-			if (!expectingType.isMemberOf(MainProvider.instance().getBasicTypeByName("Number"))) {
+			if (!expectingType.isMemberOf(MainProvider.instance().getTypeByName("Number"))) {
 				inspectManager.handleException(ExceptionMessage.OPERATOR_DOESNT_SUPPORT_TYPE, ((MinusEqImpl) node).getStart(), expectingType.getClassName());
 			}
 			if (!type.equals(expectingType)) {

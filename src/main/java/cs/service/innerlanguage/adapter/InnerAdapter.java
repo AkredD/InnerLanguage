@@ -56,6 +56,12 @@ public class InnerAdapter {
 	public static void main(String[] args) {
 		//showBasicTypes();
 		MainProvider.instance().ignorePrimitiveArrays(Boolean.TRUE).ignoreVarargs(Boolean.TRUE).reload();
+		long i = System.currentTimeMillis();
+		MainProvider.instance().getRuntimeTypesByName().values().forEach(type -> {
+			type.getAllMethods();
+			type.getAllStaticMethods();
+		});
+		System.out.println(System.currentTimeMillis() - i);
 		//showBasicTypes();
 		//InnerParser.InnerContext context = prepareContext(a);
 	}

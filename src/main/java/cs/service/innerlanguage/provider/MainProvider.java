@@ -76,12 +76,16 @@ public class MainProvider {
 		return nullType;
 	}
 
-	public TypeWrapper getBasicTypeByClassName(String className) {
-		return basicProvider.getTypeByClassName(className);
+	public TypeWrapper getTypeByClassName(String className) {
+		return getBasicTypesByClassName().containsKey(className)
+				 ? basicProvider.getTypeByClassName(className)
+				 : runtimeProvider.getTypeByClassName(className);
 	}
 
-	public TypeWrapper getBasicTypeByName(String name) {
-		return basicProvider.getTypeByName(name);
+	public TypeWrapper getTypeByName(String name) {
+		return getBasicTypesByName().containsKey(name)
+				 ? basicProvider.getTypeByName(name)
+				 : runtimeProvider.getTypeByName(name);
 	}
 
 	public Map<String, TypeWrapper> getBasicTypesByName() {
@@ -90,6 +94,14 @@ public class MainProvider {
 
 	public Map<String, TypeWrapper> getBasicTypesByClassName() {
 		return basicProvider.getTypesByClassName();
+	}
+
+	public Map<String, TypeWrapper> getRuntimeTypesByName() {
+		return runtimeProvider.getTypesByName();
+	}
+
+	public Map<String, TypeWrapper> getRuntimeTypesByClassName() {
+		return runtimeProvider.getTypesByClassName();
 	}
 
 	public void registerType(TypeImpl type) {
