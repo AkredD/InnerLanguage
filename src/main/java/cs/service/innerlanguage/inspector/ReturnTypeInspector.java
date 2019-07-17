@@ -6,10 +6,10 @@
 package cs.service.innerlanguage.inspector;
 
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
+import cs.service.innerlanguage.provider.types.TypeWrapper;
 import cs.service.innerlanguage.translator.context.FunctionImpl;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.statements.ReturnImpl;
-import cs.service.innerlanguage.translator.types.TypeWrapper;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;

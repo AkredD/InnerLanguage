@@ -7,6 +7,7 @@ package cs.service.innerlanguage.inspector;
 
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
 import cs.service.innerlanguage.parser.exceptions.ExecutionException;
+import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.BaseValueImpl;
 import cs.service.innerlanguage.translator.context.BinaryBoolExprImpl;
@@ -26,11 +27,9 @@ import cs.service.innerlanguage.translator.statements.DataDefinitionImpl;
 import cs.service.innerlanguage.translator.statements.DataStatement;
 import cs.service.innerlanguage.translator.statements.IfImpl;
 import cs.service.innerlanguage.translator.statements.StatementContext;
-import cs.service.innerlanguage.translator.statements.SystemDefinitionImpl;
 import cs.service.innerlanguage.translator.statements.WhileImpl;
 import cs.service.innerlanguage.provider.types.TypeMethod;
 import cs.service.innerlanguage.provider.types.TypeWrapper;
-import cs.service.innerlanguage.provider.types.basic.BasicProvider;
 import cs.service.innerlanguage.utils.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,7 +80,7 @@ public class InspectManager {
 			}
 			functionContext.put(foo.getFunctionName(), foo);
 		});
-		BasicProvider.instance().registerType(type);
+		MainProvider.instance().registerType(type);
 		if (type.getStaticBlock() != null && !type.getStaticBlock().isEmpty()) {
 			variableContext = type.getStaticBlock()
 					  .stream()
@@ -116,8 +115,8 @@ public class InspectManager {
 		statements.forEach(statement -> {
 			if (statement instanceof IfImpl) {
 				TypeWrapper conditionType = getExpressionContextType(((IfImpl) statement).getIfCondition());
-				if (!conditionType.equals(BasicProvider.instance().getTypeByName("Boolean"))) {
-					handleException(ExceptionMessage.INCOMPATIBLE_TYPES, statement.getStart(), conditionType.getClassName(), BasicProvider.instance().getTypeByName("Boolean").getClassName());
+				if (!conditionType.equals(MainProvider.instance().getBasicTypeByName("Boolean"))) {
+					handleException(ExceptionMessage.INCOMPATIBLE_TYPES, statement.getStart(), conditionType.getClassName(), MainProvider.instance().getBasicTypeByName("Boolean").getClassName());
 				}
 				inspectors.forEach(inspector -> {
 					if (inspector.getInspectingSubjects().contains(statement.getClass())) {
@@ -153,8 +152,8 @@ public class InspectManager {
 			}
 			if (statement instanceof WhileImpl) {
 				TypeWrapper conditionType = getExpressionContextType(((WhileImpl) statement).getWhileCondition());
-				if (!conditionType.equals(BasicProvider.instance().getTypeByName("Boolean"))) {
-					handleException(ExceptionMessage.INCOMPATIBLE_TYPES, statement.getStart(), conditionType.getClassName(), BasicProvider.instance().getTypeByName("Boolean").getClassName());
+				if (!conditionType.equals(MainProvider.instance().getBasicTypeByName("Boolean"))) {
+					handleException(ExceptionMessage.INCOMPATIBLE_TYPES, statement.getStart(), conditionType.getClassName(), MainProvider.instance().getBasicTypeByName("Boolean").getClassName());
 				}
 				inspectors.forEach(inspector -> {
 					if (inspector.getInspectingSubjects().contains(statement.getClass())) {
@@ -269,8 +268,8 @@ public class InspectManager {
 			if (!functionContext.containsKey(callFoo.getFunctionName())) {
 				handleException(ExceptionMessage.FUNCTION_DOESNT_EXISTS, callFoo.getStart(), callFoo.getFunctionName());
 			}
-			method = findMethod.apply(new Pair<>(callFoo.getFunctionName(), valueTypes), BasicProvider.instance().getTypeByName(visitingType.getTypeName()).getAllMethods());
-			reqMethod = getRequirdMethodByName.apply(callFoo.getFunctionName(), BasicProvider.instance().getTypeByName(visitingType.getTypeName()).getAllMethods());
+			method = findMethod.apply(new Pair<>(callFoo.getFunctionName(), valueTypes), MainProvider.instance().getBasicTypeByName(visitingType.getTypeName()).getAllMethods());
+			reqMethod = getRequirdMethodByName.apply(callFoo.getFunctionName(), MainProvider.instance().getBasicTypeByName(visitingType.getTypeName()).getAllMethods());
 			if (!method.isPresent()) {
 				if (!reqMethod.isPresent()) {
 					handleException(ExceptionMessage.TYPE_HAS_NO_STATIC_METHODS_WITH_THIS_NAME, callFoo.getStart(),
@@ -314,7 +313,7 @@ public class InspectManager {
 
 	public TypeWrapper getVarValueType(NodeContext value, Token start) {
 		if (value instanceof NullImpl) {
-			return BasicProvider.instance().getNullType();
+			return MainProvider.instance().getNullType();
 		}
 		if (value instanceof BaseValueImpl) {
 			return ((BaseValueImpl) value).getType();
@@ -336,24 +335,24 @@ public class InspectManager {
 		TypeWrapper exprType = null;
 		if (expr instanceof UnaryExpressionImpl) {
 			exprType = getVarValueType(((UnaryExpressionImpl) expr).getOperand(), expr.getStart());
-			if (!exprType.isMemberOf(BasicProvider.instance().getTypeByName("Number"))) {
+			if (!exprType.isMemberOf(MainProvider.instance().getBasicTypeByName("Number"))) {
 				handleException(ExceptionMessage.BAD_UNARY_OPERATOR_TYPE, expr.getStart(), ((UnaryExpressionImpl) expr).getOperator(), "Number", exprType.getClassName());
 			}
 		} else if (expr instanceof UnaryConditionImpl) {
 			exprType = getVarValueType(((UnaryConditionImpl) expr).getOperand(), expr.getStart());
-			if (!exprType.equals(BasicProvider.instance().getTypeByName("Boolean"))) {
+			if (!exprType.equals(MainProvider.instance().getBasicTypeByName("Boolean"))) {
 				handleException(ExceptionMessage.BAD_UNARY_OPERATOR_TYPE, expr.getStart(), (((UnaryConditionImpl) expr).getOperator()), "Boolean", exprType.getClassName());
 			}
 		} else if (expr instanceof BinaryExpressionImpl) {
 			exprType = getVarValueType(((BinaryExpressionImpl) expr).getLeftOperand(), expr.getStart());
 			TypeWrapper secondExprType = getVarValueType(((BinaryExpressionImpl) expr).getRightOperand(), expr.getStart());
-			if (exprType.equals(BasicProvider.instance().getTypeByName("String"))
-				 && secondExprType.equals(BasicProvider.instance().getTypeByName("String"))
+			if (exprType.equals(MainProvider.instance().getBasicTypeByName("String"))
+				 && secondExprType.equals(MainProvider.instance().getBasicTypeByName("String"))
 				 && ((BinaryExpressionImpl) expr).getOperator().equals("+")) {
 				return exprType;
 			}
-			if (!exprType.isMemberOf(BasicProvider.instance().getTypeByName("Number"))
-				 || !secondExprType.isMemberOf(BasicProvider.instance().getTypeByName("Number"))) {
+			if (!exprType.isMemberOf(MainProvider.instance().getBasicTypeByName("Number"))
+				 || !secondExprType.isMemberOf(MainProvider.instance().getBasicTypeByName("Number"))) {
 				handleException(ExceptionMessage.BAD_OPERATOR_TYPES, expr.getStart(), (((BinaryExpressionImpl) expr).getOperator()), exprType.getClassName(), secondExprType.getClassName());
 			}
 			if (!exprType.equals(secondExprType)) {
@@ -364,13 +363,13 @@ public class InspectManager {
 			TypeWrapper secondExprType = getVarValueType(((BinaryConditionImpl) expr).getRightOperand(), expr.getStart());
 			if ((((BinaryConditionImpl) expr).getOperator().equals("==") || ((BinaryConditionImpl) expr).getOperator().equals("<>"))) {
 				if ((exprType.isMemberOf(secondExprType) || exprType.isAssignableFrom(secondExprType))) {
-					return BasicProvider.instance().getTypeByName("Boolean");
+					return MainProvider.instance().getBasicTypeByName("Boolean");
 				} else {
 					handleException(ExceptionMessage.INCOMPATIBLE_TYPES, expr.getStart(), exprType.getClassName(), secondExprType.getClassName());
 				}
 			}
-			if (!secondExprType.equals(BasicProvider.instance().getTypeByName("Boolean"))
-				 || !exprType.equals(BasicProvider.instance().getTypeByName("Boolean"))) {
+			if (!secondExprType.equals(MainProvider.instance().getBasicTypeByName("Boolean"))
+				 || !exprType.equals(MainProvider.instance().getBasicTypeByName("Boolean"))) {
 				handleException(ExceptionMessage.BAD_OPERATOR_TYPES, expr.getStart(), (((BinaryConditionImpl) expr).getOperator()), exprType.getClassName(), secondExprType.getClassName());
 			}
 		} else if (expr instanceof BinaryBoolExprImpl) {
@@ -387,14 +386,14 @@ public class InspectManager {
 					handleException(ExceptionMessage.INCOMPATIBLE_TYPES, expr.getStart(), exprType.getClassName(), secondExprType.getClassName());
 				}
 			}
-			if (!exprType.isMemberOf(BasicProvider.instance().getTypeByName("Number"))
-				 || !secondExprType.isMemberOf(BasicProvider.instance().getTypeByName("Number"))) {
+			if (!exprType.isMemberOf(MainProvider.instance().getBasicTypeByName("Number"))
+				 || !secondExprType.isMemberOf(MainProvider.instance().getBasicTypeByName("Number"))) {
 				handleException(ExceptionMessage.BAD_OPERATOR_TYPES, expr.getStart(), (((BinaryExpressionImpl) expr).getOperator()), exprType.getClassName(), secondExprType.getClassName());
 			}
 			if (!exprType.equals(secondExprType)) {
 				handleException(ExceptionMessage.INCOMPATIBLE_TYPES, expr.getStart(), exprType.getClassName(), secondExprType.getClassName());
 			}
-			return BasicProvider.instance().getTypeByName("Boolean");
+			return MainProvider.instance().getBasicTypeByName("Boolean");
 		} else if (expr instanceof ExpressionContext) {
 			return getVarValueType(expr.getInner(), expr.getStart());
 		}

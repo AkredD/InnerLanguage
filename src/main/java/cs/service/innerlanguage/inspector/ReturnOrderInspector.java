@@ -19,7 +19,6 @@ import cs.service.innerlanguage.translator.statements.IfImpl;
 import cs.service.innerlanguage.translator.statements.ReturnImpl;
 import cs.service.innerlanguage.translator.statements.SystemDefinitionImpl;
 import cs.service.innerlanguage.translator.statements.WhileImpl;
-import cs.service.innerlanguage.translator.types.TypeWrapper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

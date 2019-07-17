@@ -8,6 +8,7 @@ package cs.service.innerlanguage.provider.types.basic;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
 import cs.service.innerlanguage.parser.exceptions.ExecutionException;
+import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.translator.context.TypeImpl;
 import cs.service.innerlanguage.provider.types.NullTypeWrapper;
 import cs.service.innerlanguage.provider.types.TypeConstructor;
@@ -35,30 +36,15 @@ import org.antlr.v4.runtime.Token;
 public final class BasicProvider {
 	private static final String TYPEPATH = "types";
 	private static final String DEFAULT_CLASS_PATH = "cs.service.registerTypes";
-	private static BasicProvider instance;
 	private Map<String, TypeWrapper> typesByName;
 	private Map<String, TypeWrapper> typesByClassName;
 	private List<TypeWrapper> customTypes;
-	private NullTypeWrapper nullType = new NullTypeWrapper();
+	private MainProvider mainProvaider;
 
-	private BasicProvider() {
+	public BasicProvider(MainProvider mainProvaider) {
+		this.mainProvaider = mainProvaider;
 		customTypes = new ArrayList();
 		reload();
-	}
-
-	public static BasicProvider instance() {
-		if (instance == null) {
-			synchronized (BasicProvider.class) {
-				if (instance == null) {
-					instance = new BasicProvider();
-				}
-			}
-		}
-		return instance;
-	}
-
-	public NullTypeWrapper getNullType() {
-		return nullType;
 	}
 
 	public TypeWrapper getTypeByClassName(String className) {
@@ -79,17 +65,17 @@ public final class BasicProvider {
 
 	public void registerType(TypeImpl type) {
 		if (typesByName.containsKey(type.getTypeName())) {
-			handleException(ExceptionMessage.TYPE_ALREADY_EXISTS, type.getStart(), type.getTypeName());
+			mainProvaider.handleException(ExceptionMessage.TYPE_ALREADY_EXISTS, type.getStart(), type.getTypeName());
 		}
 		List<TypeMethod> methods = type.getFunctions().stream()
 				  .map(foo -> {
 					  TypeConstructor constructor = new TypeConstructor((foo.getParameters() == null)
 																						 ? null
 																						 : foo.getParameters().stream()
-								 .map(param -> {
-									 return new Pair<>(param.getType(), param.getDataName());
-								 })
-								 .collect(Collectors.toList()));
+											.map(param -> {
+												return new Pair<>(param.getType(), param.getDataName());
+											})
+											.collect(Collectors.toList()));
 					  TypeMethod method = new TypeMethod(foo.getType(), foo.getFunctionName(), false, constructor);
 					  return method;
 				  })
@@ -108,9 +94,9 @@ public final class BasicProvider {
 			typesByClassName.put(type.getClassPath(), type);
 		});
 		try {
-			for (String name : getResourceFiles(TYPEPATH)) {
+			for (String name : mainProvaider.getResourceFiles(TYPEPATH)) {
 				ObjectMapper mapper = new ObjectMapper();
-				TypesTreeView view = mapper.readValue(getContextClassLoader().getResourceAsStream(TYPEPATH + File.separator + name), TypesTreeView.class);
+				TypesTreeView view = mapper.readValue(mainProvaider.getContextClassLoader().getResourceAsStream(TYPEPATH + File.separator + name), TypesTreeView.class);
 				visit(view);
 			}
 			typesByClassName.entrySet()
@@ -137,33 +123,5 @@ public final class BasicProvider {
 				visit(inner);
 			});
 		}
-	}
-
-	private List<String> getResourceFiles(String path) throws IOException {
-		List<String> filenames = new ArrayList<>();
-		try (
-				  InputStream in = getResourceAsStream(path);
-				  BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-			String resource;
-			while ((resource = br.readLine()) != null) {
-				filenames.add(resource);
-			}
-		}
-		return filenames;
-	}
-
-	private InputStream getResourceAsStream(String resource) {
-		final InputStream in
-								= getContextClassLoader().getResourceAsStream(resource);
-		return in == null ? getClass().getResourceAsStream(resource) : in;
-	}
-
-	private ClassLoader getContextClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
-	}
-
-	private void handleException(ExceptionMessage cause, Token start, String... details) {
-		String message = String.format(cause.getLocalizedMessage(), (Object[]) details);
-		throw new ExecutionException(message, start.getLine(), start.getCharPositionInLine());
 	}
 }
