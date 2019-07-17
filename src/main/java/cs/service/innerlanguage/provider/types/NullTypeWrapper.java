@@ -12,12 +12,8 @@ import java.util.List;
  * @author anisimov_a_v
  */
 public class NullTypeWrapper extends TypeWrapper {
-	private NullTypeWrapper(String classPath, String className, List<TypeWrapper> parentList, Boolean instanceablel, List<TypeMethod> methods, List<TypeMethod> constructors, List<TypeMethod> staticMethods) {
-		super(classPath, className, parentList, instanceablel, methods, constructors, staticMethods);
-	}
-
 	public NullTypeWrapper() {
-		super(null, null, null, false, null, null, null);
+		super(null, null, null, false, false, null, null, null);
 	}
 
 	@Override

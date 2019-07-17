@@ -8,7 +8,6 @@ package cs.service.innerlanguage.provider.types.basic;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
 import cs.service.innerlanguage.parser.exceptions.ExecutionException;
-import cs.service.innerlanguage.provider.AbstractProvider;
 import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.translator.context.TypeImpl;
 import cs.service.innerlanguage.provider.types.NullTypeWrapper;
@@ -30,12 +29,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.Token;
+import cs.service.innerlanguage.provider.IProvider;
 
 /**
  *
  * @author anisimov_a_v
  */
-public final class BasicProvider implements AbstractProvider {
+public final class BasicProvider implements IProvider {
 	private static final String TYPEPATH = "types";
 	private static final String DEFAULT_CLASS_PATH = "cs.service.registerTypes";
 	private Map<String, TypeWrapper> typesByName;
@@ -46,7 +46,6 @@ public final class BasicProvider implements AbstractProvider {
 	public BasicProvider(MainProvider mainProvaider) {
 		this.mainProvaider = mainProvaider;
 		customTypes = new ArrayList();
-		reload();
 	}
 
 	@Override
@@ -90,7 +89,7 @@ public final class BasicProvider implements AbstractProvider {
 					  return method;
 				  })
 				  .collect(Collectors.toList());
-		TypeWrapper customType = new TypeWrapper(DEFAULT_CLASS_PATH + "." + type.getTypeName(), type.getTypeName(), Arrays.asList(typesByName.get("Object")), Boolean.TRUE, methods, null, null);
+		TypeWrapper customType = new TypeWrapper(DEFAULT_CLASS_PATH + "." + type.getTypeName(), type.getTypeName(), Arrays.asList(typesByName.get("Object")), Boolean.TRUE, Boolean.FALSE, methods, null, null);
 		customTypes.add(customType);
 		typesByName.put(customType.getClassName(), customType);
 		typesByClassName.put(customType.getClassPath(), customType);
@@ -114,7 +113,7 @@ public final class BasicProvider implements AbstractProvider {
 					  .stream()
 					  .map(entry -> entry.getValue())
 					  .forEach(type -> {
-						  type.initMethods(typesByClassName);
+						  type.initMethods();
 					  });
 		} catch (IOException ex) {
 			Logger.getLogger(BasicProvider.class.getName()).log(Level.SEVERE, null, ex);

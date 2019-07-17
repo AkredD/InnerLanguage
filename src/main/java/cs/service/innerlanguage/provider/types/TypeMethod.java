@@ -5,6 +5,7 @@
  */
 package cs.service.innerlanguage.provider.types;
 
+import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.provider.types.basic.BaseMethodView;
 import java.util.Map;
 import java.util.Set;
@@ -26,10 +27,12 @@ public class TypeMethod {
 		this.primitive = primitive;
 	}
 
-	public TypeMethod(BaseMethodView methodView, Map<String, TypeWrapper> typesByClassName) {
-		this.output = (typesByClassName.containsKey(methodView.getOutputClassName())) ? typesByClassName.get(methodView.getOutputClassName()) : null;
+	public TypeMethod(BaseMethodView methodView) {
+		this.output = (MainProvider.instance().containsClassName(methodView.getOutputClassName()))
+						  ? MainProvider.instance().getTypeByClassName(methodView.getOutputClassName())
+						  : MainProvider.instance().registerType(methodView.getOutputClassName());
 		this.methodName = methodView.getMethodName();
-		this.constructor = new TypeConstructor(methodView.getConstructor(), typesByClassName);
+		this.constructor = new TypeConstructor(methodView.getConstructor());
 		this.primitive = methodView.isPrimitive();
 	}
 

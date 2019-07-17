@@ -104,7 +104,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	@Override
 	public NodeContext visitSystemDef(InnerParser.SystemDefContext ctx) {
 		checkTypeExistence(ctx.TYPENAME(), ctx.TYPENAME().getText());
-		return new SystemDefinitionImpl(null, MainProvider.instance().getBasicTypesByName().get(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), ctx.start, ctx.stop);
+		return new SystemDefinitionImpl(null, MainProvider.instance().getTypeByName(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), ctx.start, ctx.stop);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	public NodeContext visitConstantDef(InnerParser.ConstantDefContext ctx) {
 		checkTypeExistence(ctx, ctx.TYPENAME().getText());
 		List<NodeContext> values = null;
-		ConstantDefinitionImpl definition = new ConstantDefinitionImpl(null, MainProvider.instance().getBasicTypesByName().get(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
+		ConstantDefinitionImpl definition = new ConstantDefinitionImpl(null, MainProvider.instance().getTypeByName(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()
 					  .map(valueCtx -> {
@@ -146,7 +146,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		checkTypeExistence(ctx, ctx.TYPENAME().getText());
 		List<NodeContext> values = null;
 		//(ctx.VALUES() != null) meanes that it is instance of Type
-		DataDefinitionImpl definition = new DataDefinitionImpl(null, MainProvider.instance().getBasicTypesByName().get(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), null, (ctx.VALUES() != null), ctx.start, ctx.stop);
+		DataDefinitionImpl definition = new DataDefinitionImpl(null, MainProvider.instance().getTypeByName(ctx.TYPENAME().getText()), ctx.DATANAME().getText(), null, (ctx.VALUES() != null), ctx.start, ctx.stop);
 		if (ctx.varValue() != null) {
 			values = ctx.varValue().stream()
 					  .map(valueCtx -> {
@@ -223,12 +223,12 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	public NodeContext visitFunction(InnerParser.FunctionContext ctx) {
 		// TYPENAME(0) - function type name, DATANAME(0) - function name
 		checkTypeExistence(ctx.TYPENAME(0), ctx.TYPENAME(0).getText());
-		FunctionImpl foo = new FunctionImpl(null, MainProvider.instance().getBasicTypesByName().get(ctx.TYPENAME(0).getText()), ctx.DATANAME(0).getText(), null, null, ctx.start, ctx.stop);
+		FunctionImpl foo = new FunctionImpl(null, MainProvider.instance().getTypeByName(ctx.TYPENAME(0).getText()), ctx.DATANAME(0).getText(), null, null, ctx.start, ctx.stop);
 		List<ParameterImpl> parameters = new ArrayList();
 		List<StatementContext> statements = null;
 		for (int i = 1; i < ctx.TYPENAME().size(); ++i) {
 			checkTypeExistence(ctx.TYPENAME(i), ctx.TYPENAME(i).getText());
-			parameters.add(new ParameterImpl(foo, MainProvider.instance().getBasicTypesByName().get(ctx.TYPENAME(i).getText()), ctx.DATANAME(i).getText(), ctx.start, ctx.stop));
+			parameters.add(new ParameterImpl(foo, MainProvider.instance().getTypeByName(ctx.TYPENAME(i).getText()), ctx.DATANAME(i).getText(), ctx.start, ctx.stop));
 		}
 		if (ctx.statement() != null) {
 			statements = ctx.statement().stream()
@@ -304,14 +304,14 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 				TypeWrapper castType = null;
 				if (ctx.dataname().TYPENAME() != null) {
 					checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
-					castType = MainProvider.instance().getBasicTypesByName().get(ctx.dataname().TYPENAME().getText());
+					castType = MainProvider.instance().getTypeByName(ctx.dataname().TYPENAME().getText());
 				}
 				var = new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
 			}
 			//call type static method
 			if (ctx.TYPENAME() != null) {
 				checkTypeExistence(ctx.TYPENAME(), ctx.TYPENAME().getText());
-				type = MainProvider.instance().getBasicTypesByName().get(ctx.TYPENAME().getText());
+				type = MainProvider.instance().getTypeByName(ctx.TYPENAME().getText());
 			}
 		}
 		CallFunctionImpl callFoo = new CallFunctionImpl(null, var, type, ctx.DATANAME().getText(), null, ctx.start, ctx.stop);
@@ -536,15 +536,15 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return expCtx;
 		}
 		if (ctx.DQ_STRING() != null) {
-			return new BaseValueImpl(MainProvider.instance().getBasicTypesByName().get("String"), ctx.DQ_STRING().getText());
+			return new BaseValueImpl(MainProvider.instance().getTypeByName("String"), ctx.DQ_STRING().getText());
 		}
 		if (ctx.NUMBER() != null) {
 			Number number = NumberUtils.createNumber(ctx.NUMBER().getText());
-			return new BaseValueImpl(MainProvider.instance().getBasicTypesByName().get(number.getClass().getSimpleName()), number);
+			return new BaseValueImpl(MainProvider.instance().getTypeByName(number.getClass().getSimpleName()), number);
 		}
 		if (ctx.DATE() != null) {
 			try {
-				return new BaseValueImpl(MainProvider.instance().getBasicTypesByName().get("Date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
+				return new BaseValueImpl(MainProvider.instance().getTypeByName("Date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
 			} catch (ParseException ex) {
 				handleException(ExceptionMessage.CANT_PARSE_DATE, ctx.DATE().getText(), ctx.getStart());
 			}
@@ -553,7 +553,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			TypeWrapper castType = null;
 			if (ctx.dataname().TYPENAME() != null) {
 				checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
-				castType = MainProvider.instance().getBasicTypesByName().get(ctx.dataname().TYPENAME().getText());
+				castType = MainProvider.instance().getTypeByName(ctx.dataname().TYPENAME().getText());
 			}
 			return new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
 		}
@@ -597,15 +597,15 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return expCtx;
 		}
 		if (ctx.DQ_STRING() != null) {
-			return new BaseValueImpl(MainProvider.instance().getBasicTypesByName().get("String"), ctx.DQ_STRING().getText());
+			return new BaseValueImpl(MainProvider.instance().getTypeByName("String"), ctx.DQ_STRING().getText());
 		}
 		if (ctx.NUMBER() != null) {
 			Number number = NumberUtils.createNumber(ctx.NUMBER().getText());
-			return new BaseValueImpl(MainProvider.instance().getBasicTypesByName().get(number.getClass().getSimpleName()), number);
+			return new BaseValueImpl(MainProvider.instance().getTypeByName(number.getClass().getSimpleName()), number);
 		}
 		if (ctx.DATE() != null) {
 			try {
-				return new BaseValueImpl(MainProvider.instance().getBasicTypesByName().get("Date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
+				return new BaseValueImpl(MainProvider.instance().getTypeByName("Date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
 			} catch (ParseException ex) {
 				handleException(ExceptionMessage.CANT_PARSE_DATE, ctx.DATE().getText(), ctx.getStart());
 			}
@@ -614,7 +614,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			TypeWrapper castType = null;
 			if (ctx.dataname().TYPENAME() != null) {
 				checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
-				castType = MainProvider.instance().getBasicTypesByName().get(ctx.dataname().TYPENAME().getText());
+				castType = MainProvider.instance().getTypeByName(ctx.dataname().TYPENAME().getText());
 			}
 			return new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
 		}
@@ -685,13 +685,13 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return ctx.boolExpression().accept(this);
 		}
 		if (ctx.BOOLEAN() != null) {
-			return new BaseValueImpl(MainProvider.instance().getBasicTypesByName().get("Boolean"), Boolean.valueOf(ctx.BOOLEAN().getText()));
+			return new BaseValueImpl(MainProvider.instance().getTypeByName("Boolean"), Boolean.valueOf(ctx.BOOLEAN().getText()));
 		}
 		if (ctx.dataname() != null) {
 			TypeWrapper castType = null;
 			if (ctx.dataname().TYPENAME() != null) {
 				checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
-				castType = MainProvider.instance().getBasicTypesByName().get(ctx.dataname().TYPENAME().getText());
+				castType = MainProvider.instance().getTypeByName(ctx.dataname().TYPENAME().getText());
 			}
 			return new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
 		}
@@ -716,18 +716,18 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			return new NullImpl();
 		}
 		if (ctx.BOOLEAN() != null) {
-			return new BaseValueImpl(MainProvider.instance().getBasicTypesByName().get("Boolean"), Boolean.valueOf(ctx.BOOLEAN().getText()));
+			return new BaseValueImpl(MainProvider.instance().getTypeByName("Boolean"), Boolean.valueOf(ctx.BOOLEAN().getText()));
 		}
 		if (ctx.DQ_STRING() != null) {
-			return new BaseValueImpl(MainProvider.instance().getBasicTypesByName().get("String"), ctx.DQ_STRING().getText());
+			return new BaseValueImpl(MainProvider.instance().getTypeByName("String"), ctx.DQ_STRING().getText());
 		}
 		if (ctx.NUMBER() != null) {
 			Number number = NumberUtils.createNumber(ctx.NUMBER().getText());
-			return new BaseValueImpl(MainProvider.instance().getBasicTypesByName().get(number.getClass().getSimpleName()), number);
+			return new BaseValueImpl(MainProvider.instance().getTypeByName(number.getClass().getSimpleName()), number);
 		}
 		if (ctx.DATE() != null) {
 			try {
-				return new BaseValueImpl(MainProvider.instance().getBasicTypesByName().get("Date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
+				return new BaseValueImpl(MainProvider.instance().getTypeByName("Date"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(ctx.DATE().getText()));
 			} catch (ParseException ex) {
 				handleException(ExceptionMessage.CANT_PARSE_DATE, ctx.DATE().getText(), ctx.getStart());
 			}
@@ -736,7 +736,7 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 			TypeWrapper castType = null;
 			if (ctx.dataname().TYPENAME() != null) {
 				checkTypeExistence(ctx.dataname(), ctx.dataname().TYPENAME().getText());
-				castType = MainProvider.instance().getBasicTypesByName().get(ctx.dataname().TYPENAME().getText());
+				castType = MainProvider.instance().getTypeByName(ctx.dataname().TYPENAME().getText());
 			}
 			return new VariableValueImpl(null, ctx.dataname().DATANAME().getText(), castType, ctx.start, ctx.stop);
 		}
@@ -764,13 +764,13 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	}
 
 	private void checkTypeExistence(ParserRuleContext ctx, String typeName) {
-		if (!MainProvider.instance().getBasicTypesByName().containsKey(typeName)) {
+		if (!MainProvider.instance().containsName(typeName)) {
 			handleException(ExceptionMessage.TYPE_NOT_EXIST, typeName, ctx.getStart());
 		}
 	}
 
 	private void checkTypeExistence(TerminalNode node, String typeName) {
-		if (!MainProvider.instance().getBasicTypesByName().containsKey(typeName)) {
+		if (!MainProvider.instance().containsName(typeName)) {
 			handleException(ExceptionMessage.TYPE_NOT_EXIST, typeName, node.getSymbol());
 		}
 	}

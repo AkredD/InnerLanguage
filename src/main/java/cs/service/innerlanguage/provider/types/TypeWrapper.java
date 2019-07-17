@@ -23,6 +23,7 @@ public class TypeWrapper {
 	private final String classPath;
 	private final String className;
 	private final Boolean instanceablel;
+	private final Boolean injecting;
 	private List<TypeWrapper> parentList;
 	private List<TypeMethod> constructors;
 	private List<TypeMethod> methods;
@@ -33,13 +34,14 @@ public class TypeWrapper {
 	private List<TypeMethod> allStaticMethods;
 	private List<TypeMethod> allMethods;
 
-	public TypeWrapper(String classPath, String className, List<TypeWrapper> parentList, Boolean instanceablel, List<TypeMethod> methods, List<TypeMethod> constructors, List<TypeMethod> staticMethods) {
+	public TypeWrapper(String classPath, String className, List<TypeWrapper> parentList, Boolean instanceablel, Boolean injecting, List<TypeMethod> methods, List<TypeMethod> constructors, List<TypeMethod> staticMethods) {
 		this.classPath = classPath;
 		this.className = className;
 		this.parentList = parentList;
 		this.constructors = constructors;
 		this.methods = methods;
 		this.instanceablel = instanceablel;
+		this.injecting = injecting;
 		this.staticMethods = staticMethods;
 	}
 
@@ -48,6 +50,7 @@ public class TypeWrapper {
 		this.className = view.getClassName();
 		this.parentList = parentList;
 		this.instanceablel = view.getInstanceable();
+		this.injecting = view.getInjecting();
 		this.methodsView = view.getMethods();
 		this.constructorsView = view.getConstructors();
 		this.staticMethodsView = view.getStaticMethods();
@@ -59,6 +62,10 @@ public class TypeWrapper {
 
 	public void setConstructors(List<TypeMethod> constructors) {
 		this.constructors = constructors;
+	}
+
+	public Boolean getInjecting() {
+		return injecting;
 	}
 
 	public Boolean getInstanceablel() {
@@ -94,24 +101,24 @@ public class TypeWrapper {
 		return allStaticMethods;
 	}
 
-	public void initMethods(Map<String, TypeWrapper> typesByClassName) {
+	public void initMethods() {
 		this.methods = (methodsView != null) ? methodsView
 				  .stream()
 				  .map(methodView -> {
-					  return new TypeMethod(methodView, typesByClassName);
+					  return new TypeMethod(methodView);
 				  })
 				  .collect(Collectors.toList())
 							: new ArrayList();
 		this.constructors = (constructorsView != null) ? constructorsView
 				  .stream()
 				  .map(constrView -> {
-					  return new TypeMethod(constrView, typesByClassName);
+					  return new TypeMethod(constrView);
 				  }).collect(Collectors.toList())
 								  : new ArrayList();
 		this.staticMethods = (staticMethodsView != null) ? staticMethodsView
 				  .stream()
 				  .map(constrView -> {
-					  return new TypeMethod(constrView, typesByClassName);
+					  return new TypeMethod(constrView);
 				  }).collect(Collectors.toList())
 									: new ArrayList();
 		staticMethodsView = null;

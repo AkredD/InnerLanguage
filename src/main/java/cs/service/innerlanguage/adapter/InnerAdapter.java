@@ -63,7 +63,13 @@ public class InnerAdapter {
 		});
 		System.out.println(System.currentTimeMillis() - i);
 		//showBasicTypes();
-		//InnerParser.InnerContext context = prepareContext(a);
+		String a = null;
+		try {
+			a = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("examples" + File.separator + "main"), "UTF-8");
+		} catch (IOException ex) {
+			Logger.getLogger(InnerAdapter.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		InnerParser.InnerContext context = prepareContext(a);
 	}
 
 	private static void showBasicTypes() {

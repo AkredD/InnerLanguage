@@ -14,6 +14,7 @@ public class Main {
 	private final java.lang.Integer b = new java.lang.Integer(4321);
 
 	public java.lang.Integer main(java.lang.Integer e) {
+		cs.service.innerlanguage.provider.types.NullTypeWrapper wrapper = new cs.service.innerlanguage.provider.types.NullTypeWrapper();
 		java.lang.Integer g = new java.lang.Integer(null);
 		g = a + g + ((a * a) + g + ((432)));
 		if ((a == 412) && false) {

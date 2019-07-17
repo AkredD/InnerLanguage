@@ -5,6 +5,7 @@
  */
 package cs.service.innerlanguage.provider.types;
 
+import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.provider.types.basic.BaseTypeConstructorView;
 import cs.service.innerlanguage.utils.Pair;
 import java.util.ArrayList;
@@ -23,14 +24,16 @@ public class TypeConstructor {
 		this.parameters = parameters;
 	}
 
-	public TypeConstructor(BaseTypeConstructorView constructorView, Map<String, TypeWrapper> typesByClassName) {
+	public TypeConstructor(BaseTypeConstructorView constructorView) {
 		this.parameters = (constructorView != null && constructorView.getParameters() != null)
 								? constructorView
 				  .getParameters()
 				  .entrySet()
 				  .stream()
 				  .map(entry -> {
-					  return new Pair<>(typesByClassName.get(entry.getValue()), entry.getKey());
+					  return new Pair<>((MainProvider.instance().containsClassName(entry.getValue()))
+											  ? MainProvider.instance().getTypeByClassName(entry.getValue())
+											  : MainProvider.instance().registerType(entry.getValue()), entry.getKey());
 				  })
 				  .collect(Collectors.toList())
 								: new ArrayList();

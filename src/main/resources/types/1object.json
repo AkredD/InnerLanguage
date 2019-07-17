@@ -4,6 +4,7 @@
 		"className" : "Object",
 		"parent" : null,
 		"instanceable" : false,
+		"injecting" : false,
 		"methods" : [
 			{
 				"outputClassName" : "java.lang.Object",
@@ -41,10 +42,20 @@
 	"innerTypes" : [
 		{
 			"typeNode" : {
+				"classPath" : "java.lang.Class",
+				"className" : "Class",
+				"parent" : "java.lang.Object",
+				"instanceable" : false,
+				"injecting" : false
+			}
+		},
+		{
+			"typeNode" : {
 				"classPath" : "java.lang.Void",
 				"className" : "Void",
 				"parent" : "java.lang.Object",
-				"instanceable" : false
+				"instanceable" : false,
+				"injecting" : false
 			}
 		},
 		{
@@ -53,6 +64,7 @@
 				"className" : "String",
 				"parent" : "java.lang.Object",
 				"instanceable" : true,
+				"injecting" : false,
 				"constructors" : [
 					{
 						"outputClassName" : "java.lang.String",
@@ -104,6 +116,7 @@
 				"className" : "Character",
 				"parent" : "java.lang.Object",
 				"instanceable" : true,
+				"injecting" : false,
 				"constructors" : [
 					{
 						"outputClassName" : "java.lang.Character",
@@ -125,6 +138,7 @@
 				"className" : "Boolean",
 				"parent" : "java.lang.Object",
 				"instanceable" : true,
+				"injecting" : false,
 				"constructors" : [
 					{
 						"outputClassName" : "java.lang.Boolean",
@@ -155,6 +169,7 @@
 				"className" : "Date",
 				"parent" : "java.lang.Object",
 				"instanceable" : false,
+				"injecting" : false,
 				"methods" : [
 				]
 			},
@@ -165,6 +180,7 @@
 						"className" : "DateFormatter",
 						"parent" : "java.lang.Object",
 						"instanceable" : true,
+						"injecting" : false,
 						"methods" : [
 							{
 								"outputClassName" : "java.util.Date",

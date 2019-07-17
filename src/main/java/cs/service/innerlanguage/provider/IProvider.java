@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @author anisimov_a_v
  */
-public interface AbstractProvider {
+public interface IProvider {
 	public TypeWrapper getTypeByClassName(String className);
 
 	public Map<String, TypeWrapper> getTypesByClassName();

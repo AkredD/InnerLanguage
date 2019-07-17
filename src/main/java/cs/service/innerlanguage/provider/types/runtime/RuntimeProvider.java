@@ -6,7 +6,6 @@
 package cs.service.innerlanguage.provider.types.runtime;
 
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
-import cs.service.innerlanguage.provider.AbstractProvider;
 import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.provider.types.TypeConstructor;
 import cs.service.innerlanguage.provider.types.TypeMethod;
@@ -34,12 +33,13 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
+import cs.service.innerlanguage.provider.IProvider;
 
 /**
  *
  * @author anisimov_a_v
  */
-public class RuntimeProvider implements AbstractProvider{
+public class RuntimeProvider implements IProvider{
 	private MainProvider mainProvider;
 	private final List<TypeWrapper> systemTypes = new ArrayList();
 	private final Map<String, TypeWrapper> typesByName = new HashMap();
@@ -83,15 +83,16 @@ public class RuntimeProvider implements AbstractProvider{
 	public void reload() {
 		try {
 			String pathFileContent = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("system" + File.separator + "pathes"), "UTF-8");
-			String[] javaPathes = (pathFileContent.contains(";")) ? pathFileContent.split(";") : (String[]) Arrays.asList(pathFileContent).toArray();
+			String[] javaPathes = (pathFileContent.contains(";")) ? pathFileContent.split(";") : new String[]{pathFileContent};
 			List<ClassLoader> classLoadersList = new LinkedList<>();
 			classLoadersList.add(ClasspathHelper.contextClassLoader());
 			classLoadersList.add(ClasspathHelper.staticClassLoader());
 			for (String className : javaPathes) {
+				System.out.println("package: " + className);
 				Reflections reflections = new Reflections(new ConfigurationBuilder()
 						  .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
-						  .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[1])))
-						  .filterInputsBy(new FilterBuilder().include(className + "\\..*")));
+						  .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
+						  .filterInputsBy(new FilterBuilder().includePackage(className)));
 				Set<String> allClasses = reflections.getAllTypes();
 				System.out.println("in package " + className + " " + allClasses.size());
 				allClasses.forEach(clazz -> {
@@ -112,7 +113,7 @@ public class RuntimeProvider implements AbstractProvider{
 				  : mainProvider.getBasicTypesByClassName().get(clazz.getName()));
 	};
 
-	private void register(String className) {
+	public void register(String className) {
 		try {
 			Class clazz = Class.forName(className);
 			System.out.println(clazz.getName());
@@ -135,7 +136,7 @@ public class RuntimeProvider implements AbstractProvider{
 				});
 			}
 			Boolean instanceablel = Modifier.isAbstract(clazz.getModifiers()) || clazz.isInterface();
-			TypeWrapper type = new TypeWrapper(clazz.getName(), clazz.getSimpleName(), parentList, !instanceablel, null, null, null);
+			TypeWrapper type = new TypeWrapper(clazz.getName(), clazz.getSimpleName(), parentList, !instanceablel, false, null, null, null);
 			typesByName.put(type.getClassName(), type);
 			typesByClassName.put(type.getClassPath(), type);
 			type.setMethods(formMethods(clazz, false));

@@ -15,12 +15,13 @@ import java.util.List;
  * @author anisimov_a_v
  */
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"classPath", "className", "parent", "instanceable", "constructors", "staticMethods", "methods"})
+@JsonPropertyOrder({"classPath", "className", "parent", "instanceable", "injecting", "constructors", "staticMethods", "methods"})
 public class BaseTypeView {
 	private String classPath;
 	private String className;
 	private String parent;
 	private Boolean instanceable;
+	private Boolean injecting;
 	private List<BaseMethodView> constructors;
 	private List<BaseMethodView> staticMethods;
 	private List<BaseMethodView> methods;
@@ -50,6 +51,14 @@ public class BaseTypeView {
 
 	public void setConstructors(List<BaseMethodView> constructors) {
 		this.constructors = constructors;
+	}
+
+	public Boolean getInjecting() {
+		return injecting;
+	}
+
+	public void setInjecting(Boolean injecting) {
+		this.injecting = injecting;
 	}
 
 	public Boolean getInstanceable() {
