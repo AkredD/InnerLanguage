@@ -80,9 +80,14 @@ public class TypeWrapper {
 		allStaticMethods = new ArrayList();
 		Set<TypeMethod> staticMethodsSet = new HashSet();
 		if (parentList != null) {
-			parentList.forEach(parent -> {
-				staticMethodsSet.addAll(parent.getAllStaticMethods());
-			});
+			staticMethodsSet = parentList.stream()
+					  .map(parent -> {
+						  return parent.getAllStaticMethods();
+					  })
+					  .collect(Collector.of(HashSet::new, HashSet::addAll, (left, right) -> {
+											 left.addAll(right);
+											 return left;
+										 }))
 		}
 		staticMethodsSet.addAll(this.methods);
 		allStaticMethods.addAll(staticMethodsSet);
@@ -137,9 +142,14 @@ public class TypeWrapper {
 		allMethods = new ArrayList();
 		Set<TypeMethod> methodsSet = new HashSet();
 		if (parentList != null) {
-			parentList.forEach(parent -> {
-				methodsSet.addAll(parent.getAllMethods());
-			});
+			methodsSet = parentList.stream()
+					  .map(parent -> {
+						  return parent.getAllMethods();
+					  })
+					  .collect(Collector.of(HashSet::new, HashSet::addAll, (left, right) -> {
+											 left.addAll(right);
+											 return left;
+										 }))
 		}
 		methodsSet.addAll(this.methods);
 		allMethods.addAll(methodsSet);

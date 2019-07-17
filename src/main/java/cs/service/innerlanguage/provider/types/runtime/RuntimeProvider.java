@@ -6,6 +6,7 @@
 package cs.service.innerlanguage.provider.types.runtime;
 
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
+import cs.service.innerlanguage.provider.AbstractProvider;
 import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.provider.types.TypeConstructor;
 import cs.service.innerlanguage.provider.types.TypeMethod;
@@ -38,7 +39,7 @@ import org.reflections.util.FilterBuilder;
  *
  * @author anisimov_a_v
  */
-public class RuntimeProvider {
+public class RuntimeProvider implements AbstractProvider{
 	private MainProvider mainProvider;
 	private final List<TypeWrapper> systemTypes = new ArrayList();
 	private final Map<String, TypeWrapper> typesByName = new HashMap();
@@ -58,6 +59,27 @@ public class RuntimeProvider {
 		this.ignoreVarargs = ignoreVarargs;
 	}
 
+	@Override
+	public TypeWrapper getTypeByClassName(String className) {
+		return typesByClassName.get(className);
+	}
+
+	@Override
+	public Map<String, TypeWrapper> getTypesByClassName() {
+		return typesByClassName;
+	}
+
+	@Override
+	public TypeWrapper getTypeByName(String name) {
+		return typesByName.get(name);
+	}
+
+	@Override
+	public Map<String, TypeWrapper> getTypesByName() {
+		return typesByName;
+	}
+
+	@Override
 	public void reload() {
 		try {
 			String pathFileContent = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("system" + File.separator + "pathes"), "UTF-8");
@@ -102,7 +124,7 @@ public class RuntimeProvider {
 			//registering super class
 			List<TypeWrapper> parentList = new ArrayList();
 			if ((clazz.getSuperclass() == null && (clazz.getInterfaces() == null || clazz.getInterfaces().length == 0))) {
-				parentList.add(mainProvider.getBasicTypeByName("Object"));
+				parentList.add(mainProvider.getTypeByName("Object"));
 			}
 			if (clazz.getSuperclass() != null) {
 				parentList.add(getTypeWrapperByClass.apply(clazz.getSuperclass()));
@@ -183,31 +205,31 @@ public class RuntimeProvider {
 			TypeWrapper primitive = null;
 			switch (clazz.getName()) {
 				case "int":
-					primitive = mainProvider.getBasicTypeByName("Integer");
+					primitive = mainProvider.getTypeByName("Integer");
 					break;
 				case "short":
-					primitive = mainProvider.getBasicTypeByName("Short");
+					primitive = mainProvider.getTypeByName("Short");
 					break;
 				case "long":
-					primitive = mainProvider.getBasicTypeByName("Long");
+					primitive = mainProvider.getTypeByName("Long");
 					break;
 				case "float":
-					primitive = mainProvider.getBasicTypeByName("Float");
+					primitive = mainProvider.getTypeByName("Float");
 					break;
 				case "double":
-					primitive = mainProvider.getBasicTypeByName("Double");
+					primitive = mainProvider.getTypeByName("Double");
 					break;
 				case "char":
-					primitive = mainProvider.getBasicTypeByName("Character");
+					primitive = mainProvider.getTypeByName("Character");
 					break;
 				case "byte":
-					primitive = mainProvider.getBasicTypeByName("Byte");
+					primitive = mainProvider.getTypeByName("Byte");
 					break;
 				case "boolean":
-					primitive = mainProvider.getBasicTypeByName("Boolean");
+					primitive = mainProvider.getTypeByName("Boolean");
 					break;
 				case "void":
-					primitive = mainProvider.getBasicTypeByName("Void");
+					primitive = mainProvider.getTypeByName("Void");
 					break;
 			}
 			return primitive;
@@ -216,6 +238,6 @@ public class RuntimeProvider {
 				|| mainProvider.getBasicTypesByClassName().containsKey(clazz.getName()))) {
 			register(clazz.getName());
 		}
-		return (typesByClassName.containsKey(clazz.getName())) ? typesByClassName.get(clazz.getName()) : mainProvider.getBasicTypeByClassName(clazz.getName());
+		return (typesByClassName.containsKey(clazz.getName())) ? typesByClassName.get(clazz.getName()) : mainProvider.getTypeByClassName(clazz.getName());
 	}
 }

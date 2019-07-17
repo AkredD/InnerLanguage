@@ -8,6 +8,7 @@ package cs.service.innerlanguage.provider.types.basic;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
 import cs.service.innerlanguage.parser.exceptions.ExecutionException;
+import cs.service.innerlanguage.provider.AbstractProvider;
 import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.translator.context.TypeImpl;
 import cs.service.innerlanguage.provider.types.NullTypeWrapper;
@@ -34,7 +35,7 @@ import org.antlr.v4.runtime.Token;
  *
  * @author anisimov_a_v
  */
-public final class BasicProvider {
+public final class BasicProvider implements AbstractProvider {
 	private static final String TYPEPATH = "types";
 	private static final String DEFAULT_CLASS_PATH = "cs.service.registerTypes";
 	private Map<String, TypeWrapper> typesByName;
@@ -48,18 +49,26 @@ public final class BasicProvider {
 		reload();
 	}
 
+	@Override
 	public TypeWrapper getTypeByClassName(String className) {
 		return typesByClassName.get(className);
 	}
 
+	@Override
 	public TypeWrapper getTypeByName(String name) {
 		return typesByName.get(name);
 	}
 
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public Map<String, TypeWrapper> getTypesByName() {
 		return typesByName;
 	}
 
+	@Override
 	public Map<String, TypeWrapper> getTypesByClassName() {
 		return typesByClassName;
 	}
@@ -87,6 +96,7 @@ public final class BasicProvider {
 		typesByClassName.put(customType.getClassPath(), customType);
 	}
 
+	@Override
 	public void reload() {
 		this.typesByName = new HashMap();
 		this.typesByClassName = new HashMap();
