@@ -7,6 +7,7 @@ package cs.service.innerlanguage.translator.statements;
 
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.provider.types.TypeWrapper;
+import cs.service.innerlanguage.translator.context.TypeImpl;
 import org.antlr.v4.runtime.Token;
 
 /**
@@ -19,7 +20,27 @@ public class SystemDefinitionImpl extends DataStatement {
 	}
 
 	@Override
+	public void setParent(AbstractNodeContext parent) {
+		super.setParent(parent);
+		registerSystemTypeDefinition();
+	}
+
+	private void registerSystemTypeDefinition() {
+		TypeImpl parentType = findType(super.parent);
+		if (!parentType.getInjectedTypes().contains(type)) {
+			parentType.getInjectedTypes().add(type);
+		}
+	}
+
+	private TypeImpl findType(AbstractNodeContext parent) {
+		if (parent instanceof TypeImpl) {
+			return (TypeImpl) parent;
+		}
+		return findType(parent.getParent());
+	}
+
+	@Override
 	public String toString() {
-		return type + " " + dataName;
+		return type + " " + dataName + " = system" + type.getClassName();
 	}
 }
