@@ -279,10 +279,10 @@ public class InspectManager {
 			}
 		} else if (callFoo.getType() != null) {
 			//static method call
-			if (callFoo.getType().gettAllStaticMethods() == null || callFoo.getType().gettAllStaticMethods().isEmpty()) {
+			if (callFoo.getType().getAllStaticMethods() == null || callFoo.getType().getAllStaticMethods().isEmpty()) {
 				handleException(ExceptionMessage.NO_COLLABLE_STATIC_METHODS, callFoo.getType().getClassName(), callFoo.getStart());
 			}
-			method = findMethod.apply(new Pair<>(callFoo.getFunctionName(), valueTypes), callFoo.getType().gettAllStaticMethods());
+			method = findMethod.apply(new Pair<>(callFoo.getFunctionName(), valueTypes), callFoo.getType().getAllStaticMethods());
 			if (!method.isPresent()) {
 				if (!reqMethod.isPresent()) {
 					handleException(ExceptionMessage.TYPE_HAS_NO_STATIC_METHODS_WITH_THIS_NAME, callFoo.getStart(),

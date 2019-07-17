@@ -55,7 +55,7 @@ public class InnerAdapter {
 
 	public static void main(String[] args) {
 		//showBasicTypes();
-		MainProvider.instance();
+		MainProvider.instance().ignorePrimitiveArrays(Boolean.TRUE).ignoreVarargs(Boolean.TRUE).reload();
 		//showBasicTypes();
 		//InnerParser.InnerContext context = prepareContext(a);
 	}
@@ -67,7 +67,12 @@ public class InnerAdapter {
 				  .forEach(typeEntry -> {
 					  System.out.println("---------------------------------------");
 					  System.out.println(typeEntry.getKey() + " parent - "
-												+ ((typeEntry.getValue().getParent() == null) ? "null" : typeEntry.getValue().getParent().getClassName()));
+												+ ((typeEntry.getValue().getParentList() == null) ? "null" : typeEntry.getValue().getParentList()
+											.stream()
+											.map(parent -> {
+												return parent.getClassName();
+											})
+											.collect(Collectors.joining(", "))));
 					  typeEntry.getValue().getConstructors().forEach(costr -> {
 						  System.out.println("constructors  ("
 													+ costr.getConstructor().getParameters()
