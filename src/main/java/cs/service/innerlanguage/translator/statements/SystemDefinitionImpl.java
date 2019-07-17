@@ -19,13 +19,7 @@ public class SystemDefinitionImpl extends DataStatement {
 		super(parent, type, dataName, null, false, start, stop);
 	}
 
-	@Override
-	public void setParent(AbstractNodeContext parent) {
-		super.setParent(parent);
-		registerSystemTypeDefinition();
-	}
-
-	private void registerSystemTypeDefinition() {
+	public void registerSystemTypeDefinition() {
 		TypeImpl parentType = findType(super.parent);
 		if (!parentType.getInjectedTypes().contains(type)) {
 			parentType.getInjectedTypes().add(type);
