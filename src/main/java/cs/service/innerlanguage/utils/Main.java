@@ -10,11 +10,11 @@ package cs.service.innerlanguage.utils;
  * @author Zhigalowsky S.
  */
 public class Main {
-	@javax.inject.Inject
-	private cs.somepackage.SystemClass systemSystemClass;
+	//@javax.inject.Inject
+	//private cs.somepackage.SystemClass systemSystemClass;
 	private java.lang.Integer a = new java.lang.Integer(412);
 	private final java.lang.Integer b = new java.lang.Integer(4321);
-	private cs.somepackage.SystemClass sys = systemSystemClass;
+	//private cs.somepackage.SystemClass sys = systemSystemClass;
 
 	public java.lang.Integer main(java.lang.Integer e) {
 		cs.service.innerlanguage.provider.types.NullTypeWrapper wrapper = new cs.service.innerlanguage.provider.types.NullTypeWrapper();
