@@ -176,7 +176,13 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	public NodeContext visitType(InnerParser.TypeContext ctx) {
 		List<DataStatement> staticBlock = null;
 		List<FunctionImpl> functions = null;
-		TypeImpl type = new TypeImpl(null, ctx.TYPENAME().getText(), null, null, ctx.start, ctx.stop);
+		TypeWrapper parentType = (ctx.TYPENAME().get(1) == null)
+										 ? MainProvider.instance().getTypeByName("Object")
+										 : MainProvider.instance().getTypeByName(ctx.TYPENAME().get(1).getText());
+		if (parentType == null) {
+			handleException(ExceptionMessage.TYPE_NOT_EXIST, ctx.TYPENAME().get(1).getText(), ctx.TYPENAME().get(1).getSymbol());
+		}
+		TypeImpl type = new TypeImpl(null, ctx.TYPENAME().get(0).getText(), parentType, null, null, ctx.start, ctx.stop);
 		if (ctx.staticBlock() != null) {
 			staticBlock = ctx.staticBlock().varDefinition()
 					  .stream()

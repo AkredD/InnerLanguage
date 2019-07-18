@@ -137,8 +137,17 @@ public class InnerAdapter {
 			String message;
 			if (cause instanceof RecognitionException) {
 				Token token = ((RecognitionException) cause).getOffendingToken();
+				System.out.println(((RecognitionException) cause).getCtx().getText());
 				message = String.format(ExceptionMessage.MISMATCH_INPUT.getLocalizedMessage(),
-												new Object[] {token.getLine(), token.getStartIndex(), token.getText()});
+												new Object[] {token.getLine(),
+																  token.getStartIndex() - tokens.get(token.getTokenIndex() - 1).getStopIndex(),
+																  token.getText(),
+																  ((RecognitionException) cause).getExpectedTokens().toList().stream()
+																  .map(tokenId -> {
+																	  System.out.println(tokenId);
+																	  return lexer.getVocabulary().getDisplayName(tokenId);
+																  })
+																  .collect(Collectors.joining(" "))});
 			} else {
 				message = ex.getMessage();
 			}

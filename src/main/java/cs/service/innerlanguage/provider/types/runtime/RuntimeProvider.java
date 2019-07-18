@@ -116,7 +116,7 @@ public class RuntimeProvider implements IProvider{
 	public void register(String className) {
 		try {
 			Class clazz = Class.forName(className);
-			//System.out.println(clazz.getName());
+			System.out.println(clazz.getName());
 			//class already registered
 			if (typesByClassName.containsKey(className)
 				 || mainProvider.getBasicTypesByClassName().containsKey(className)) {
