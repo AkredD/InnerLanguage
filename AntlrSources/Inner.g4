@@ -34,7 +34,7 @@ fragment FALSE          : 'FALSE'   | 'false';
 // Tokens
 BOOLEAN         : (TRUE | FALSE);
 NUMBER          : DIGIT+ ('.' DIGIT+)? (('e'|'E')('+'|'-')? DIGIT+)?;
-DQ_STRING       : '"' ('\\"')* '"';
+DQ_STRING       : '"' ( '\\"' | . )*? '"';
 DATE            : '\'' DIGIT DIGIT DIGIT DIGIT '-' DIGIT DIGIT '-' DIGIT DIGIT (' ' DIGIT DIGIT ':' DIGIT DIGIT ':' DIGIT DIGIT ('.' DIGIT+)?)? '\'';
 WS              : [ \t\n\r]+ -> skip ;
 COMMENTS        : ('/*' .*? '*/' | '//' ~'\n'* '\n' ) -> skip;
@@ -61,6 +61,7 @@ STATIC              : 'STATIC'      | 'static' ;
 CALL                : 'CALL'        | 'call' ;
 WRITE               : 'WRITE'       | 'write' ;
 NULL					  : 'null';
+PARENT				  : 'PARENT'		| 'parent' ;
 
 OPERATOR                :    (PLUS | MINUS | MULTIPLICATION | DIVISION | MOD | POWER);
 
@@ -169,7 +170,7 @@ function    :
 staticBlock : STATIC OPENBRACKET (varDefinition)+ CLOSEBRACKET;
 
 type        :   
-            TYPE TYPENAME ENDCOMMAND 
+            TYPE TYPENAME (PARENT TYPENAME)? ENDCOMMAND
                 staticBlock?
                 (function)+ 
                 ENDSTATEMENT ENDCOMMAND;

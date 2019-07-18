@@ -183,7 +183,7 @@ public class TypeWrapper {
 			return false;
 		}
 		return type.getParentList()
-				  .parallelStream()
+				  .stream()
 				  .map(parent -> {
 					  return isAssignableFrom(parent);
 				  })

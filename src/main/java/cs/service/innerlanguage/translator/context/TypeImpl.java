@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.Token;
 
@@ -22,20 +24,26 @@ import org.antlr.v4.runtime.Token;
  */
 public class TypeImpl extends WrapperStatement {
 	private String typeName;
+	private TypeWrapper parentType;
 	private List<DataStatement> staticBlock;
 	private List<FunctionImpl> functions;
 	private final Set<TypeWrapper> injectedTypes;
 
-	public TypeImpl(AbstractNodeContext parent, String typeName, List<DataStatement> staticBlock, List<FunctionImpl> functions, Token start, Token stop) {
+	public TypeImpl(AbstractNodeContext parent, String typeName, TypeWrapper parentType, List<DataStatement> staticBlock, List<FunctionImpl> functions, Token start, Token stop) {
 		super(parent, start, stop);
 		this.typeName = typeName;
 		this.staticBlock = staticBlock;
 		this.functions = functions;
+		this.parentType = parentType;
 		this.injectedTypes = new HashSet();
 	}
 
 	public Set<TypeWrapper> getInjectedTypes() {
 		return injectedTypes;
+	}
+
+	public TypeWrapper getParentType() {
+		return parentType;
 	}
 
 	public List<DataStatement> getStaticBlock() {
@@ -60,26 +68,35 @@ public class TypeImpl extends WrapperStatement {
 
 	@Override
 	public String toString() {
-		StringBuilder function = new StringBuilder();
-		function.append("public class ").append(typeName).append(" {\n")
-				  .append(injectedTypes.stream()
-							 .map(injectingType -> {
-								 return "\t@javax.inject.Inject\n"
+		try {
+			StringBuilder function = new StringBuilder();
+			Class parentClass = Class.forName(parentType.getClassPath());
+			function.append("public class ").append(typeName)
+					  .append(parentClass.isInterface() ? " implements " : " extends ")
+					  .append(parentClass.getName())
+					  .append(" {\n")
+					  .append(injectedTypes.stream()
+								 .map(injectingType -> {
+									 return "\t@javax.inject.Inject\n"
 										  + "\tprivate " + injectingType + " system" + injectingType.getClassName() + ";\n";
-							 })
-							 .collect(Collectors.joining()))
-				  .append(staticBlock.stream()
-							 .map(staticVar -> {
-								 return "\tprivate " + staticVar.toString() + ";\n";
-							 })
-							 .collect(Collectors.joining()))
-				  .append("\n")
-				  .append(functions.stream()
-							 .map(foo -> {
-								 return "\t" + foo.toString().replaceAll("\n", "\n\t") + "\n";
-							 })
-							 .collect(Collectors.joining("\n")))
-				  .append("}");
-		return function.toString();
+								 })
+								 .collect(Collectors.joining()))
+					  .append(staticBlock.stream()
+								 .map(staticVar -> {
+									 return "\tprivate " + staticVar.toString() + ";\n";
+								 })
+								 .collect(Collectors.joining()))
+					  .append("\n")
+					  .append(functions.stream()
+								 .map(foo -> {
+									 return "\t" + foo.toString().replaceAll("\n", "\n\t") + "\n";
+								 })
+								 .collect(Collectors.joining("\n")))
+					  .append("}");
+			return function.toString();
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(TypeImpl.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return null;
 	}
 }

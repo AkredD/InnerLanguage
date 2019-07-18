@@ -1,4 +1,4 @@
-TYPE Main.
+TYPE Main parent Object.
 	STATIC (
 		DATA: Integer a VALUES(412).
 		CONSTANT: Integer b VALUES(4321).
@@ -7,6 +7,8 @@ TYPE Main.
 	FUNCTION Integer main (Integer e)
 		START.
 			data: NullTypeWrapper wrapper VALUES().
+			data: String str VALUES("dsaeqw").
+			str = "eqw\"".
 			DATA: Integer g VALUES(null).
 			g = a + g + ((a*a) + g + ((432))).
 			if ((a == 412) AND FALSE)

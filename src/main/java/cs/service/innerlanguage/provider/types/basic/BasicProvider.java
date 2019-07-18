@@ -89,7 +89,7 @@ public final class BasicProvider implements IProvider {
 					  return method;
 				  })
 				  .collect(Collectors.toList());
-		TypeWrapper customType = new TypeWrapper(DEFAULT_CLASS_PATH + "." + type.getTypeName(), type.getTypeName(), Arrays.asList(typesByName.get("Object")), Boolean.TRUE, Boolean.FALSE, methods, null, null);
+		TypeWrapper customType = new TypeWrapper(DEFAULT_CLASS_PATH + "." + type.getTypeName(), type.getTypeName(), Arrays.asList(type.getParentType()), Boolean.TRUE, Boolean.FALSE, methods, null, null);
 		customTypes.add(customType);
 		typesByName.put(customType.getClassName(), customType);
 		typesByClassName.put(customType.getClassPath(), customType);

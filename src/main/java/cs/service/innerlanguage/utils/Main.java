@@ -9,7 +9,7 @@ package cs.service.innerlanguage.utils;
  *
  * @author Zhigalowsky S.
  */
-public class Main {
+public class Main extends java.lang.Object {
 	//@javax.inject.Inject
 	//private cs.somepackage.SystemClass systemSystemClass;
 	private java.lang.Integer a = new java.lang.Integer(412);
@@ -18,6 +18,8 @@ public class Main {
 
 	public java.lang.Integer main(java.lang.Integer e) {
 		cs.service.innerlanguage.provider.types.NullTypeWrapper wrapper = new cs.service.innerlanguage.provider.types.NullTypeWrapper();
+		java.lang.String str = new java.lang.String("dsaeqw");
+		str = "eqw\"";
 		java.lang.Integer g = new java.lang.Integer(null);
 		g = a + g + ((a * a) + g + ((432)));
 		if ((a == 412) && false) {
