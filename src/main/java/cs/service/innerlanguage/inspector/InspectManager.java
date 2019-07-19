@@ -38,7 +38,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.Token;
@@ -57,7 +59,7 @@ public class InspectManager {
 		IInspector[] inspectors = {new ContextInspector(this), new ReturnOrderInspector(this),
 											new ReturnTypeInspector(this), new ContinueBreakInspector(this),
 											new EqInspector(this), new CallTypeInspector(this),
-											new WriteInspector(this)};
+											new WriteInspector(this), new OverridingInspector(this)};
 		this.inspectors.addAll(Arrays.asList(inspectors));
 	}
 
@@ -68,6 +70,28 @@ public class InspectManager {
 	public Map<String, DataStatement> getVariableContext() {
 		return variableContext;
 	}
+	private final BiConsumer<BiConsumer<IInspector, NodeContext>, NodeContext> forAllInspector = (inspectBiConsumer, node) -> {
+		inspectors.forEach(inspector -> {
+			if (inspector.getInspectingSubjects().contains(node.getClass())) {
+				inspectBiConsumer.accept(inspector, node);
+			}
+		});
+	};
+	private final Consumer<NodeContext> inspectStart = (node) -> {
+		forAllInspector.accept((inspector, nodeLocal) -> {
+			inspector.startInspecting(nodeLocal);
+		}, node);
+	};
+	private final Consumer<NodeContext> inspectEnd = (node) -> {
+		forAllInspector.accept((inspector, nodeLocal) -> {
+			inspector.endInspecting(nodeLocal);
+		}, node);
+	};
+	private final Consumer<NodeContext> inspect = (node) -> {
+		forAllInspector.accept((inspector, nodeLocal) -> {
+			inspector.inspect(nodeLocal);
+		}, node);
+	};
 
 	public void inspectType(TypeImpl type) {
 		this.visitingType = type;
@@ -94,20 +118,14 @@ public class InspectManager {
 									 return varInit;
 								 }));
 		}
+		inspectStart.accept(type);
 		//inspect functions
 		type.getFunctions().forEach(foo -> {
-			inspectors.forEach(inspector -> {
-				if (inspector.getInspectingSubjects().contains(foo.getClass())) {
-					inspector.startInspecting(foo);
-				}
-			});
+			inspectStart.accept(foo);
 			inspectInnerStatements(foo.getInnerStatements());
-			inspectors.forEach(inspector -> {
-				if (inspector.getInspectingSubjects().contains(foo.getClass())) {
-					inspector.endInspecting(foo);
-				}
-			});
+			inspectEnd.accept(foo);
 		});
+		inspectEnd.accept(type);
 	}
 
 	//inspect statements
@@ -118,35 +136,19 @@ public class InspectManager {
 				if (!conditionType.equals(MainProvider.instance().getTypeByName("Boolean"))) {
 					handleException(ExceptionMessage.INCOMPATIBLE_TYPES, statement.getStart(), conditionType.getClassName(), MainProvider.instance().getTypeByName("Boolean").getClassName());
 				}
-				inspectors.forEach(inspector -> {
-					if (inspector.getInspectingSubjects().contains(statement.getClass())) {
-						inspector.startInspecting(statement);
-					}
-				});
+				inspectStart.accept(statement);
 				//inspect main if block
 				if (((IfImpl) statement).getMainBlockPart() != null) {
 					inspectInnerStatements(((IfImpl) statement).getMainBlockPart());
 				}
-				inspectors.forEach(inspector -> {
-					if (inspector.getInspectingSubjects().contains(statement.getClass())) {
-						inspector.endInspecting(statement);
-					}
-				});
+				inspectEnd.accept(statement);
 				if (((IfImpl) statement).getElseBlockPart() != null) {
-					inspectors.forEach(inspector -> {
-						if (inspector.getInspectingSubjects().contains(statement.getClass())) {
-							inspector.startInspecting(statement);
-						}
-					});
+					inspectStart.accept(statement);
 					//inspect else if block
 					if (((IfImpl) statement).getElseBlockPart() != null) {
 						inspectInnerStatements(((IfImpl) statement).getElseBlockPart());
 					}
-					inspectors.forEach(inspector -> {
-						if (inspector.getInspectingSubjects().contains(statement.getClass())) {
-							inspector.endInspecting(statement);
-						}
-					});
+					inspectEnd.accept(statement);
 				}
 				return;
 			}
@@ -155,26 +157,14 @@ public class InspectManager {
 				if (!conditionType.equals(MainProvider.instance().getTypeByName("Boolean"))) {
 					handleException(ExceptionMessage.INCOMPATIBLE_TYPES, statement.getStart(), conditionType.getClassName(), MainProvider.instance().getTypeByName("Boolean").getClassName());
 				}
-				inspectors.forEach(inspector -> {
-					if (inspector.getInspectingSubjects().contains(statement.getClass())) {
-						inspector.startInspecting(statement);
-					}
-				});
+				inspectStart.accept(statement);
 				if (((WhileImpl) statement).getInnerStatements() != null) {
 					inspectInnerStatements(((WhileImpl) statement).getInnerStatements());
 				}
-				inspectors.forEach(inspector -> {
-					if (inspector.getInspectingSubjects().contains(statement.getClass())) {
-						inspector.endInspecting(statement);
-					}
-				});
+				inspectEnd.accept(statement);
 				return;
 			}
-			inspectors.forEach(inspector -> {
-				if (inspector.getInspectingSubjects().contains(statement.getClass())) {
-					inspector.inspect(statement);
-				}
-			});
+			inspect.accept(statement);
 		});
 	}
 
@@ -225,7 +215,7 @@ public class InspectManager {
 					  return Optional.of(staticMethod.getOutput());
 				  });
 	};
-	private final BiFunction<String, List<TypeMethod>, Optional<TypeMethod>> getRequirdMethodByName = (name, methods) -> {
+	private final BiFunction<String, List<TypeMethod>, Optional<TypeMethod>> getRequiredMethodByName = (name, methods) -> {
 		return methods.stream()
 				  .filter(staticMethod -> staticMethod.getMethodName().equals(name))
 				  .findFirst();
@@ -269,7 +259,7 @@ public class InspectManager {
 				handleException(ExceptionMessage.FUNCTION_DOESNT_EXISTS, callFoo.getStart(), callFoo.getFunctionName());
 			}
 			method = findMethod.apply(new Pair<>(callFoo.getFunctionName(), valueTypes), MainProvider.instance().getTypeByName(visitingType.getTypeName()).getAllMethods());
-			reqMethod = getRequirdMethodByName.apply(callFoo.getFunctionName(), MainProvider.instance().getTypeByName(visitingType.getTypeName()).getAllMethods());
+			reqMethod = getRequiredMethodByName.apply(callFoo.getFunctionName(), MainProvider.instance().getTypeByName(visitingType.getTypeName()).getAllMethods());
 			if (!method.isPresent()) {
 				if (!reqMethod.isPresent()) {
 					handleException(ExceptionMessage.TYPE_HAS_NO_STATIC_METHODS_WITH_THIS_NAME, callFoo.getStart(),
@@ -297,7 +287,7 @@ public class InspectManager {
 				handleException(ExceptionMessage.NO_COLLABLE_METHODS, callFoo.getStart(), callFoo.getVar().getName(), callableObjectType.getClassName());
 			}
 			method = findMethod.apply(new Pair<>(callFoo.getFunctionName(), valueTypes), callableObjectType.getAllMethods());
-			reqMethod = getRequirdMethodByName.apply(callFoo.getFunctionName(), callableObjectType.getAllMethods());
+			reqMethod = getRequiredMethodByName.apply(callFoo.getFunctionName(), callableObjectType.getAllMethods());
 			if (!method.isPresent()) {
 				if (!reqMethod.isPresent()) {
 					handleException(ExceptionMessage.TYPE_HAS_NO_METHODS_WITH_THIS_NAME, callFoo.getStart(),

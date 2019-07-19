@@ -5,6 +5,11 @@
  */
 package cs.service.innerlanguage.utils;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
 /**
  *
  * @author Zhigalowsky S.
@@ -56,4 +61,4 @@ public class Main extends java.lang.Object {
 		System.out.println(((Boolean) a.equals(a)).toString() + " \n " + a.toString() + " \n " + a.toString());
 		return a;
 	}
-}
+	}

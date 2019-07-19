@@ -60,7 +60,16 @@ public class InnerAdapter {
 			type.getAllMethods();
 			type.getAllStaticMethods();
 		});
-		//showBasicTypes();
+		Class clazz = null;
+		try {
+			//showBasicTypes();
+			clazz = Class.forName("cs.service.innerlanguage.inspector.AbstractInspector");
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(InnerAdapter.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		clazz.getMethods();
+		clazz.getDeclaredAnnotations();
+		clazz.getDeclaredMethods();
 		String a = null;
 		try {
 			a = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("examples" + File.separator + "main"), "UTF-8");
