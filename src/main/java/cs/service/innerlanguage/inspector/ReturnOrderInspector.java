@@ -53,7 +53,6 @@ public class ReturnOrderInspector extends AbstractInspector {
 			if (!returning) {
 				inspectManager.handleException(ExceptionMessage.MISS_RETURN_STATEMENT, ((FunctionImpl) node).getStart(), ((FunctionImpl) node).getType().getClassName());
 			}
-			System.out.println(linkedStatement.size());
 		}
 	}
 

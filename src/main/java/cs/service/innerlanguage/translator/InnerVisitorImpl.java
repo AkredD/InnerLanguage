@@ -569,7 +569,6 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		if (ctx.callStatement() != null) {
 			return ctx.callStatement().accept(this);
 		}
-		System.out.println("smth wrong in expr");
 		return super.visitExpression(ctx);
 	}
 
@@ -630,7 +629,6 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		if (ctx.callStatement() != null) {
 			return ctx.callStatement().accept(this);
 		}
-		System.out.println("smth wrong in bool expr");
 		return super.visitBoolExpression(ctx); //To change body of generated methods, choose Tools | Templates.
 	}
 
@@ -707,7 +705,6 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		if (ctx.callStatement() != null) {
 			return ctx.callStatement().accept(this);
 		}
-		System.out.println("smth wrong in visit condition");
 		return super.visitCondition(ctx); //To change body of generated methods, choose Tools | Templates.
 	}
 
@@ -758,7 +755,6 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 		if (ctx.condition() != null) {
 			return ctx.condition().accept(this);
 		}
-		System.out.println("smth wrong in var value ");
 		return super.visit(ctx);
 	}
 
