@@ -1,4 +1,4 @@
-TYPE Main parent Object.
+TYPE Main parent ArrayList.
 	STATIC (
 		DATA: Integer a VALUES(412).
 		CONSTANT: Integer b VALUES(4321).

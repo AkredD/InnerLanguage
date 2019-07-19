@@ -41,7 +41,9 @@ public enum ExceptionMessage {
 	VARARGS_DOESNT_SUPPORT,
 	PRIMITVE_ARRAYS_DOESNT_SUPPORT,
 	RUNTIME_TYPE_LOAD_EXCEPTION,
-	THIS_TYPE_CANT_BE_A_SYSTEM;
+	THIS_TYPE_CANT_BE_A_SYSTEM,
+	REQUIRED_METHODS_DOESNT_EXISTS,
+	CANT_OVERRIDE_THIS_TYPE;
 	private static final String MESSAGES = "messages";
 	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.getDefault());
 

@@ -5,13 +5,17 @@
  */
 package cs.service.innerlanguage.provider.types;
 
+import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.provider.types.basic.BaseMethodView;
 import cs.service.innerlanguage.provider.types.basic.BaseTypeView;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -94,7 +98,7 @@ public class TypeWrapper {
 					  .collect(Collector.of(HashSet::new, HashSet::addAll, (left, right) -> {
 											 left.addAll(right);
 											 return left;
-										 }))
+										 }));
 		}
 		staticMethodsSet.addAll(this.methods);
 		allStaticMethods.addAll(staticMethodsSet);
@@ -156,7 +160,7 @@ public class TypeWrapper {
 					  .collect(Collector.of(HashSet::new, HashSet::addAll, (left, right) -> {
 											 left.addAll(right);
 											 return left;
-										 }))
+										 }));
 		}
 		methodsSet.addAll(this.methods);
 		allMethods.addAll(methodsSet);
@@ -165,6 +169,33 @@ public class TypeWrapper {
 
 	public List<TypeWrapper> getParentList() {
 		return parentList;
+	}
+	private final BiFunction<TypeConstructor, List<TypeWrapper>, Boolean> compareParametersWithTypeList = (constructor, params) -> {
+		if (constructor.getParameters() == null || params == null || constructor.getParameters().size() != params.size()) {
+			return false;
+		}
+		for (int i = 0; i < params.size(); ++i) {
+			if (!constructor.getParameters().get(i).getKey().equals(params.get(i))) {
+				return false;
+			}
+		}
+		return true;
+	};
+
+	public TypeMethod findTypeMethodByMethod(Method method) {
+		List<TypeWrapper> methodParams = Arrays.asList(method.getParameterTypes())
+				  .stream()
+				  .map(clazz -> {
+					  return MainProvider.instance().getTypeByClassName(clazz.getName());
+				  })
+				  .collect(Collectors.toList());
+		return getAllMethods().stream()
+				  .filter(typeMethod -> compareParametersWithTypeList.apply(typeMethod.getConstructor(), methodParams))
+				  .findAny()
+				  .orElse(getAllStaticMethods().stream()
+							 .filter(typeMethod -> compareParametersWithTypeList.apply(typeMethod.getConstructor(), methodParams))
+							 .findAny()
+							 .orElse(null));
 	}
 
 	@Override
