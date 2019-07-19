@@ -88,13 +88,11 @@ public class RuntimeProvider implements IProvider{
 			classLoadersList.add(ClasspathHelper.contextClassLoader());
 			classLoadersList.add(ClasspathHelper.staticClassLoader());
 			for (String className : javaPathes) {
-				//System.out.println("package: " + className);
 				Reflections reflections = new Reflections(new ConfigurationBuilder()
 						  .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
 						  .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
 						  .filterInputsBy(new FilterBuilder().includePackage(className)));
 				Set<String> allClasses = reflections.getAllTypes();
-				//System.out.println("in package " + className + " " + allClasses.size());
 				allClasses.forEach(clazz -> {
 					register(clazz);
 				});
@@ -116,7 +114,6 @@ public class RuntimeProvider implements IProvider{
 	public void register(String className) {
 		try {
 			Class clazz = Class.forName(className);
-			//System.out.println(clazz.getName());
 			//class already registered
 			if (typesByClassName.containsKey(className)
 				 || mainProvider.getBasicTypesByClassName().containsKey(className)) {

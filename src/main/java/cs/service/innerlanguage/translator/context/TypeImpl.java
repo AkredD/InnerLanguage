@@ -5,6 +5,7 @@
  */
 package cs.service.innerlanguage.translator.context;
 
+import cs.service.innerlanguage.adapter.InnerAdapter;
 import cs.service.innerlanguage.translator.statements.DataStatement;
 import cs.service.innerlanguage.parser.InnerParser;
 import cs.service.innerlanguage.provider.types.TypeWrapper;
@@ -71,14 +72,16 @@ public class TypeImpl extends WrapperStatement {
 		try {
 			StringBuilder function = new StringBuilder();
 			Class parentClass = Class.forName(parentType.getClassPath());
-			function.append("public class ").append(typeName)
+			function.append("package ").append(InnerAdapter.instance().getPackageFolder()).append(".").append(typeName).append(";")
+					  .append("\n\n")
+					  .append("public class ").append(typeName)
 					  .append(parentClass.isInterface() ? " implements " : " extends ")
 					  .append(parentClass.getName())
 					  .append(" {\n")
 					  .append(injectedTypes.stream()
 								 .map(injectingType -> {
 									 return "\t@javax.inject.Inject\n"
-										  + "\tprivate " + injectingType + " system" + injectingType.getClassName() + ";\n";
+											  + "\tprivate " + injectingType + " system" + injectingType.getClassName() + ";\n";
 								 })
 								 .collect(Collectors.joining()))
 					  .append(staticBlock.stream()

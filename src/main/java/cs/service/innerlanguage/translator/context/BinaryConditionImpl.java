@@ -60,7 +60,6 @@ public class BinaryConditionImpl extends ExpressionContext {
 			case "==":
 				return "==";
 			default:
-				System.out.println("Cannot resolve boolean operator - " + operator);
 				return null;
 		}
 	}

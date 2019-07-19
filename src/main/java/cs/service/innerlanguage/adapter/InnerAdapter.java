@@ -42,89 +42,42 @@ import org.apache.commons.io.IOUtils;
  * @author anisimov_a_v
  */
 public class InnerAdapter {
-	private Integer a = new Integer(32);
-	private Integer b = new Integer(a);
+	private static InnerAdapter instance;
+	private String packageFolder = "ru.ntik.cs.actions.translated";
 
-	public int[] someMethod(String aa, char aaaa) {
-		return new int[] {1};
+	private InnerAdapter() {
+		MainProvider.instance().ignorePrimitiveArrays(Boolean.TRUE).ignoreVarargs(Boolean.TRUE).reload();
 	}
 
-	public int someMethod2(InnerAdapter[] d) {
-		return 1;
+	public static InnerAdapter instance() {
+		if (instance == null) {
+			synchronized (MainProvider.class) {
+				if (instance == null) {
+					instance = new InnerAdapter();
+				}
+			}
+		}
+		return instance;
+	}
+
+	public String translate(String sourceCode) {
+		return prepareContext(sourceCode).toString();
 	}
 
 	public static void main(String[] args) {
-		//showBasicTypes();
 		MainProvider.instance().ignorePrimitiveArrays(Boolean.TRUE).ignoreVarargs(Boolean.TRUE).reload();
-		MainProvider.instance().getRuntimeTypesByName().values().forEach(type -> {
-			type.getAllMethods();
-			type.getAllStaticMethods();
-		});
-		Class clazz = null;
-		try {
-			//showBasicTypes();
-			clazz = Class.forName("cs.service.innerlanguage.inspector.AbstractInspector");
-		} catch (ClassNotFoundException ex) {
-			Logger.getLogger(InnerAdapter.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		clazz.getMethods();
-		clazz.getDeclaredAnnotations();
-		clazz.getDeclaredMethods();
 		String a = null;
 		try {
 			a = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("examples" + File.separator + "main"), "UTF-8");
 		} catch (IOException ex) {
 			Logger.getLogger(InnerAdapter.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		InnerParser.InnerContext context = prepareContext(a);
+		NodeContext context = prepareContext(a);
+		System.out.println(context.toString());
 	}
 
-	private static void showBasicTypes() {
-		MainProvider.instance().getBasicTypesByName()
-				  .entrySet()
-				  .stream()
-				  .forEach(typeEntry -> {
-					  System.out.println("---------------------------------------");
-					  System.out.println(typeEntry.getKey() + " parent - "
-												+ ((typeEntry.getValue().getParentList() == null) ? "null" : typeEntry.getValue().getParentList()
-											.stream()
-											.map(parent -> {
-												return parent.getClassName();
-											})
-											.collect(Collectors.joining(", "))));
-					  typeEntry.getValue().getConstructors().forEach(costr -> {
-						  System.out.println("constructors  ("
-													+ costr.getConstructor().getParameters()
-									 .stream()
-									 .map(constr -> {
-										 return constr.getKey().getClassName() + " " + constr.getValue();
-									 })
-									 .collect(Collectors.joining(", ")) + " )");
-					  });
-					  System.out.println("----");
-					  typeEntry.getValue().getStaticMethods().forEach(stMethod -> {
-						  System.out.println("static methods " + stMethod.getMethodName() + " ("
-													+ stMethod.getConstructor().getParameters()
-									 .stream()
-									 .map(constr -> {
-										 return constr.getKey().getClassName() + " " + constr.getValue();
-									 })
-									 .collect(Collectors.joining(", ")) + " )");
-					  });
-					  System.out.println("----");
-					  typeEntry.getValue().getAllMethods().forEach(method -> {
-						  System.out.println("method " + method.getMethodName() + " ("
-													+ method.getConstructor().getParameters()
-									 .stream()
-									 .map(constr -> {
-										 return constr.getKey().getClassName() + " " + constr.getValue();
-									 })
-									 .collect(Collectors.joining(", ")) + ")");
-					  });
-				  });
-	}
-
-	private static InnerParser.InnerContext prepareContext(String csdmlQuery) {
+	private static NodeContext prepareContext(String csdmlQuery) {
+		NodeContext obj = null;
 		ANTLRInputStream input = new ANTLRInputStream(csdmlQuery);
 		InnerLexer lexer = new InnerLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -134,26 +87,20 @@ public class InnerAdapter {
 		InnerParser.InnerContext scriptCtx;
 		try {
 			scriptCtx = parser.inner();
-			Object obj = visitor.visit(scriptCtx);
+			obj = visitor.visit(scriptCtx);
 			InspectManager manager = new InspectManager();
 			manager.inspectType((TypeImpl) obj);
-			//System.out.println(csdmlQuery);
-			System.out.println("\n\n----------------------------------------------------------------------\n\n");
-			System.out.println(((AbstractNodeContext) obj).getPosition());
-			System.out.println(obj.toString());
 		} catch (ParseCancellationException ex) {
 			Throwable cause = ex.getCause();
 			String message;
 			if (cause instanceof RecognitionException) {
 				Token token = ((RecognitionException) cause).getOffendingToken();
-				System.out.println(((RecognitionException) cause).getCtx().getText());
 				message = String.format(ExceptionMessage.MISMATCH_INPUT.getLocalizedMessage(),
 												new Object[] {token.getLine(),
 																  token.getStartIndex() - tokens.get(token.getTokenIndex() - 1).getStopIndex(),
 																  token.getText(),
 																  ((RecognitionException) cause).getExpectedTokens().toList().stream()
 																  .map(tokenId -> {
-																	  System.out.println(tokenId);
 																	  return lexer.getVocabulary().getDisplayName(tokenId);
 																  })
 																  .collect(Collectors.joining(" "))});
@@ -162,6 +109,14 @@ public class InnerAdapter {
 			}
 			throw new ParsingException(message);
 		}
-		return scriptCtx;
+		return obj;
+	}
+
+	public String getPackageFolder() {
+		return packageFolder;
+	}
+
+	public void setPackageFolder(String packageFolder) {
+		this.packageFolder = packageFolder;
 	}
 }
