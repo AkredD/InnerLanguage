@@ -20,14 +20,25 @@ import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.context.TypeImpl;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
+import javax.tools.ToolProvider;
+import static jdk.nashorn.internal.codegen.CompilerConstants.className;
+import net.openhft.compiler.CompilerUtils;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -73,7 +84,22 @@ public class InnerAdapter {
 			Logger.getLogger(InnerAdapter.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		NodeContext context = prepareContext(a);
-		System.out.println(context.toString());
+		JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
+		if (jc == null) {
+			//throw new Exception("Compiler unavailable");
+		}
+		String code = context.toString();
+		System.out.println(code);
+		Class aClass;
+		try {
+			aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(InnerAdapter.instance().getPackageFolder() + ".Main", code);
+			Class b = Class.forName(InnerAdapter.instance().getPackageFolder() + ".Main");
+			System.out.println("");
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(InnerAdapter.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		
 	}
 
 	private static NodeContext prepareContext(String csdmlQuery) {
@@ -100,10 +126,10 @@ public class InnerAdapter {
 																  token.getStartIndex() - tokens.get(token.getTokenIndex() - 1).getStopIndex(),
 																  token.getText(),
 																  ((RecognitionException) cause).getExpectedTokens().toList().stream()
-																  .map(tokenId -> {
-																	  return lexer.getVocabulary().getDisplayName(tokenId);
-																  })
-																  .collect(Collectors.joining(" "))});
+																			 .map(tokenId -> {
+																				 return lexer.getVocabulary().getDisplayName(tokenId);
+																			 })
+																			 .collect(Collectors.joining(" "))});
 			} else {
 				message = ex.getMessage();
 			}
@@ -118,5 +144,19 @@ public class InnerAdapter {
 
 	public void setPackageFolder(String packageFolder) {
 		this.packageFolder = packageFolder;
+	}
+	private static class JavaSourceFromString extends SimpleJavaFileObject {
+		final String code;
+
+		public JavaSourceFromString(String name, String code) {
+			super(URI.create("string:///" + name.replace('.', '/') + JavaFileObject.Kind.SOURCE.extension), JavaFileObject.Kind.SOURCE);
+			System.out.println("string:///" + name.replace('.', '/') + JavaFileObject.Kind.SOURCE.extension);
+			this.code = code;
+		}
+
+		@Override
+		public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+			return code;
+		}
 	}
 }
