@@ -72,7 +72,7 @@ public class TypeImpl extends WrapperStatement {
 		try {
 			StringBuilder function = new StringBuilder();
 			Class parentClass = Class.forName(parentType.getClassPath());
-			function.append("package ").append(InnerAdapter.instance().getPackageFolder()).append(".").append(typeName).append(";")
+			function.append("package ").append(InnerAdapter.instance().getPackageFolder()).append(";")
 					  .append("\n\n")
 					  .append("public class ").append(typeName)
 					  .append(parentClass.isInterface() ? " implements " : " extends ")

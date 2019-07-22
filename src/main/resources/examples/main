@@ -2,7 +2,6 @@ TYPE Main parent ArrayList.
 	STATIC (
 		DATA: Integer a VALUES(412).
 		CONSTANT: Integer b VALUES(4321).
-		SYSTEM: SystemClass sys.
 	)
 	FUNCTION Integer main (Integer e)
 		START.
@@ -14,7 +13,6 @@ TYPE Main parent ArrayList.
 			if ((a == 412) AND FALSE)
 				START.
 					DATA: Boolean gg VALUES(true).
-					SYSTEM: SystemClass sys1.
 					return a.
 				END.
 			ELSE
