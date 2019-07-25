@@ -45,7 +45,7 @@ public enum ExceptionMessage {
 	REQUIRED_METHODS_DOESNT_EXISTS,
 	CANT_OVERRIDE_THIS_TYPE;
 	private static final String MESSAGES = "messages";
-	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.getDefault());
+	private static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(MESSAGES, Locale.ENGLISH);
 
 	public String getLocalizedMessage() {
 		return MSG_BUNDLE.getString(this.toString());

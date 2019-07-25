@@ -14,27 +14,14 @@ import cs.service.innerlanguage.provider.types.basic.BasicProvider;
 import cs.service.innerlanguage.provider.types.runtime.RuntimeProvider;
 import cs.service.innerlanguage.translator.context.TypeImpl;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 import org.antlr.v4.runtime.Token;
-import org.apache.commons.io.IOUtils;
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 /**
  *
@@ -50,6 +37,39 @@ public class MainProvider {
 		this.basicProvider = new BasicProvider(this);
 		this.runtimeProvider = new RuntimeProvider(this);
 	}
+	public final Function<Class, TypeWrapper> getTypeWrapperByPrimitive = (primitiveClass) -> {
+		TypeWrapper primitive = null;
+		switch (primitiveClass.getName()) {
+			case "int":
+				primitive = getTypeByName("Integer");
+				break;
+			case "short":
+				primitive = getTypeByName("Short");
+				break;
+			case "long":
+				primitive = getTypeByName("Long");
+				break;
+			case "float":
+				primitive = getTypeByName("Float");
+				break;
+			case "double":
+				primitive = getTypeByName("Double");
+				break;
+			case "char":
+				primitive = getTypeByName("Character");
+				break;
+			case "byte":
+				primitive = getTypeByName("Byte");
+				break;
+			case "boolean":
+				primitive = getTypeByName("Boolean");
+				break;
+			case "void":
+				primitive = getTypeByName("Void");
+				break;
+		}
+		return primitive;
+	};
 
 	public static MainProvider instance() {
 		if (instance == null) {
@@ -154,7 +174,7 @@ public class MainProvider {
 	public InputStream getResourceAsStream(String resource) {
 		final InputStream in
 								= getContextClassLoader().getResourceAsStream(resource);
-		return in == null ? getClass().getResourceAsStream(resource) : in;
+		return in == null ? getClass().getClassLoader().getResourceAsStream(resource) : in;
 	}
 
 	public ClassLoader getContextClassLoader() {

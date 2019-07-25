@@ -8,6 +8,7 @@ package cs.service.innerlanguage.provider.types.basic;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
 import cs.service.innerlanguage.parser.exceptions.ExecutionException;
+import cs.service.innerlanguage.parser.exceptions.InnerException;
 import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.translator.context.TypeImpl;
 import cs.service.innerlanguage.provider.types.NullTypeWrapper;
@@ -30,6 +31,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.Token;
 import cs.service.innerlanguage.provider.IProvider;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import sun.reflect.Reflection;
 
 /**
  *
@@ -42,6 +46,7 @@ public final class BasicProvider implements IProvider {
 	private Map<String, TypeWrapper> typesByClassName;
 	private List<TypeWrapper> customTypes;
 	private MainProvider mainProvaider;
+	private String[] pathes = {"1object.json", "2numbers.json", "3list.json", "4system.json"};
 
 	public BasicProvider(MainProvider mainProvaider) {
 		this.mainProvaider = mainProvaider;
@@ -104,9 +109,15 @@ public final class BasicProvider implements IProvider {
 			typesByClassName.put(type.getClassPath(), type);
 		});
 		try {
-			for (String name : mainProvaider.getResourceFiles(TYPEPATH)) {
+			//Don't work in glassfish
+			/*for (String name : mainProvaider.getResourceFiles(TYPEPATH)) {
 				ObjectMapper mapper = new ObjectMapper();
 				TypesTreeView view = mapper.readValue(mainProvaider.getContextClassLoader().getResourceAsStream(TYPEPATH + File.separator + name), TypesTreeView.class);
+				visit(view);
+			}*/
+			for (String name : pathes) {
+				ObjectMapper mapper = new ObjectMapper();
+				TypesTreeView view = mapper.readValue(new String(Files.readAllBytes(Paths.get((TYPEPATH + File.separator + name)))), TypesTreeView.class);
 				visit(view);
 			}
 			typesByClassName.entrySet()

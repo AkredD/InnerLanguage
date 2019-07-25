@@ -10,6 +10,7 @@ import cs.service.innerlanguage.provider.types.TypeWrapper;
 import cs.service.innerlanguage.translator.context.FunctionImpl;
 import cs.service.innerlanguage.translator.context.NodeContext;
 import cs.service.innerlanguage.translator.statements.ReturnImpl;
+import cs.service.innerlanguage.translator.statements.ReturnVoidImpl;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,12 +19,12 @@ import java.util.Set;
  *
  * @author Zhigalowsky S.
  */
-public class ReturnTypeInspector extends AbstractInspector{
+public class ReturnTypeInspector extends AbstractInspector {
 	private static Set<Class> inspectingSubjects = new HashSet();
 	private FunctionImpl actualFoo;
 
 	static {
-		Class[] classes = {ReturnImpl.class, FunctionImpl.class};
+		Class[] classes = {ReturnImpl.class, ReturnVoidImpl.class, FunctionImpl.class};
 		inspectingSubjects.addAll(Arrays.asList(classes));
 	}
 
@@ -43,12 +44,24 @@ public class ReturnTypeInspector extends AbstractInspector{
 
 	@Override
 	public <T extends NodeContext> void inspect(T node) {
+		if (actualFoo.getType().getClassName().equals("Void")) {
+			if (node instanceof ReturnVoidImpl) {
+				return;
+			} else {
 				TypeWrapper returnType = inspectManager.getVarValueType(((ReturnImpl) node).getValue(), ((ReturnImpl) node).getStart());
-		if (!returnType.equals(actualFoo.getType())) {
-			inspectManager.handleException(ExceptionMessage.WRONG_RETURN_TYPE,
-													 ((ReturnImpl) node).getStart(),
-													 actualFoo.getType().getClassName(),
-													 returnType.getClassName());
+				inspectManager.handleException(ExceptionMessage.WRONG_RETURN_TYPE,
+														 ((ReturnImpl) node).getStart(),
+														 "void",
+														 returnType.getClassName());
+			}
+		} else {
+			TypeWrapper returnType = inspectManager.getVarValueType(((ReturnImpl) node).getValue(), ((ReturnImpl) node).getStart());
+			if (!returnType.equals(actualFoo.getType())) {
+				inspectManager.handleException(ExceptionMessage.WRONG_RETURN_TYPE,
+														 ((ReturnImpl) node).getStart(),
+														 actualFoo.getType().getClassName(),
+														 returnType.getClassName());
+			}
 		}
 	}
 
@@ -58,5 +71,4 @@ public class ReturnTypeInspector extends AbstractInspector{
 			actualFoo = (FunctionImpl) node;
 		}
 	}
-
 }

@@ -17,6 +17,7 @@ import cs.service.innerlanguage.translator.statements.ConstantDefinitionImpl;
 import cs.service.innerlanguage.translator.statements.DataDefinitionImpl;
 import cs.service.innerlanguage.translator.statements.IfImpl;
 import cs.service.innerlanguage.translator.statements.ReturnImpl;
+import cs.service.innerlanguage.translator.statements.ReturnVoidImpl;
 import cs.service.innerlanguage.translator.statements.SystemDefinitionImpl;
 import cs.service.innerlanguage.translator.statements.WhileImpl;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class ReturnOrderInspector extends AbstractInspector {
 	private Map<NodeContext, List<TraversalWrapper>> linkedStatement;
 
 	static {
-		Class[] classes = {ReturnImpl.class, IfImpl.class, WhileImpl.class, FunctionImpl.class};
+		Class[] classes = {ReturnImpl.class, ReturnVoidImpl.class, IfImpl.class, WhileImpl.class, FunctionImpl.class};
 		inspectingSubjects.addAll(Arrays.asList(classes));
 	}
 
@@ -59,13 +60,13 @@ public class ReturnOrderInspector extends AbstractInspector {
 	private boolean visitTraversalWrapper(BranchLinkedStatement branch, FunctionImpl foo) {
 		for (int i = 0; i < branch.getLinkedStatements().size(); ++i) {
 			ITreeTraversal traversal = branch.getLinkedStatements().get(i);
-			if (traversal.getElement() instanceof ReturnImpl) {
+			if (traversal.getElement() instanceof ReturnImpl || traversal.getElement() instanceof ReturnVoidImpl) {
 				if (branch.getInnerStatements().indexOf(traversal.getElement())
 					 < branch.getInnerStatements().size() - 1) {
 					inspectManager.handleException(ExceptionMessage.UNREACHABLE_STATEMENT,
 															 ((AbstractNodeContext) branch.getInnerStatements()
-															 .get(branch.getInnerStatements().indexOf(traversal.getElement()) + 1))
-															 .getStart());
+																		.get(branch.getInnerStatements().indexOf(traversal.getElement()) + 1))
+																		.getStart());
 				} else {
 					return true;
 				}
@@ -81,8 +82,8 @@ public class ReturnOrderInspector extends AbstractInspector {
 							 < branch.getInnerStatements().size() - 1) {
 							inspectManager.handleException(ExceptionMessage.UNREACHABLE_STATEMENT,
 																	 ((AbstractNodeContext) branch.getInnerStatements()
-																	 .get(branch.getInnerStatements().indexOf(traversal.getElement()) + 1))
-																	 .getStart());
+																				.get(branch.getInnerStatements().indexOf(traversal.getElement()) + 1))
+																				.getStart());
 						}
 						return true;
 					}
@@ -101,7 +102,7 @@ public class ReturnOrderInspector extends AbstractInspector {
 	public <T extends NodeContext> void inspect(T node) {
 		AbstractNodeContext parent = ((AbstractNodeContext) node).getParent();
 		BranchLinkedStatement parentTraversal = linkedStatement.get(parent).get(getLastIndex(parent)).getTraversal();
-		if (node instanceof ReturnImpl) {
+		if (node instanceof ReturnImpl || node instanceof ReturnVoidImpl) {
 			EndPointStatement returnSt = new EndPointStatement(parentTraversal, (ReturnImpl) node);
 			parentTraversal.addLinkedStatement(returnSt);
 		}

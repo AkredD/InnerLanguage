@@ -1,11 +1,16 @@
-TYPE Main parent ArrayList.
+TYPE Main parent Object.
 	STATIC (
 		DATA: Integer a VALUES(412).
 		CONSTANT: Integer b VALUES(4321).
 	)
+
+	FUNCTION Void execute(Integer args)
+		START.
+			return void.
+		END.
+
 	FUNCTION Integer main (Integer e)
 		START.
-			data: NullTypeWrapper wrapper VALUES().
 			data: String str VALUES("dsaeqw").
 			str = "eqw\"".
 			DATA: Integer g VALUES(null).
@@ -33,7 +38,7 @@ TYPE Main parent ArrayList.
 			a += a.
 			if (true AND FALSE)
 				START.
-					
+
 				END.
 			ELSE
 				START.

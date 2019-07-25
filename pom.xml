@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cs.service</groupId>
 	<artifactId>InnerLanguage</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>0.1</version>
 	<packaging>jar</packaging>
    
 	<properties>
@@ -48,15 +48,28 @@
 		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
-			<version>0.9.11</version>
+			<version>0.9.8</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
+		<dependency>
+			<groupId>net.openhft</groupId>
+			<artifactId>compiler</artifactId>
+			<version>2.3.4</version>
+		</dependency>
 	</dependencies>
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<!-- Plugin to compile the g4 files ahead of the java files
 				See https://github.com/antlr/antlr4/blob/master/antlr4-maven-plugin/src/site/apt/examples/simple.apt.vm
