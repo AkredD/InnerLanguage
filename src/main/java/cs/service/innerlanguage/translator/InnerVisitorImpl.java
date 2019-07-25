@@ -40,6 +40,7 @@ import cs.service.innerlanguage.translator.context.VariableValueImpl;
 import cs.service.innerlanguage.translator.statements.WhileImpl;
 import cs.service.innerlanguage.translator.statements.WriteStatementImpl;
 import cs.service.innerlanguage.provider.types.TypeWrapper;
+import cs.service.innerlanguage.translator.statements.ReturnVoidImpl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -373,6 +374,9 @@ public class InnerVisitorImpl extends InnerBaseVisitor<NodeContext> {
 	 */
 	@Override
 	public NodeContext visitReturnStatement(InnerParser.ReturnStatementContext ctx) {
+		if (ctx.varValue().getText().equals("void")) {
+			return new ReturnVoidImpl(null, null, ctx.start, ctx.stop);
+		}
 		ReturnImpl returnStatement = new ReturnImpl(null, null, ctx.start, ctx.stop);
 		NodeContext value = ctx.varValue().accept(this);
 		if (AbstractNodeContext.class.isAssignableFrom(value.getClass())) {

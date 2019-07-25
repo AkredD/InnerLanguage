@@ -5,6 +5,7 @@
  */
 package cs.service.innerlanguage.provider.types.runtime;
 
+import com.google.common.base.Predicate;
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
 import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.provider.types.TypeConstructor;
@@ -34,12 +35,16 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 import cs.service.innerlanguage.provider.IProvider;
+import java.io.FileReader;
+import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  *
  * @author anisimov_a_v
  */
-public class RuntimeProvider implements IProvider{
+public class RuntimeProvider implements IProvider {
 	private MainProvider mainProvider;
 	private final List<TypeWrapper> systemTypes = new ArrayList();
 	private final Map<String, TypeWrapper> typesByName = new HashMap();
@@ -82,19 +87,24 @@ public class RuntimeProvider implements IProvider{
 	@Override
 	public void reload() {
 		try {
-			String pathFileContent = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("system" + File.separator + "pathes"), "UTF-8");
-			String[] javaPathes = (pathFileContent.contains(";")) ? pathFileContent.split(";") : new String[]{pathFileContent};
+			//Don't work in glassfish
+			//String pathFileContent = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("system" + File.separator + "pathes"), "UTF-8");
+			String pathFileContent = new String(Files.readAllBytes(Paths.get(("system" + File.separator + "pathes"))));
+			System.out.println(pathFileContent);
+			String[] javaPathes = (pathFileContent.contains(";")) ? pathFileContent.split(";") : new String[] {pathFileContent};
 			List<ClassLoader> classLoadersList = new LinkedList<>();
 			classLoadersList.add(ClasspathHelper.contextClassLoader());
 			classLoadersList.add(ClasspathHelper.staticClassLoader());
 			for (String className : javaPathes) {
+				System.out.println("ClassPath: " + className);
 				Reflections reflections = new Reflections(new ConfigurationBuilder()
 						  .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
 						  .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
-						  .filterInputsBy(new FilterBuilder().includePackage(className)));
-				Set<String> allClasses = reflections.getAllTypes();
+						  .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(className))));
+				Set<Class<? extends Object>> allClasses = reflections.getSubTypesOf(Object.class);
+				System.out.println(allClasses.size());
 				allClasses.forEach(clazz -> {
-					register(clazz);
+					register(clazz.getName());
 				});
 			}
 		} catch (IOException ex) {
@@ -200,37 +210,7 @@ public class RuntimeProvider implements IProvider{
 			if (clazz.getName().startsWith("[")) {
 				mainProvider.handleException(ExceptionMessage.PRIMITVE_ARRAYS_DOESNT_SUPPORT, methodName, clazz.getSimpleName());
 			}
-			TypeWrapper primitive = null;
-			switch (clazz.getName()) {
-				case "int":
-					primitive = mainProvider.getTypeByName("Integer");
-					break;
-				case "short":
-					primitive = mainProvider.getTypeByName("Short");
-					break;
-				case "long":
-					primitive = mainProvider.getTypeByName("Long");
-					break;
-				case "float":
-					primitive = mainProvider.getTypeByName("Float");
-					break;
-				case "double":
-					primitive = mainProvider.getTypeByName("Double");
-					break;
-				case "char":
-					primitive = mainProvider.getTypeByName("Character");
-					break;
-				case "byte":
-					primitive = mainProvider.getTypeByName("Byte");
-					break;
-				case "boolean":
-					primitive = mainProvider.getTypeByName("Boolean");
-					break;
-				case "void":
-					primitive = mainProvider.getTypeByName("Void");
-					break;
-			}
-			return primitive;
+			return MainProvider.instance().getTypeWrapperByPrimitive.apply(clazz);
 		}
 		if (!(typesByClassName.containsKey(clazz.getName())
 				|| mainProvider.getBasicTypesByClassName().containsKey(clazz.getName()))) {
