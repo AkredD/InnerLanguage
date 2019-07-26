@@ -7,6 +7,7 @@ package cs.service.innerlanguage.inspector;
 
 import cs.service.innerlanguage.parser.exceptions.ExceptionMessage;
 import cs.service.innerlanguage.parser.exceptions.ExecutionException;
+import cs.service.innerlanguage.parser.exceptions.InnerException;
 import cs.service.innerlanguage.provider.MainProvider;
 import cs.service.innerlanguage.translator.context.AbstractNodeContext;
 import cs.service.innerlanguage.translator.context.BaseValueImpl;
@@ -105,27 +106,33 @@ public class InspectManager {
 			functionContext.put(foo.getFunctionName(), foo);
 		});
 		MainProvider.instance().registerType(type);
-		if (type.getStaticBlock() != null && !type.getStaticBlock().isEmpty()) {
-			variableContext = type.getStaticBlock()
-					  .stream()
-					  .peek(varInit -> {
-						  checkDataInitialization(varInit);
-					  })
-					  .collect(Collectors.toMap(
-								 varInit -> {
-									 return varInit.getDataName();
-								 }, varInit -> {
-									 return varInit;
-								 }));
+		try {
+			if (type.getStaticBlock() != null && !type.getStaticBlock().isEmpty()) {
+				variableContext = type.getStaticBlock()
+						  .stream()
+						  .peek(varInit -> {
+							  checkDataInitialization(varInit);
+						  })
+						  .collect(Collectors.toMap(
+									 varInit -> {
+										 return varInit.getDataName();
+									 }, varInit -> {
+										 return varInit;
+									 }));
+			}
+			inspectStart.accept(type);
+			//inspect functions
+			type.getFunctions().forEach(foo -> {
+				inspectStart.accept(foo);
+				inspectInnerStatements(foo.getInnerStatements());
+				inspectEnd.accept(foo);
+			});
+			inspectEnd.accept(type);
+		} catch (RuntimeException ex) {
+			MainProvider.instance().unRegisterType(type);
+			throw ex;
 		}
-		inspectStart.accept(type);
-		//inspect functions
-		type.getFunctions().forEach(foo -> {
-			inspectStart.accept(foo);
-			inspectInnerStatements(foo.getInnerStatements());
-			inspectEnd.accept(foo);
-		});
-		inspectEnd.accept(type);
+		MainProvider.instance().unRegisterType(type);
 	}
 
 	//inspect statements
@@ -178,10 +185,10 @@ public class InspectManager {
 					 || !findMethod.apply(new Pair<>(null, valueTypes), data.getType().getConstructors()).isPresent()) {
 					handleException(ExceptionMessage.NO_SUITABLE_CONSTRUCTORS_FOUND, data.getStart(), data.getType().getClassName(),
 										 valueTypes.stream()
-										 .map(type -> {
-											 return type.getClassPath();
-										 })
-										 .collect(Collectors.joining(", ")));
+													.map(type -> {
+														return type.getClassPath();
+													})
+													.collect(Collectors.joining(", ")));
 				}
 			}
 		}
@@ -224,11 +231,11 @@ public class InspectManager {
 		return (vars == null)
 				 ? new ArrayList()
 				 : vars
-				  .stream()
-				  .map(value -> {
-					  return getVarValueType(value, start);
-				  })
-				  .collect(Collectors.toList());
+							 .stream()
+							 .map(value -> {
+								 return getVarValueType(value, start);
+							 })
+							 .collect(Collectors.toList());
 	};
 
 	private void handleNoSuitableMethodFound(AbstractNodeContext node, TypeMethod reqMethod, List<TypeWrapper> valueTypes) {
@@ -243,10 +250,10 @@ public class InspectManager {
 										.collect(Collectors.joining(", "))
 							 : "no parameters",
 							 valueTypes.stream()
-							 .map(type -> {
-								 return type.toString();
-							 })
-							 .collect(Collectors.joining(", ")));
+										.map(type -> {
+											return type.toString();
+										})
+										.collect(Collectors.joining(", ")));
 	}
 
 	public TypeWrapper getCallStatementReturnType(CallFunctionImpl callFoo) {

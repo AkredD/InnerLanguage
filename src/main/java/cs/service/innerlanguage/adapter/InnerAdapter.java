@@ -71,8 +71,12 @@ public class InnerAdapter {
 		return instance;
 	}
 
-	public String translate(String sourceCode) {
-		return prepareContext(sourceCode).toString();
+	public String translate(String sourceCode) throws ParsingException {
+		return translateToMetaObject(sourceCode).toString();
+	}
+
+	public TypeImpl translateToMetaObject(String sourceCode) throws ParsingException {
+		return (TypeImpl) prepareContext(sourceCode);
 	}
 
 	public static void main(String[] args) {
@@ -89,17 +93,13 @@ public class InnerAdapter {
 			//throw new Exception("Compiler unavailable");
 		}
 		String code = context.toString();
-		System.out.println(code);
 		Class aClass;
 		try {
 			aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(InnerAdapter.instance().getPackageFolder() + ".Main", code);
 			Class b = Class.forName(InnerAdapter.instance().getPackageFolder() + ".Main");
-			System.out.println("");
 		} catch (ClassNotFoundException ex) {
 			Logger.getLogger(InnerAdapter.class.getName()).log(Level.SEVERE, null, ex);
 		}
-
-		
 	}
 
 	private static NodeContext prepareContext(String csdmlQuery) {

@@ -137,6 +137,10 @@ public class MainProvider {
 		return getTypeByName(type.getTypeName());
 	}
 
+	public void unRegisterType(TypeImpl type) {
+		basicProvider.unRegisterType(type);
+	}
+
 	public TypeWrapper registerType(String className) {
 		runtimeProvider.register(className);
 		return getTypeByName(className);

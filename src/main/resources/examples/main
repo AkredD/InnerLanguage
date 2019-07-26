@@ -6,12 +6,13 @@ TYPE Main parent Object.
 
 	FUNCTION Void execute(Integer args)
 		START.
+                        write("WE INSIDE GENERATED CLASS").
 			return void.
 		END.
 
 	FUNCTION Integer main (Integer e)
 		START.
-			data: String str VALUES("dsaeqw").
+			data: String str VALUES("dsa dsaeq  w").
 			str = "eqw\"".
 			DATA: Integer g VALUES(null).
 			g = a + g + ((a*a) + g + ((432))).
