@@ -50,7 +50,6 @@ public class OverridingInspector extends AbstractInspector {
 				List<Method> list = Arrays.asList();
 				List<Method> expectedMethods = new ArrayList();
 				for (Method method : clazz.getDeclaredMethods()) {
-					System.out.println(method.getName());
 					if (Modifier.isAbstract(method.getModifiers())) {
 						TypeMethod typeMethod = ((TypeImpl) node).getParentType().findTypeMethodByMethod(method);
 						if (typeMethod == null) {

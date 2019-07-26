@@ -77,6 +77,15 @@ public final class BasicProvider implements IProvider {
 		return typesByClassName;
 	}
 
+	public void unRegisterType(TypeImpl type) {
+		if (typesByName.containsKey(type.getTypeName())) {
+			TypeWrapper typeWrapper = typesByName.get(type.getTypeName());
+			customTypes.remove(typeWrapper);
+			typesByName.remove(typeWrapper.getClassName());
+			typesByClassName.remove(typeWrapper.getClassPath());
+		}
+	}
+
 	public void registerType(TypeImpl type) {
 		if (typesByName.containsKey(type.getTypeName())) {
 			mainProvaider.handleException(ExceptionMessage.TYPE_ALREADY_EXISTS, type.getStart(), type.getTypeName());

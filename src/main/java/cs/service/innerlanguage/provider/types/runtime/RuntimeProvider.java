@@ -90,19 +90,16 @@ public class RuntimeProvider implements IProvider {
 			//Don't work in glassfish
 			//String pathFileContent = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream("system" + File.separator + "pathes"), "UTF-8");
 			String pathFileContent = new String(Files.readAllBytes(Paths.get(("system" + File.separator + "pathes"))));
-			System.out.println(pathFileContent);
 			String[] javaPathes = (pathFileContent.contains(";")) ? pathFileContent.split(";") : new String[] {pathFileContent};
 			List<ClassLoader> classLoadersList = new LinkedList<>();
 			classLoadersList.add(ClasspathHelper.contextClassLoader());
 			classLoadersList.add(ClasspathHelper.staticClassLoader());
 			for (String className : javaPathes) {
-				System.out.println("ClassPath: " + className);
 				Reflections reflections = new Reflections(new ConfigurationBuilder()
 						  .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
 						  .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
 						  .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(className))));
 				Set<Class<? extends Object>> allClasses = reflections.getSubTypesOf(Object.class);
-				System.out.println(allClasses.size());
 				allClasses.forEach(clazz -> {
 					register(clazz.getName());
 				});
@@ -166,7 +163,7 @@ public class RuntimeProvider implements IProvider {
 									 return new Pair<>(type, "o" + type.getClassName());
 								 })
 								 .collect(Collectors.toList()));
-					  return new TypeMethod(null, null, false, methodConstructor);
+					  return new TypeMethod(MainProvider.instance().getTypeByName("Void"), null, false, methodConstructor);
 				  })
 				  .collect(Collectors.toList());
 	}
