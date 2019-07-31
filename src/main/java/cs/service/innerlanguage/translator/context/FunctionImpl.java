@@ -22,6 +22,8 @@ public class FunctionImpl extends WrapperStatement {
 	private TypeWrapper type;
 	private List<ParameterImpl> parameters;
 	private List<StatementContext> innerStatements;
+	private boolean primitive;
+	private boolean overriding;
 
 	public FunctionImpl(AbstractNodeContext parent, TypeWrapper type, String functionName, List<ParameterImpl> parameters, List<StatementContext> innerStatements, Token start, Token stop) {
 		super(parent, start, stop);
@@ -33,6 +35,10 @@ public class FunctionImpl extends WrapperStatement {
 
 	public String getFunctionName() {
 		return functionName;
+	}
+
+	public void setOverriding(boolean overriding) {
+		this.overriding = overriding;
 	}
 
 	public List<ParameterImpl> getParameters() {
@@ -51,6 +57,10 @@ public class FunctionImpl extends WrapperStatement {
 		this.innerStatements = innerStatements;
 	}
 
+	public void setPrimitive(boolean primitive) {
+		this.primitive = primitive;
+	}
+
 	public TypeWrapper getType() {
 		return type;
 	}
@@ -58,7 +68,8 @@ public class FunctionImpl extends WrapperStatement {
 	@Override
 	public String toString() {
 		StringBuilder function = new StringBuilder();
-		function.append("public ").append(type).append(" ").append(functionName)
+		function.append((overriding) ? "@Override\n" : "");
+		function.append("public ").append((primitive) ? transformWrapperToPrimitive(type.getClassName()) : type).append(" ").append(functionName)
 				  .append("(")
 				  .append(parameters.stream()
 							 .map(param -> {
@@ -73,5 +84,28 @@ public class FunctionImpl extends WrapperStatement {
 							 .collect(Collectors.joining()))
 				  .append("}");
 		return function.toString();
+	}
+
+	private String transformWrapperToPrimitive(String simpleClassName) {
+		switch (simpleClassName) {
+			case "Integer":
+				return "int";
+			case "Short":
+				return "short";
+			case "Long":
+				return "long";
+			case "Float":
+				return "float";
+			case "Double":
+				return "double";
+			case "Char":
+				return "char";
+			case "Byte":
+				return "byte";
+			case "Boolean":
+				return "boolean";
+			default:
+				return "void";
+		}
 	}
 }

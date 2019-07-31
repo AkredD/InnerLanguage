@@ -1,12 +1,13 @@
-TYPE Main parent Object.
+TYPE Main parent WorkflowMethod.
 	STATIC (
 		DATA: Integer a VALUES(412).
 		CONSTANT: Integer b VALUES(4321).
 	)
 
-	FUNCTION Void execute(Integer args)
+	FUNCTION Void execute(Map args)
 		START.
-                        write("WE INSIDE GENERATED CLASS").
+			DATA: BaseObject bo VALUES("testObject", "testtest", null, null).
+         write("WE INSIDE GENERATED CLASS").
 			return void.
 		END.
 

@@ -143,7 +143,7 @@ public class MainProvider {
 
 	public TypeWrapper registerType(String className) {
 		runtimeProvider.register(className);
-		return getTypeByName(className);
+		return getTypeByClassName(className);
 	}
 
 	public void handleException(ExceptionMessage cause, String... details) {

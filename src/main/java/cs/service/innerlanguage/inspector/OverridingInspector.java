@@ -16,9 +16,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +33,7 @@ import java.util.stream.Stream;
  */
 public class OverridingInspector extends AbstractInspector {
 	private static final Set<Class> inspectingSubjects = new HashSet();
-	private Set<Integer> methodsHash;
+	private Map<Integer, FunctionImpl> methodsHash;
 
 	public OverridingInspector(InspectManager inspectManager) {
 		super(inspectManager);
@@ -53,18 +55,23 @@ public class OverridingInspector extends AbstractInspector {
 					if (Modifier.isAbstract(method.getModifiers())) {
 						TypeMethod typeMethod = ((TypeImpl) node).getParentType().findTypeMethodByMethod(method);
 						if (typeMethod == null) {
-							inspectManager.handleException(ExceptionMessage.CANT_OVERRIDE_THIS_TYPE, ((TypeImpl) node).getStart()
-									  , clazz.getSimpleName(), method.getName());
+							inspectManager.handleException(ExceptionMessage.CANT_OVERRIDE_THIS_TYPE, ((TypeImpl) node).getStart(),
+																	 clazz.getSimpleName(), method.getName());
 						}
 						Integer typeMethodHash = 31
 														 * typeMethod.getConstructor().getParameters().stream()
-								  .map(param -> {
-									  return param.getKey();
-								  })
-								  .collect(Collectors.toList())
-								  .hashCode() + method.getName().hashCode();
-						if (!methodsHash.contains(typeMethodHash)) {
+											 .map(param -> {
+												 return param.getKey();
+											 })
+											 .collect(Collectors.toList())
+											 .hashCode() + method.getName().hashCode();
+						if (!methodsHash.containsKey(typeMethodHash)) {
 							expectedMethods.add(method);
+						} else {
+							methodsHash.get(typeMethodHash).setOverriding(true);
+							if (method.getReturnType().isPrimitive()) {
+								methodsHash.get(typeMethodHash).setPrimitive(true);
+							}
 						}
 					}
 				}
@@ -73,11 +80,11 @@ public class OverridingInspector extends AbstractInspector {
 															 .map(method -> {
 																 return method.getName() + "("
 																		  + Arrays.asList(method.getParameterTypes())
-																			.stream()
-																			.map(param -> {
-																				return param.getSimpleName();
-																			})
-																			.collect(Collectors.joining(", "))
+																					  .stream()
+																					  .map(param -> {
+																						  return param.getSimpleName();
+																					  })
+																					  .collect(Collectors.joining(", "))
 																		  + ") from " + method.getDeclaringClass().getSimpleName();
 															 })
 															 .collect(Collectors.joining("\n ")));
@@ -103,15 +110,15 @@ public class OverridingInspector extends AbstractInspector {
 	public <T extends NodeContext> void startInspecting(T node
 	) {
 		if (node instanceof TypeImpl) {
-			methodsHash = new HashSet();
+			methodsHash = new HashMap<>();
 		}
 		if (node instanceof FunctionImpl) {
-			methodsHash.add(31 * ((FunctionImpl) node).getParameters().stream()
+			methodsHash.put(31 * ((FunctionImpl) node).getParameters().stream()
 					  .map(param -> {
 						  return param.getType().hashCode();
 					  })
 					  .collect(Collectors.toList())
-					  .hashCode() + ((FunctionImpl) node).getFunctionName().hashCode());
+					  .hashCode() + ((FunctionImpl) node).getFunctionName().hashCode(), (FunctionImpl) node);
 		}
 	}
 }
