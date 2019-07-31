@@ -1,14 +1,16 @@
-TYPE Main parent WorkflowMethod.
+TYPE MainObjTest parent WorkflowMethod.
 	STATIC (
 		DATA: Integer a VALUES(412).
 		CONSTANT: Integer b VALUES(4321).
 	)
 
-	FUNCTION Void execute(Map args)
+	FUNCTION Boolean execute(Map args)
 		START.
 			DATA: BaseObject bo VALUES("testObject", "testtest", null, null).
-         write("WE INSIDE GENERATED CLASS").
-			return void.
+			SYSTEM: BaseObjectLocal bol.
+			CALL bol.save(bo, false).
+			write("WE INSIDE GENERATED CLASS").
+			return true.
 		END.
 
 	FUNCTION Integer main (Integer e)

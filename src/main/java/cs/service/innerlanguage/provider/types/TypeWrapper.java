@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class TypeWrapper {
 	private final String classPath;
 	private final String className;
+	private final String beanClassName;
 	private final Boolean instanceablel;
 	private final Boolean injecting;
 	private List<TypeWrapper> parentList;
@@ -48,6 +49,7 @@ public class TypeWrapper {
 		this.instanceablel = instanceablel;
 		this.injecting = injecting;
 		this.staticMethods = staticMethods;
+		this.beanClassName = null;
 	}
 
 	public TypeWrapper(BaseTypeView view, List<TypeWrapper> parentList) {
@@ -59,6 +61,11 @@ public class TypeWrapper {
 		this.methodsView = view.getMethods();
 		this.constructorsView = view.getConstructors();
 		this.staticMethodsView = view.getStaticMethods();
+		this.beanClassName = view.getBeanClassName();
+	}
+
+	public String getBeanClassName() {
+		return beanClassName;
 	}
 
 	public List<TypeMethod> getConstructors() {

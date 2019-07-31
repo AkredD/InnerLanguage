@@ -78,12 +78,27 @@ public class TypeImpl extends WrapperStatement {
 					  .append(parentClass.isInterface() ? " implements " : " extends ")
 					  .append(parentClass.getName())
 					  .append(" {\n")
-					  .append(injectedTypes.stream()
+					  /*					  .append(injectedTypes.stream()
 								 .map(injectingType -> {
 									 return "\t@javax.inject.Inject\n"
 											  + "\tprivate " + injectingType + " system" + injectingType.getClassName() + ";\n";
 								 })
+								 .collect(Collectors.joining()))*/
+					  .append(injectedTypes.stream()
+								 .map(injectingType -> {
+									 return "\tprivate final " + injectingType + " system" + injectingType.getClassName() + ";\n";
+								 })
 								 .collect(Collectors.joining()))
+					  .append("\tpublic ").append(typeName).append("() throws javax.naming.NamingException {\n")
+					  .append("\t\tjavax.naming.InitialContext ic = new javax.naming.InitialContext();\n")
+					  .append(injectedTypes.stream()
+								 .map(injectingType -> {
+									 return "\t\tsystem" + injectingType.getClassName() + " = (" + injectingType + ")"
+											  + " ic.lookup(\"java:global/CScore/CScore/" + injectingType.getBeanClassName() + "!" + injectingType + "\");\n";
+								 })
+								 .collect(Collectors.joining())
+					  )
+					  .append("\t}\n")
 					  .append(staticBlock.stream()
 								 .map(staticVar -> {
 									 return "\tprivate " + staticVar.toString() + ";\n";
