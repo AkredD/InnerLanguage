@@ -84,32 +84,40 @@ public class TypeImpl extends WrapperStatement {
 											  + "\tprivate " + injectingType + " system" + injectingType.getClassName() + ";\n";
 								 })
 								 .collect(Collectors.joining()))*/
-					  .append(injectedTypes.stream()
-								 .map(injectingType -> {
-									 return "\tprivate final " + injectingType + " system" + injectingType.getClassName() + ";\n";
-								 })
-								 .collect(Collectors.joining()))
+					  .append((injectedTypes == null)
+								 ? ""
+								 : injectedTypes.stream()
+											.map(injectingType -> {
+												return "\tprivate final " + injectingType + " system" + injectingType.getClassName() + ";\n";
+											})
+											.collect(Collectors.joining()))
 					  .append("\tpublic ").append(typeName).append("() throws javax.naming.NamingException {\n")
 					  .append("\t\tjavax.naming.InitialContext ic = new javax.naming.InitialContext();\n")
-					  .append(injectedTypes.stream()
-								 .map(injectingType -> {
-									 return "\t\tsystem" + injectingType.getClassName() + " = (" + injectingType + ")"
-											  + " ic.lookup(\"java:global/CScore/CScore/" + injectingType.getBeanClassName() + "!" + injectingType + "\");\n";
-								 })
-								 .collect(Collectors.joining())
+					  .append((injectedTypes == null)
+								 ? ""
+								 : injectedTypes.stream()
+											.map(injectingType -> {
+												return "\t\tsystem" + injectingType.getClassName() + " = (" + injectingType + ")"
+														 + " ic.lookup(\"java:global/CScore/CScore/" + injectingType.getBeanClassName() + "!" + injectingType + "\");\n";
+											})
+											.collect(Collectors.joining())
 					  )
 					  .append("\t}\n")
-					  .append(staticBlock.stream()
-								 .map(staticVar -> {
-									 return "\tprivate " + staticVar.toString() + ";\n";
-								 })
-								 .collect(Collectors.joining()))
+					  .append((staticBlock == null)
+								 ? ""
+								 : staticBlock.stream()
+											.map(staticVar -> {
+												return "\tprivate " + staticVar.toString() + ";\n";
+											})
+											.collect(Collectors.joining()))
 					  .append("\n")
-					  .append(functions.stream()
-								 .map(foo -> {
-									 return "\t" + foo.toString().replaceAll("\n", "\n\t") + "\n";
-								 })
-								 .collect(Collectors.joining("\n")))
+					  .append((functions == null)
+								 ? ""
+								 : functions.stream()
+											.map(foo -> {
+												return "\t" + foo.toString().replaceAll("\n", "\n\t") + "\n";
+											})
+											.collect(Collectors.joining("\n")))
 					  .append("}");
 			return function.toString();
 		} catch (ClassNotFoundException ex) {
